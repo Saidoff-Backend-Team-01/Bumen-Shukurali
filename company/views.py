@@ -1,26 +1,35 @@
-from django.shortcuts import render
-from rest_framework.generics import CreateAPIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
-from company.models import FAQ, ContactWithUs
-from company.serializers import ContactWithUsSerializer, FAQSerializer
+from rest_framework.generics import ListAPIView, ListCreateAPIView
+from company.models import Contacts, ContactUS, PrivacyPolicy, AppInfo, AboutMistake, Sponsor, SocialMedia
+from company.serializers import ContactsSerializer, ContactUSSerializer, PrivacyPolicySerializer, AppInfoSerializer, SponsorSerializer, SocialMediaSerializer
+# Create your views here.
 
 
-class ContactWithUsView(CreateAPIView):
-    queryset = ContactWithUs.objects.all()
-    serializer_class = ContactWithUsSerializer
+class ContactsList(ListAPIView):
+    queryset = Contacts.objects.all()
+    serializer_class = ContactsSerializer
 
 
-class FAQAPIView(APIView):
-    serializer_class = FAQSerializer
-    permission_classes = [IsAuthenticated]
+class ContactUSCreateList(ListCreateAPIView):
+    queryset = ContactUS.objects.all()
+    serializer_class = ContactUSSerializer
 
-    def get(self, request, *args, **kwargs):
-        try:
-            queryset = FAQ.objects.all()
-            serializer = FAQSerializer(queryset, many=True)
-            return Response(serializer.data)
-        except Exception:
-            return Response(data={"message": "Internal Server Error"}, status=500)
+
+class PrivacyPolicyRead(ListAPIView):
+    queryset = PrivacyPolicy.objects.all()
+    serializer_class = PrivacyPolicySerializer
+
+
+
+class AppInfoList(ListAPIView):
+    queryset = AppInfo.objects.all()
+    serializer_class = AppInfoSerializer
+
+
+class SponsorsList(ListAPIView):
+    queryset = Sponsor.objects.all()
+    serializer_class = SponsorSerializer
+
+
+class SocialMediaRead(ListAPIView):
+    queryset = SocialMedia.objects.all()
+    serializer_class = SocialMediaSerializer

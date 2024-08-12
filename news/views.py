@@ -1,13 +1,22 @@
-from django.shortcuts import render
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
+from news.models import News
+from news.serializers import NewsSerializer
+from news.tasks import add_in_views
 
-from .models import News
-from .serializers import NewsListSerializer
-
-
-class NewsListView(ListAPIView):
+# Create your views here.
+class NewsList(ListAPIView):
     queryset = News.published.all()
-    serializer_class = NewsListSerializer
+    serializer_class = NewsSerializer
 
-    def get_queryset(self):
-        return self.queryset.order_by("-created_at")
+
+class NewsDetail(RetrieveAPIView):
+    queryset = News.published.all()
+    serializer_class = NewsSerializer
+
+
+    def retrieve(self, request, *args, **kwargs):
+        news_id = self.get_object().pk
+        ip = request.META.get('REMOTE_ADDR')
+
+        add_in_views.delay(ip, news_id)
+        return super().retrieve(request, *args, **kwargs)

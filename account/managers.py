@@ -1,8 +1,9 @@
-from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.hashers import make_password
 
 
-class CustomUserManager(BaseUserManager):
+class UserManager(BaseUserManager):
+    use_in_migrations = True
 
     def _create_user(self, email, password, **extra_fields):
         """
@@ -11,9 +12,6 @@ class CustomUserManager(BaseUserManager):
         if not email:
             raise ValueError("The given username must be set")
         email = self.normalize_email(email)
-        # Lookup the real model class from the global app registry so this
-        # manager method can be used in migrations. This is fine because
-        # managers are by definition working on the real model.
 
         user = self.model(email=email, **extra_fields)
         user.password = make_password(password)
@@ -35,3 +33,5 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser=True.")
 
         return self._create_user(email, password, **extra_fields)
+
+ 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-10 19:02+0500\n"
+"POT-Creation-Date: 2024-07-27 16:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,51 +19,444 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
+#: account/models.py:10
+msgid "Photo"
+msgstr ""
 
-#: common/models.py:13
+#: account/models.py:11
+msgid "Birthday Data"
+msgstr ""
+
+#: account/models.py:22 account/models.py:40 subject/models.py:56
+msgid "User"
+msgstr ""
+
+#: account/models.py:23 account/models.py:28 subject/models.py:87
+#: subject/models.py:208 subject/models.py:222
+msgid "Users"
+msgstr ""
+
+#: account/models.py:27 company/models.py:38 company/models.py:112
+#: subject/models.py:8 subject/models.py:22 subject/models.py:40
+#: subject/models.py:70 subject/models.py:85 subject/models.py:102
+msgid "Name"
+msgstr ""
+
+#: account/models.py:35 account/models.py:43
+msgid "Group"
+msgstr ""
+
+#: account/models.py:36
+msgid "Groups"
+msgstr ""
+
+#: account/models.py:41 company/models.py:40 company/models.py:129
+msgid "Message"
+msgstr ""
+
+#: account/models.py:42 company/models.py:130 subject/models.py:135
+msgid "File"
+msgstr ""
+
+#: account/models.py:51
+msgid "User's message"
+msgstr ""
+
+#: account/models.py:52
+msgid "User's messages"
+msgstr ""
+
+#: common/models.py:9
 msgid "image"
 msgstr ""
 
-#: common/models.py:14
+#: common/models.py:10 common/models.py:13
 msgid "video"
 msgstr ""
 
-#: common/models.py:15
+#: common/models.py:11
 msgid "audio"
 msgstr ""
 
-#: common/models.py:16 common/models.py:20
+#: common/models.py:12 common/models.py:17 news/models.py:29
 msgid "file"
 msgstr ""
 
-#: common/models.py:17
-msgid "music"
-msgstr ""
-
-#: common/models.py:19
+#: common/models.py:16
 msgid "type"
 msgstr ""
 
-#: common/models.py:26
-msgid "Invalid File Type"
-msgstr ""
-
-#: common/models.py:29
-msgid "Invalid Image File"
-msgstr ""
-
-#: common/models.py:32 common/models.py:33
+#: common/models.py:44 common/models.py:45
 msgid "Media"
 msgstr ""
 
-#: core/settings.py:146
+#: common/models.py:49 subject/models.py:177 subject/models.py:190
+#: subject/models.py:206
+msgid "Question"
+msgstr ""
+
+#: common/models.py:50 subject/models.py:191 subject/models.py:207
+msgid "Answer"
+msgstr ""
+
+#: common/models.py:58 common/models.py:59
+msgid "FAQ"
+msgstr ""
+
+#: common/models.py:63 company/models.py:98
+msgid "Image"
+msgstr ""
+
+#: common/models.py:64 company/models.py:99
+msgid "URL"
+msgstr ""
+
+#: common/models.py:65
+msgid "Created at"
+msgstr ""
+
+#: common/models.py:73
+msgid "Advertising"
+msgstr ""
+
+#: common/models.py:74
+msgid "Advertisings"
+msgstr ""
+
+#: company/models.py:13
+msgid "Adress"
+msgstr ""
+
+#: company/models.py:15 company/models.py:128
+msgid "Email"
+msgstr ""
+
+#: company/models.py:16
+msgid "Latitude"
+msgstr ""
+
+#: company/models.py:17
+msgid "Longitude"
+msgstr ""
+
+#: company/models.py:18
+msgid "Location"
+msgstr ""
+
+#: company/models.py:28 company/models.py:29
+msgid "Contacts"
+msgstr ""
+
+#: company/models.py:44 company/models.py:45
+msgid "Contact US"
+msgstr ""
+
+#: company/models.py:54
+msgid "Text"
+msgstr ""
+
+#: company/models.py:58 company/models.py:59
+msgid "Privacy Policy"
+msgstr ""
+
+#: company/models.py:68 subject/models.py:118
+msgid "Title"
+msgstr ""
+
+#: company/models.py:69 company/models.py:113 subject/models.py:72
+#: subject/models.py:88 subject/models.py:121
+msgid "Description"
+msgstr ""
+
+#: company/models.py:73 company/models.py:74
+msgid "App Info"
+msgstr ""
+
+#: company/models.py:82
+msgid "Telegram URL"
+msgstr ""
+
+#: company/models.py:83
+msgid "LinkedIN URL"
+msgstr ""
+
+#: company/models.py:84
+msgid "Facebook URL"
+msgstr ""
+
+#: company/models.py:85
+msgid "Instagram URL"
+msgstr ""
+
+#: company/models.py:89 company/models.py:90
+msgid "Social Media"
+msgstr ""
+
+#: company/models.py:103
+msgid "Sponsor"
+msgstr ""
+
+#: company/models.py:104
+msgid "Sponsors"
+msgstr ""
+
+#: company/models.py:119
+msgid "About Mistake"
+msgstr ""
+
+#: company/models.py:120
+msgid "About Mistakes"
+msgstr ""
+
+#: company/models.py:135 company/models.py:136
+msgid "Contact With Us"
+msgstr ""
+
+#: core/settings.py:89
 msgid "English"
 msgstr ""
 
-#: core/settings.py:147
+#: core/settings.py:90
+msgid "Russion"
+msgstr ""
+
+#: core/settings.py:91
 msgid "Uzbek"
 msgstr ""
 
-#: core/settings.py:148
-msgid "Russian"
+#: news/models.py:10
+msgid "title"
+msgstr ""
+
+#: news/models.py:11
+msgid "description"
+msgstr ""
+
+#: news/models.py:12
+msgid "created at"
+msgstr ""
+
+#: news/models.py:13
+msgid "is published"
+msgstr ""
+
+#: news/models.py:14
+msgid "media"
+msgstr ""
+
+#: news/models.py:19 news/models.py:20
+msgid "News"
+msgstr ""
+
+#: news/models.py:30
+msgid "news"
+msgstr ""
+
+#: news/models.py:38
+msgid "News Image"
+msgstr ""
+
+#: news/models.py:39
+msgid "News Images"
+msgstr ""
+
+#: subject/models.py:9
+msgid "Click Count"
+msgstr ""
+
+#: subject/models.py:17 subject/models.py:23 subject/models.py:71
+msgid "Category"
+msgstr ""
+
+#: subject/models.py:18
+msgid "Categorys"
+msgstr ""
+
+#: subject/models.py:31 subject/models.py:42
+msgid "Subject title"
+msgstr ""
+
+#: subject/models.py:32
+msgid "Subject titles"
+msgstr ""
+
+#: subject/models.py:37
+msgid "Local"
+msgstr ""
+
+#: subject/models.py:38
+msgid "Global"
+msgstr ""
+
+#: subject/models.py:41
+msgid "Type"
+msgstr ""
+
+#: subject/models.py:50 subject/models.py:55 subject/models.py:86
+#: subject/models.py:120
+msgid "Subject"
+msgstr ""
+
+#: subject/models.py:51
+msgid "Subjects"
+msgstr ""
+
+#: subject/models.py:57
+msgid "Total test bal"
+msgstr ""
+
+#: subject/models.py:65
+msgid "User's subject"
+msgstr ""
+
+#: subject/models.py:66
+msgid "User's subjects"
+msgstr ""
+
+#: subject/models.py:80
+msgid "Vacancy"
+msgstr ""
+
+#: subject/models.py:81
+msgid "Vacancies"
+msgstr ""
+
+#: subject/models.py:97 subject/models.py:105
+msgid "Club"
+msgstr ""
+
+#: subject/models.py:98
+msgid "Clubs"
+msgstr ""
+
+#: subject/models.py:103
+msgid "Location link"
+msgstr ""
+
+#: subject/models.py:113
+msgid "Club Meeting"
+msgstr ""
+
+#: subject/models.py:114
+msgid "Club Meetings"
+msgstr ""
+
+#: subject/models.py:119
+msgid "Order"
+msgstr ""
+
+#: subject/models.py:129 subject/models.py:136 subject/models.py:154
+msgid "Step"
+msgstr ""
+
+#: subject/models.py:130
+msgid "Steps"
+msgstr ""
+
+#: subject/models.py:134
+msgid "Step lesson"
+msgstr ""
+
+#: subject/models.py:144
+msgid "Step's lesson"
+msgstr ""
+
+#: subject/models.py:145
+msgid "Step's lessons"
+msgstr ""
+
+#: subject/models.py:150
+msgid "Miderm"
+msgstr ""
+
+#: subject/models.py:151
+msgid "Final"
+msgstr ""
+
+#: subject/models.py:155
+msgid "Bal for each question"
+msgstr ""
+
+#: subject/models.py:156
+msgid "Question Count"
+msgstr ""
+
+#: subject/models.py:157
+msgid "Test type"
+msgstr ""
+
+#: subject/models.py:158
+msgid "Test time limit"
+msgstr ""
+
+#: subject/models.py:166
+msgid "Step's test"
+msgstr ""
+
+#: subject/models.py:167
+msgid "Step's tests"
+msgstr ""
+
+#: subject/models.py:172
+msgid "Multiple"
+msgstr ""
+
+#: subject/models.py:173
+msgid "Single"
+msgstr ""
+
+#: subject/models.py:175 subject/models.py:221
+msgid "Step test"
+msgstr ""
+
+#: subject/models.py:176
+msgid "Question type"
+msgstr ""
+
+#: subject/models.py:185
+msgid "Test's question"
+msgstr ""
+
+#: subject/models.py:186
+msgid "Test's questions"
+msgstr ""
+
+#: subject/models.py:192
+msgid "Is correct"
+msgstr ""
+
+#: subject/models.py:200
+msgid "Test's answer"
+msgstr ""
+
+#: subject/models.py:201
+msgid "Test's answers"
+msgstr ""
+
+#: subject/models.py:216
+msgid "Test result"
+msgstr ""
+
+#: subject/models.py:217
+msgid "Test results"
+msgstr ""
+
+#: subject/models.py:223
+msgid "Bal"
+msgstr ""
+
+#: subject/models.py:224
+msgid "Count of correct answers"
+msgstr ""
+
+#: subject/models.py:225
+msgid "Test Results"
+msgstr ""
+
+#: subject/models.py:233
+msgid "Total test result"
+msgstr ""
+
+#: subject/models.py:234
+msgid "Total test results"
 msgstr ""

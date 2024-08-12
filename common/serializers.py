@@ -1,11 +1,20 @@
-from django.conf import settings
 from rest_framework import serializers
+from common.models import Media, FAQ, Advertising
 
 
-class MediaURlSerializer(serializers.Serializer):
+class MediaSerializer(serializers.Serializer):
+    type = serializers.CharField(max_length=50, required=False)
+    file = serializers.FileField()
 
-    def to_representation(self, obj):
-        try:
-            return self.context["request"].build_absolute_uri(obj.file.url)
-        except Exception:
-            return str(settings.HOST) + str(obj.file.url)
+
+class FAQSerializer(serializers.Serializer):
+    question = serializers.CharField()
+    answer = serializers.CharField()
+
+
+class AdvertisingSerializer(serializers.Serializer):
+    image = MediaSerializer()
+    url = serializers.URLField()
+    created_at = serializers.DateTimeField()
+
+    

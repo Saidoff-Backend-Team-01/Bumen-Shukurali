@@ -1,98 +1,68 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils.translation import gettext_lazy as _
-from rest_framework_simplejwt.tokens import RefreshToken
-
+from django.contrib.auth.models import AbstractUser
 from common.models import Media
+from django.utils.translation import gettext_lazy as _
+from common.models import Media
+from account.managers import UserManager
 
-from .managers import CustomUserManager
 
-
+# Create your models here.
 class User(AbstractUser):
     class AuthType(models.TextChoices):
         GOOGLE = "GOOGLE", _("Google Account")
         FACEBOOK = "FACEBOOK", _("Facebook Account")
         TELEGRAM = "TELEGRAM", _("Telegram Account")
         WITH_EMAIL = "WITH EMAIL", _("Email Account")
-
-    birth_date = models.DateField(_("birth_date"), null=True, blank=True)
-    photo = models.ForeignKey(Media, on_delete=models.SET_NULL, null=True, blank=True)
-    email = models.EmailField(_("email address"), unique=True)
+    
+    username = models.CharField(max_length=200, blank=True, null=True)
     auth_type = models.CharField(_("auth type"), choices=AuthType.choices)
-    objects = CustomUserManager()
-    USERNAME_FIELD = "email"
+    photo = models.OneToOneField(verbose_name=_('Photo'), to=Media, null=True, blank=True, on_delete=models.SET_NULL)
+    birthday = models.DateTimeField(verbose_name=_('Birthday Data'), auto_now=True, blank=True, null=True)
+    email = models.EmailField(verbose_name=_("Email"), unique=True)
+    is_active = models.BooleanField(default=False)
+
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+
+    objects = UserManager()
+
 
     def __str__(self) -> str:
         return self.username
+    
 
     class Meta:
-        verbose_name = _("User")
-        verbose_name_plural = _("Users")
-
-    def get_token(self):
-        return RefreshToken.access_token
-
-
-class UserOtpCode(models.Model):
-    class VerificationType(models.TextChoices):
-        REGISTER = "register"
-        RESET_PASSWORD = "reset_password"
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    code = models.CharField(max_length=6)
-    type = models.CharField(_("type"), max_length=20, choices=VerificationType.choices)
-    expires_in = models.DateTimeField(_("expires_in"), null=True, blank=True)
-    is_used = models.BooleanField(_("is_used"), default=False)
-
-    def __str__(self) -> str:
-        return self.code
-
+        verbose_name = _('User')
+        verbose_name_plural = _('Users')
+    
 
 class Groups(models.Model):
-    name = models.CharField(_("name"), max_length=100)
-    users = models.ManyToManyField(User, related_name="user_groups")
+    name = models.CharField(verbose_name=_('Name'), max_length=100)
+    users = models.ManyToManyField(verbose_name=_('Users'), to=User, related_name='groupusers')
 
     def __str__(self) -> str:
         return self.name
+    
 
     class Meta:
-        verbose_name = _("Group")
-        verbose_name_plural = _("Groups")
-
+        verbose_name = _('Group')
+        verbose_name_plural = _('Groups')
+    
 
 class UserMessage(models.Model):
-    user = models.ForeignKey(verbose_name=_("User"), to=User, on_delete=models.CASCADE)
-    message = models.TextField(verbose_name=_("Message"))
-    file = models.OneToOneField(
-        verbose_name=_("File"),
-        to=Media,
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-    )
-    group = models.ForeignKey(
-        verbose_name=_("Group"), to=Groups, on_delete=models.CASCADE
-    )
+    user = models.ForeignKey(verbose_name=_('User'), to=User, on_delete=models.CASCADE)
+    message = models.TextField(verbose_name=_('Message'))
+    file = models.OneToOneField(verbose_name=_('File'), to=Media, on_delete=models.SET_NULL, blank=True, null=True)
+    group = models.ForeignKey(verbose_name=_('Group'), to=Groups, on_delete=models.CASCADE)
+
 
     def __str__(self) -> str:
         return f"{self.user.username} - {self.group.name}"
+    
 
     class Meta:
-        verbose_name = _("User's message")
-        verbose_name_plural = _("User's messages")
+        verbose_name = _('User\'s message')
+        verbose_name_plural = _('User\'s messages')
+    
 
-
-class SocialUser(models.Model):
-    class RegisterType(models.TextChoices):
-        GOOGLE = "google", _("google")
-        FACEBOOK = "facebook", _("facebook")
-        TELEGRAM = "telegram", _("telegram")
-
-    user = models.ForeignKey(
-        verbose_name=_("User"), to=User, on_delete=models.CASCADE, null=True, blank=True
-    )
-    social_user_id = models.IntegerField(_("user id"), null=True, blank=True)
-    provider = models.CharField(_("provider"), choices=RegisterType.choices)
-    email = models.EmailField(_("email address"), unique=True)
-    extra_data = models.JSONField(_("extra data"), default=dict)

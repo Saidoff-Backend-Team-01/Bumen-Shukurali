@@ -1,83 +1,94 @@
-from datetime import timedelta
-
-from django.conf import settings
-from django.shortcuts import render
-from django.utils import timezone
-from rest_framework import status
+from rest_framework.views import APIView
+from account.serializers import UserSerializer, GoogleSerializer
+from account.models import User
 from rest_framework.generics import CreateAPIView
+from account.tasks import send_verification_code
+from rest_framework.request import Request
 from rest_framework.response import Response
-
-from .models import User, UserOtpCode
-from .serializers import (
-    GoogleSocialAuthSerializer,
-    UserOtpCodeVerifySerializer,
-    UserRegisterSerializer,
-)
-from .utils import generate_otp_code, send_verification_code
+from rest_framework import status
+from django.core.cache import cache
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
-class UserRegisterView(CreateAPIView):
+
+
+class UserSignup(CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = UserRegisterSerializer
+    serializer_class = UserSerializer
+
 
     def perform_create(self, serializer):
-        user = serializer.save(is_active=False)
-        user.set_password(serializer.validated_data["password"])
-        user.save()
-        code = generate_otp_code()
-        new_otp_code = UserOtpCode.objects.create(
-            user=user,
-            code=code,
-            type=UserOtpCode.VerificationType.REGISTER,
-            expires_in=timezone.now()
-            + timedelta(minutes=settings.OTP_CODE_VERIFICATION_TIME),
-        )
-        send_verification_code(user.email, new_otp_code.code)
+        user = serializer.save()
+
+        send_verification_code.delay(user.email)
+
+        return user
+    
+
+class UserSignin(APIView):
+    def post(self, req: Request):
+        email = req.data.get('email')
+        password = req.data.get('password')
+
+        if not User.objects.filter(email=email).exists():
+            return Response({'error': 'User with this email was not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        
+        else:
+            user = User.objects.get(email=email)
+
+            if user.is_active == False:
+                return Response({'error': 'User is not active'}, status=status.HTTP_400_BAD_REQUEST)
+            
+
+            if user.check_password(password):
+                token = RefreshToken.for_user(user=user)
+                return Response({'refresh_token': str(token), 'access_token': str(token.access_token)})
+            
+            else:
+                return Response({'error': 'Wrong password'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserRegisterVerifyView(CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserOtpCodeVerifySerializer
 
-    def create(self, request, *args, **kwargs):
-        try:
 
-            data = self.serializer_class(data=request.data)
-            if not data.is_valid():
-                return Response(
-                    status=status.HTTP_400_BAD_REQUEST, data={"message": "Invalid data"}
-                )
-            user = User.objects.get(email=data.data["email"])
-            user_otp_code = UserOtpCode.objects.filter(
-                user=user, code=data.data["code"], is_used=False
-            )
-            if not user_otp_code.exists():
-                return Response(
-                    status=status.HTTP_404_NOT_FOUND,
-                    data={"message": "otp code not found"},
-                )
-            user_otp_code = user_otp_code.filter(expires_in__gte=timezone.now())
-            if not user_otp_code.exists():
-                return Response(
-                    status=status.HTTP_400_BAD_REQUEST,
-                    data={"message": "otp code was expired"},
-                )
+class UserVerification(APIView):
+    def post(self, req: Request):
+        email = req.data.get('email')
+        code = req.data.get('code')
 
+        if not User.objects.filter(email=email).exists():
+            return Response({'error': 'User with this email was not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        if cache.get(email) == str(code):
+            user = User.objects.get(email=email)
             user.is_active = True
             user.save()
-            otp_code = user_otp_code.first()
-            otp_code.is_used = True
-            otp_code.save()
+            
+
+            token = RefreshToken.for_user(user=user)
+
             return Response(
-                status=status.HTTP_200_OK, data={"message": "user is activated"}
-            )
-        except User.DoesNotExist:
-            return Response(
-                status=status.HTTP_404_NOT_FOUND,
-                data={"message": "User does not exist"},
-            )
+                {
+                    'message': 'User pass verification succecfuly !!!',
+                    'tokens': {
+                        'refresh_token': str(token),
+                        'access_token': str(token.access_token)
+                    }          
+                }, 
+                status=status.HTTP_200_OK)
+        
+        else:
+            return Response({'error': 'The code is invalid or has expired'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class GoogleRegisterView(CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = GoogleSocialAuthSerializer
+
+
+class GoogleAuth(APIView):
+    def get(self, request, *args, **kwargs):
+        auth_token = str(request.query_params.get('code'))
+        ser = GoogleSerializer(data={'auth_token': auth_token})
+        if ser.is_valid():
+            return Response(ser.data)
+        return Response(ser.errors, status=400)
+ 
+

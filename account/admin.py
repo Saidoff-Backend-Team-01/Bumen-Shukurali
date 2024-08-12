@@ -1,25 +1,17 @@
 from django.contrib import admin
+from django.http import HttpRequest
+from account.models import User, UserMessage, Groups
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
-
-from .models import Groups, User, UserMessage, UserOtpCode
-
-
-class UserMessageInlineAdmin(admin.StackedInline):
-    model = UserMessage
-    extra = 1
+# Register your models here.
 
 
-class CustomUserAdmin(UserAdmin):
-    inlines = [UserMessageInlineAdmin]
-    # list_display = ("id", "email", "first_name", "last_name")
 
+@admin.register(User)
+class UsersAdmin(UserAdmin):
     fieldsets = (
         (None, {"fields": ("email", "password")}),
-        (
-            _("Personal info"),
-            {"fields": ("first_name", "last_name", "birth_date", "photo")},
-        ),
+        (_("Personal info"), {"fields": ("first_name", "last_name", "username", "photo", "auth_type")}),
         (
             _("Permissions"),
             {
@@ -32,39 +24,46 @@ class CustomUserAdmin(UserAdmin):
                 ),
             },
         ),
-        # (_("Important dates"), {"fields": ("last_login", "date_joined")}),
-    )
-    add_fieldsets = (
-        (
-            None,
-            {
-                "classes": ("wide",),
-                "fields": ("email", "password1", "password2"),
-            },
-        ),
+        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
 
+    list_display = ['id', 'username', 'first_name', 'last_name', 'email']
+    list_display_links = ['id', 'username', 'first_name', 'last_name', 'email']
+    search_fields = ['username', 'first_name', 'last_name', 'email']
 
-admin.site.register(User, CustomUserAdmin)
 
-admin.site.register(Groups)
-
-
+@admin.register(UserMessage)
 class UserMessageAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user_name', 'group_name']
+    list_display_links = ['id', 'user_name', 'group_name']
+    search_fields = ['user__username', 'group__name']
 
-    def has_delete_permission(self, request, obj=None):
+
+    def user_name(self, obj):
+        return obj.user.username
+    
+
+    def group_name(self, obj):
+        return obj.group.name
+    
+
+    def has_add_permission(self, request: HttpRequest) -> bool:
         return False
+    
 
-    def has_change_permission(self, request, obj=None):
+    def has_change_permission(self, request: HttpRequest, obj=None) -> bool:
         return False
+    
 
-    def has_add_permission(self, request):
+    def has_delete_permission(self, request: HttpRequest, obj=None) -> bool:
         return False
+    
 
 
-admin.site.register(UserMessage, UserMessageAdmin)
 
-
-@admin.register(UserOtpCode)
-class UserOtpCodeAdmin(admin.ModelAdmin):
-    list_display = ("id", "user", "code", "type")
+@admin.register(Groups)
+class GroupsAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name']
+    list_display_links = ['id', 'name']
+    search_fields = ['name']
+    filter_horizontal = ['users']
