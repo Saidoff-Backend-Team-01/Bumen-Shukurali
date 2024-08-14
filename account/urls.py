@@ -1,5 +1,5 @@
 from django.urls import path
-from account.views import UserSignup, UserVerification, UserSignin, GoogleAuth
+from account.views import UserSignup, UserVerification, UserSignin, GoogleAuth, FacebookAuth
 
 
 
@@ -7,5 +7,6 @@ urlpatterns = [
     path('signup/', UserSignup.as_view(), name='emailsignup'),
     path('signin/', UserSignin.as_view(), name='emailsignin'),
     path('verification/', UserVerification.as_view(), name='verification'),
-    path('google/', GoogleAuth.as_view(), name='googleauth')
+    path('google/', GoogleAuth.as_view(), name='googleauth'),
+    path('facebook/', FacebookAuth.as_view(), name='facebookauth'),
 ]

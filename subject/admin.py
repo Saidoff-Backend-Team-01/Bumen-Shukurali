@@ -77,3 +77,17 @@ class ClubMeetingAdmin(admin.ModelAdmin):
 
     def club_name(self, obj):
         return obj.club.name
+
+
+@admin.register(Step)
+class StepAdmin(admin.ModelAdmin):
+    list_display = ['id', 'title']
+    list_display_links = ['id', 'title']
+    search_fields = ['name', 'title']
+
+
+@admin.register(StepLesson)
+class StepLessonAdmin(admin.ModelAdmin):
+    list_display = ['id', 'title']
+    list_display_links = ['id', 'title']
+    search_fields = ['name', 'title']

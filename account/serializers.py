@@ -3,6 +3,7 @@ from common.serializers import MediaSerializer
 from common.models import Media
 from account.models import User
 from .auth.google import Google
+from .auth.facebook import Facebook
 from .auth.register import register_social_user
 import requests
 from rest_framework.exceptions import APIException
@@ -30,7 +31,6 @@ class UserSerializer(serializers.Serializer):
 
         return user
     
-
 
 class GoogleSerializer(serializers.Serializer):
     auth_token = serializers.CharField()
@@ -87,5 +87,30 @@ class GoogleSerializer(serializers.Serializer):
             raise serializers.ValidationError(f'Ошибка при регистрации пользователя: {e}')
         
 
+class FacebookSerializer(serializers.Serializer):
+    auth_token = serializers.CharField()
 
+    def validate_auth_token(self, auth_token):
+        user_data = Facebook.validated(auth_token=auth_token)
+
+        email = user_data.get("email")
+        first_name = user_data.get("given_name", "")
+        last_name = user_data.get("family_name", "")
+        photo = user_data.get("picture", None)
+        birthday = user_data.get("birthday", None)
+        username = first_name + last_name
+
+        try:
+            return register_social_user(
+                auth_type=User.AuthType.GOOGLE,
+                email=email,
+                first_name=first_name,
+                last_name=last_name,
+                birthday=birthday,
+                username=username,
+                photo=photo,
+            )
+        except Exception as e:
+            raise serializers.ValidationError(f'Ошибка при регистрации пользователя: {e}')
+        
 

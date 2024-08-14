@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 class Media(models.Model):
     class MediaType(models.TextChoices):
         IMAGE = 'image', _('image')
-        MUSIC = 'music', _('video')
+        MUSIC = 'music', _('music')
         AUDIO = 'audio', _('audio')
         FILE = 'file', _('file')
         VIDEO = 'video', _('video')

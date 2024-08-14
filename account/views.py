@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from account.serializers import UserSerializer, GoogleSerializer
+from account.serializers import UserSerializer, GoogleSerializer, FacebookSerializer
 from account.models import User
 from rest_framework.generics import CreateAPIView
 from account.tasks import send_verification_code
@@ -91,4 +91,9 @@ class GoogleAuth(APIView):
             return Response(ser.data)
         return Response(ser.errors, status=400)
  
+
+class FacebookAuth(CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = FacebookSerializer
+    
 

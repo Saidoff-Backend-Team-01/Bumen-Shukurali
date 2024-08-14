@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from account.serializers import UserSerializer
+from common.serializers import MediaSerializer
 
 
 class CategorySerializer(serializers.Serializer):
@@ -47,3 +48,15 @@ class ClubDatailSerializer(serializers.Serializer):
     subject = SubjectSerializer()
     meetings = ClubMeetingSerializer(read_only=True, many=True)
 
+
+class StepSerializer(serializers.Serializer):
+    title = serializers.CharField(max_length=200)
+    order = serializers.IntegerField()
+    subject = SubjectSerializer()
+    description = serializers.CharField()
+
+
+class StepLessonSerializer(serializers.Serializer):
+    title = serializers.CharField(max_length=250)
+    file = MediaSerializer()
+    step = StepSerializer()

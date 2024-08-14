@@ -233,3 +233,5 @@ class UserTotelTestResult(models.Model):
     class Meta:
         verbose_name = _('Total test result')
         verbose_name_plural = _('Total test results')
+
+
