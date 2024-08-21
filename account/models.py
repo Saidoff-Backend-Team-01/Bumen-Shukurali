@@ -93,6 +93,6 @@ class SocialUser(models.Model):
         verbose_name=_("User"), to=User, on_delete=models.CASCADE, null=True, blank=True
     )
     social_user_id = models.IntegerField(_("user id"), null=True, blank=True)
-    provider = models.CharField(_("provider"), choices=RegisterType.choices, max_length=255)
+    provider = models.CharField(_("provider"), choices=RegisterType.choices, max_length=255, default=RegisterType.GOOGLE)
     email = models.EmailField(_("email address"), unique=True)
     extra_data = models.JSONField(_("extra data"), default=dict)
