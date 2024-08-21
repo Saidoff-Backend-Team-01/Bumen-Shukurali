@@ -55,11 +55,11 @@ AUTH_USER_MODEL = "account.User"
 
 THIRD_PARTY_APPS = [
     "rosetta",
-    "modeltranslation",
+    # "modeltranslation",
     "rest_framework",
     "phonenumber_field",
     "drf_yasg",
-    "django_ckeditor_5",
+    # "django_ckeditor_5",
     "rest_framework_simplejwt",
 ]
 
