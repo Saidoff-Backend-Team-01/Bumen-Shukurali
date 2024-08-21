@@ -1,8 +1,11 @@
 from rest_framework import serializers
 
+from account.serializers import UserSerializer
 from common.serializers import MediaURlSerializer
 from supject.models import (
     Category,
+    Club,
+    ClubMeeting,
     Step,
     StepFile,
     Subject,
@@ -10,12 +13,15 @@ from supject.models import (
     TestAnswer,
     TestQuestion,
     UserSubject,
+    UserTestResult,
+    UserTotalTestResult,
 )
 
 
 class StepSerializer(serializers.ModelSerializer):
     class Meta:
         model = Step
+
         fields = [
             "id",
         ]
@@ -50,15 +56,13 @@ class SubjectTitleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubjectTitle
-        fields = ["id", "name", "category","subjects"]
+        fields = ["id", "name", "category", "subjects"]
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    subject_titles = SubjectTitleSerializer(many=True, read_only=True, source='subjecttitle_set')
-
     class Meta:
         model = Category
-        fields = ["id", "name", "click_count", "subject_titles"]
+        fields = ["id", "name", "click_count"]
 
 
 class SubjectTitleListSerializer(serializers.ModelSerializer):
@@ -101,3 +105,47 @@ class StepTestQuestionTestSerializer(serializers.ModelSerializer):
     class Meta:
         model = TestQuestion
         fields = ("id", "question_type", "question", "test_answers")
+
+
+class ClubSerializer(serializers.ModelSerializer):
+    subject = SubjectSerializer(read_only=True)
+    users = UserSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Club
+        fields = ("id", "name", "users", "subject", "description")
+
+
+class ClubMeetingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClubMeeting
+        fields = "__all__"
+
+
+class FinishTestQuestionSerializer(serializers.Serializer):
+    question_id = serializers.IntegerField(required=True)
+    answer_ids = serializers.ListField(source=serializers.IntegerField())
+
+
+class StepTestFinishSerializer(serializers.Serializer):
+    result_id = serializers.IntegerField(required=True)
+    questions = serializers.ListField(source=FinishTestQuestionSerializer())
+
+
+class UserTestResultSerializer(serializers.ModelSerializer):
+    test_question = serializers.StringRelatedField()
+    test_answers = TestAnswerSerializer(many=True)
+
+    class Meta:
+        model = UserTestResult
+        fields = ['id', 'test_question', 'test_answers']
+
+
+class UserTotalTestResultSerializer(serializers.ModelSerializer):
+    user_test_results = UserTestResultSerializer(many=True)
+
+    class Meta:
+        model = UserTotalTestResult
+        fields = ['id', 'step_test', 'user', 'ball', 'correct_answers', 'user_test_results', 'finished', 'percentage']
+        read_only_fields = ['id', 'user', 'step_test']
+

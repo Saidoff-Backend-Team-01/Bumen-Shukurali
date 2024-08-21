@@ -7,3 +7,4 @@ urlpatterns = [
     path("faqs/", FAQAPIView.as_view(), name="faqs"),
     path('contact/', ContactsDetailView.as_view(), name="contact")
 ]
+        

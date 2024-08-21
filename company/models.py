@@ -3,6 +3,8 @@ from django.utils.translation import gettext_lazy as _
 from django_ckeditor_5.fields import CKEditor5Field
 from phonenumber_field.modelfields import PhoneNumberField
 
+
+from account.models import User
 from common.models import Media
 
 from .validators import (
@@ -19,7 +21,7 @@ class Contacts(models.Model):
     email = models.EmailField()
     location = models.URLField()
 
-    class Meta:
+    class Meta: 
         verbose_name = "Contacts"
 
 

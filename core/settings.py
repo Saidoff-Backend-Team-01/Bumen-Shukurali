@@ -61,6 +61,7 @@ THIRD_PARTY_APPS = [
     "drf_yasg",
     "django_ckeditor_5",
     "rest_framework_simplejwt",
+    "django_celery_beat",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -106,11 +107,11 @@ LOCALE_PATHS = [
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": config["POSTGRES_NAME"],
-        "HOST": config["POSTGRES_HOST"],
-        "USER": config["POSTGRES_USER"],
-        "PORT": config["POSTGRES_PORT"],
-        "PASSWORD": config["POSTGRES_PASSWORD"],
+        "NAME": config["DB_NAME"],
+        "HOST": config["DB_HOST"],
+        "USER": config["DB_USER"],
+        "PORT": config["DB_PORT"],
+        "PASSWORD": config["DB_PASSWORD"],
     }
 }
 
@@ -342,6 +343,10 @@ REST_FRAMEWORK = {
     )
 }
 
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "account.authentication.PhoneEmailAuthBackend",
+]
 SWAGGER_SETTINGS = {
     "SECURITY_DEFINITIONS": {
         "Bearer": {
@@ -388,7 +393,6 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
-
 import sentry_sdk
 
 sentry_sdk.init(
@@ -403,3 +407,23 @@ sentry_sdk.init(
 )
 
 SOCIAL_SECRET_PASSWORD = config["SOCIAL_SECRET_PASSWORD"]
+
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
+GOOGLE_GRANT_TYPE = os.getenv("GOOGLE_GRANT_TYPE")
+SOCIAL_USER_PASSWORD = os.getenv("SOCIAL_USER_PASSWORD")
+
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+
+# Celery Configurations
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/0"
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TIMEZONE = "Asia/Tashkent"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_IMPORTS = "company.tasks"
+
+
+FCM_SERVER_KEY = config["FCM_SERVER_KEY"]

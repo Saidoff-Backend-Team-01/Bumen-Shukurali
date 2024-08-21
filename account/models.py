@@ -15,16 +15,28 @@ class User(AbstractUser):
         TELEGRAM = "TELEGRAM", _("Telegram Account")
         WITH_EMAIL = "WITH EMAIL", _("Email Account")
 
+    username = models.CharField(max_length=123, unique=True, null=True, blank=True)
     birth_date = models.DateField(_("birth_date"), null=True, blank=True)
-    photo = models.ForeignKey(Media, on_delete=models.SET_NULL, null=True, blank=True)
-    email = models.EmailField(_("email address"), unique=True)
-    auth_type = models.CharField(_("auth type"), choices=AuthType.choices, max_length=244)
+    photo = models.ForeignKey(
+        Media, on_delete=models.SET_NULL, null=True, blank=True, related_name="photo"
+    )
+    email = models.EmailField(_("email address"), unique=True, null=True, blank=True)
+    phone_number = models.CharField(
+        _("phone number"), unique=True, max_length=20, null=True, blank=True
+    )
+    auth_type = models.CharField(
+        _("auth type"), choices=AuthType.choices, max_length=244
+    )
+    telegram_id = models.CharField(_("telegram id"))
     objects = CustomUserManager()
+    device_id = models.CharField(
+        _("device id"), unique=True, max_length=244, null=True, blank=True
+    )
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
     def __str__(self) -> str:
-        return self.username
+        return self.email
 
     class Meta:
         verbose_name = _("User")
@@ -83,6 +95,7 @@ class UserMessage(models.Model):
         verbose_name_plural = _("User's messages")
 
 
+
 class SocialUser(models.Model):
     class RegisterType(models.TextChoices):
         GOOGLE = "google", _("google")
@@ -93,6 +106,9 @@ class SocialUser(models.Model):
         verbose_name=_("User"), to=User, on_delete=models.CASCADE, null=True, blank=True
     )
     social_user_id = models.IntegerField(_("user id"), null=True, blank=True)
-    provider = models.CharField(_("provider"), choices=RegisterType.choices, max_length=255, default=RegisterType.GOOGLE)
+    provider = models.CharField(
+        _("provider"), choices=RegisterType.choices, max_length=255
+    )
     email = models.EmailField(_("email address"), unique=True)
     extra_data = models.JSONField(_("extra data"), default=dict)
+

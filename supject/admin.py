@@ -18,9 +18,12 @@ from .models import (
     Vacancy,
 )
 
+
 admin.site.register(TestQuestion)
 admin.site.register(TestAnswer)
 admin.site.register(UserTotalTestResult)
+admin.site.register(Club)
+admin.site.register(ClubMeeting)
 
 
 class SubjectTitleInline(admin.StackedInline):
@@ -59,7 +62,6 @@ class SubjectAdmin(admin.ModelAdmin):
 @admin.register(UserSubject)
 class UserSubjectAdmin(admin.ModelAdmin):
     list_display = ("id", "user")
-
 
 @admin.register(StepFile)
 class StepFileAdmin(admin.ModelAdmin):
