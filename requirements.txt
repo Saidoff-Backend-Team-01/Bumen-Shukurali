@@ -14,12 +14,8 @@ psycopg2-binary
 django-rosetta
 djangorestframework-simplejwt
 django-ckeditor-5
-<<<<<<< HEAD
 sentry-sdk
-=======
 google-auth==2.32.0
 facebook-sdk==3.1.0
 sentry-sdk==2.13.0
 setuptools
-
->>>>>>> ea86244cf895a7c4f5643854973d3f9d5061833b

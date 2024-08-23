@@ -9,7 +9,9 @@ from common.models import Media
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(verbose_name=_("Name"), max_length=100, unique=True)
-    click_count = models.PositiveIntegerField(verbose_name=_("Click Count"))
+    click_count = models.PositiveIntegerField(
+        verbose_name=_("Click Count"), null=True, blank=True
+    )
 
     def __str__(self) -> str:
         return self.name
@@ -266,7 +268,7 @@ class UserTotalTestResult(models.Model):
         verbose_name=_("Test Results"), to=UserTestResult, related_name="testresults"
     )
     finished = models.BooleanField(default=False)
-    percenateg = models.IntegerField()
+    percentage = models.IntegerField()
 
     def __str__(self) -> str:
         return f"{self.pk} - {self.user.username}"

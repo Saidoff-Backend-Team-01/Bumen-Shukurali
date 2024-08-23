@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django_ckeditor_5.fields import CKEditor5Field
 from phonenumber_field.modelfields import PhoneNumberField
 
+from account.models import User
 from common.models import Media
 
 from .validators import (
@@ -144,3 +145,19 @@ class ContactWithUsMobile(models.Model):
     class Meta:
         verbose_name = _("Contact With Us Mobile")
         verbose_name_plural = _("Contact With Us Mobile")
+
+
+class Notification(models.Model):
+    title = models.CharField(_("title"), max_length=50)
+    message = models.TextField(_("message"))
+    is_all_users = models.BooleanField(_("is_all_users"), default=False)
+    users = models.ManyToManyField(User)
+    extra_data = models.JSONField(_("extra data"))
+    scheduled_date = models.DateTimeField(_("scheduled date"), blank=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = _("Notification")
+        verbose_name_plural = _("Notifications")

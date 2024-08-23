@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Count, Q
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
@@ -72,7 +72,6 @@ class StartSubjectApi(APIView):
 class SubjectTitleApiView(ListAPIView):
     queryset = SubjectTitle.objects.all()
     serializer_class = SubjectTitleSerializer
-
 
     @swagger_auto_schema(manual_parameters=[category_id])
     def get(self, request, *args, **kwargs):
@@ -285,11 +284,31 @@ class GetTestResultsView(RetrieveAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        result_id = kwargs.get('result_id')
+        result_id = kwargs.get("result_id")
         try:
             test_result = self.queryset.get(id=result_id, user=request.user)
             serializer = self.serializer_class(test_result)
             return Response(serializer.data)
         except UserTotalTestResult.DoesNotExist:
-            return Response({"message": "No test results found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"message": "No test results found"}, status=status.HTTP_404_NOT_FOUND
+            )
 
+
+class UserPopularSubject(APIView):
+    def get(self, request):
+        started_subjects = (
+            UserSubject.objects.filter(started=True)
+            .values("subject")
+            .annotate(start_count=Count("subject_id"))
+            .order_by("-start_count")
+        )
+
+        if not started_subjects:
+            return Response({"error": "No subjects found"}, status=404)
+
+        subject_ids = [item["subject"] for item in started_subjects]
+        subjects = Subject.objects.filter(id__in=subject_ids)
+
+        serializer = SubjectSerializer(subjects, many=True)
+        return Response(serializer.data)
