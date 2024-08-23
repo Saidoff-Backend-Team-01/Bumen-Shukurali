@@ -132,13 +132,11 @@ class StepTestFinishSerializer(serializers.Serializer):
     questions = serializers.ListField(source=FinishTestQuestionSerializer())
 
 
-class UserTestResultSerializer(serializers.ModelSerializer):
+class UserTestResultSerializer(serializers.Serializer):
+    result_id = serializers.IntegerField
     test_question = serializers.StringRelatedField()
-    test_answers = TestAnswerSerializer(many=True)
+    test_answers = serializers.ListField(child=serializers.IntegerField)
 
-    class Meta:
-        model = UserTestResult
-        fields = ['id', 'test_question', 'test_answers']
 
 
 class UserTotalTestResultSerializer(serializers.ModelSerializer):
