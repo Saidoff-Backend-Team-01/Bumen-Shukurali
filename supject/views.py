@@ -207,58 +207,6 @@ class ClubDetail(APIView):
             raise APIException(e)
 
 
-
-class StepTestFinishView(CreateAPIView):
-    queryset = UserTotalTestResult.objects.all()
-    serializer_class = StepTestFinishSerializer
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user_total_test = self.queryset.filter(
-            id=serializer.validated_data["result_id"], user=request.user, finished=False
-        )
-        if not user_total_test.exists():
-            return Response(
-                data={"message": error_codes.USER_TOTAL_TEST_RESULT_MSG},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        questions = serializer.validated_data["questions"]
-        total_ball = 0
-        for qst in questions:
-            question_ball = 0
-            question = TestQuestion.objects.get(id=qst["question_id"])
-            user_test_result = UserTestResult.objects.create(
-                user=request.user, test_question=question
-            )
-            if question.question_type == TestQuestion.QuestionType.MULTIPLE:
-                answers = question.answers.filter(id__in=qst["answer_ids"])
-                for ans in answers:
-                    user_test_result.test_answers.add(ans)
-            else:
-                answer = question.answers.filter(id__in=qst["answer_ids"]).last()
-                user_test_result.test_answers.add(answer)
-
-            if not answers.exists():
-                return Response(
-                    data={"message": error_codes.TEST_ANSWERS_NOT_EXISTS},
-                    status=status.HTTP_404_NOT_FOUND,
-                )
-        percentage = total_ball * 100 // len(questions)
-        user_total_test.percentage = percentage
-        user_total_test.ball = total_ball
-        user_total_test.save()
-        user_results = UserTestResult.objects.filter(
-            user=request.user, total_result=user_total_test
-        )
-
-        data = {
-            "question": user_total_test,
-            "answers": user_results.filter(test_answers__is_correct=True),
-        }
-        return Response(data=data)
-
-
 class StepTestFinishView(CreateAPIView):
     queryset = UserTotalTestResult.objects.all()
     serializer_class = StepTestFinishSerializer
@@ -346,32 +294,56 @@ class GetTestResultsView(RetrieveAPIView):
             return Response({"message": "No test results found"}, status=status.HTTP_404_NOT_FOUND)
 
 
+class SubmitTestView(CreateAPIView):
+    queryset = UserTotalTestResult.objects.all()
+    serializer_class = UserTestResultSerializer
+    # permission_classes = [IsAuthenticated]
 
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-# class SubmitTestView(CreateAPIView):
-#     queryset = UserTotalTestResult.objects.all()
-#     serializer_class = UserTestResultSerializer
-#     permission_classes = [IsAuthenticated]
-#
-#     def post(self, request, *args, **kwargs):
-#         serializer = self.serializer_class(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#
-#         user_total_test_result = self.queryset.filter(
-#             id=serializer.validated_data["result_id"], user=request.user, finished=False
-#         ).first()
-#         if not user_total_test_result:
-#             return Response(
-#                 data={"message": "Test natijalari topilmadi yoki allaqachon yakunladi"},
-#                 status=status.HTTP_404_NOT_FOUND,
-#             )
-#         questions = serializer.validated_data["questions"]
-#         total_ball = 0
-#
-#         for qst in questions:
-#             total_ball = 0
-#             question = TestQuestion.objects.get(id=qst["result_id"])
-#             user_test_result = UserTestResult.objects.create(
-#                 user=request.user, test_question=question, total_result=user_total_test_result
-#             )
-#             if question.question_type=
+        user_total_test_result = self.queryset.filter(
+            id=serializer.validated_data["result_id"], user=request.user, finished=False
+        ).first()
+
+        if not user_total_test_result:
+            return Response(
+                data={"message": "Test natijalari topilmadi yoki allaqachon yakunlangan"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        questions = serializer.validated_data["questions"]
+        total_ball = 0
+
+        for qst in questions:
+            question_ball = 0
+            question = TestQuestion.objects.get(id=qst["question_id"])
+            user_test_result = UserTestResult.objects.create(
+                user=request.user, test_question=question, total_result=user_total_test_result
+            )
+
+            if question.question_type == TestQuestion.QuestionType.MULTIPLE:
+                answers = question.test_answers.filter(id__in=qst["answer_ids"])
+                for ans in answers:
+                    user_test_result.test_answers.add(ans)
+                    if ans.is_correct:
+                        question_ball += user_total_test_result.step_test.ball_for_each_test
+            else:
+                answer = question.test_answers.filter(id__in=qst["answer_ids"]).first()
+                user_test_result.test_answers.add(answer)
+                if answer.is_correct:
+                    question_ball += user_total_test_result.step_test.ball_for_each_test
+
+            total_ball += question_ball
+
+        user_total_test_result.ball = total_ball
+        user_total_test_result.percenateg = (total_ball / (len(questions) * user_total_test_result.step_test.ball_for_each_test)) * 100
+        user_total_test_result.finished = True
+        user_total_test_result.save()
+
+        return Response({
+            "message": "Test muvaffaqiyatli yakunlandi",
+            "ball": total_ball,
+            "percentage": user_total_test_result.percenateg
+        })
