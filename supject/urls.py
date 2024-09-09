@@ -12,9 +12,7 @@ from .views import (
     SubjectTitleApiView,
     UserClubsView,
     UserPopularSubject,
-    VacancyList,
     TopUserList,
-
 )
 
 urlpatterns = [
@@ -31,7 +29,6 @@ urlpatterns = [
     path("categories/", CategoryListView.as_view(), name="categories"),
     path("steps/<int:pk>/", StepDetailAPIView.as_view(), name="step-detail"),
     path("steps/start-test/", StartStepTestView.as_view(), name="step-start-test"),
-    path("vacancy/<int:pk>", VacancyList.as_view(), name="vacancy"),
     path("subject-search/", SubjectSearchApiView.as_view(), name="subject-search"),
     path("clubs/", UserClubsView.as_view(), name="clubs"),
     path("club/<int:pk>/", ClubDetail.as_view(), name="club"),
@@ -40,6 +37,7 @@ urlpatterns = [
         "user-popular_subjects/",
         UserPopularSubject.as_view(),
         name="user-popular-subjects",
+
     ),
     path("tops/", TopUserList.as_view(), name='tops'),
 

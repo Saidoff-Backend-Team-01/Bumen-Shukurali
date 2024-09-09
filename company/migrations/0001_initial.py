@@ -1,6 +1,5 @@
-
-
 import company.validators
+from django.db import migrations, models
 import django.db.models.deletion
 import django_ckeditor_5.fields
 import phonenumber_field.modelfields
@@ -208,6 +207,33 @@ class Migration(migrations.Migration):
             options={
                 "verbose_name": "Social Media",
                 "verbose_name_plural": "Social Medias",
+            },
+        ),
+        migrations.CreateModel(
+            name="Sponsor",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("url", models.URLField(verbose_name="URL")),
+                (
+                    "image",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="common.media",
+                        verbose_name="Image",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "Sponsor",
+                "verbose_name_plural": "Sponsors",
             },
         ),
         migrations.CreateModel(

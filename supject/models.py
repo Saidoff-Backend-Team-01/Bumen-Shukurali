@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_ckeditor_5.fields import CKEditor5Field
+from django.core.exceptions import ValidationError
 
 from common.models import Media
 
@@ -24,10 +25,10 @@ class SubjectTitle(models.Model):
     category = models.ForeignKey(
         verbose_name=_("Category"), to=Category, on_delete=models.CASCADE
     )
-
+            
     def __str__(self) -> str:
         return self.name
-
+            
     class Meta:
         verbose_name = _("Subject title")
         verbose_name_plural = _("Subject titles")
@@ -49,6 +50,12 @@ class Subject(models.Model):
         related_name="subjects",
     )
 
+    def clean(self):
+        subject_title = Subject.objects.filter(subject_title=self.subject_title).count()
+        if subject_title >= 2:
+            raise ValidationError(_("Invalid Subject Type"))
+            
+            
     def __str__(self) -> str:
         return self.name
 

@@ -51,6 +51,13 @@ class UserSubjectSerializer(serializers.ModelSerializer):
         model = UserSubject
         fields = ["id", "subject", "total_test_ball", "started_time", "started"]
 
+class UserSubjectStartSerializer(serializers.ModelSerializer):
+    subject = SubjectDetailSerializer()
+
+    class Meta:
+        model = UserSubject
+        fields = ["id", "subject", "total_test_ball", "started_time", "started"]
+
 
 class SubjectTitleSerializer(serializers.ModelSerializer):
     subjects = SubjectSerializer(many=True, read_only=True)
