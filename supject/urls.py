@@ -12,11 +12,13 @@ from .views import (
     SubjectTitleApiView,
     UserClubsView,
     UserPopularSubject,
-<<<<<<< HEAD
+
     VacancyList,
-=======
+
     JoinDiscussionGroupView
->>>>>>> a2ae375aadd44468c4111a2f5a31c4c8659fb8c5
+
+    TopUserList,
+
 )
 
 urlpatterns = [
@@ -33,7 +35,6 @@ urlpatterns = [
     path("categories/", CategoryListView.as_view(), name="categories"),
     path("steps/<int:pk>/", StepDetailAPIView.as_view(), name="step-detail"),
     path("steps/start-test/", StartStepTestView.as_view(), name="step-start-test"),
-    path("vacancy/<int:pk>", VacancyList.as_view(), name="vacancy"),
     path("subject-search/", SubjectSearchApiView.as_view(), name="subject-search"),
     path("clubs/", UserClubsView.as_view(), name="clubs"),
     path("club/<int:pk>/", ClubDetail.as_view(), name="club"),
@@ -42,7 +43,11 @@ urlpatterns = [
         "user-popular_subjects/",
         UserPopularSubject.as_view(),
         name="user-popular-subjects",
+
     ),
+
     path('join_group/<int:user_id>/<int:subject_id>/', JoinDiscussionGroupView.as_view(), name='join_group'),
+
+    path("tops/", TopUserList.as_view(), name='tops'),
 ]
 

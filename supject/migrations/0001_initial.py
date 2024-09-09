@@ -1,9 +1,7 @@
-
-
-import django.db.models.deletion
-import django_ckeditor_5.fields
 from django.conf import settings
 from django.db import migrations, models
+import django.db.models.deletion
+import django_ckeditor_5.fields
 
 
 class Migration(migrations.Migration):
@@ -11,8 +9,8 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("common", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ("common", "0001_initial"),
     ]
 
     operations = [
@@ -40,6 +38,26 @@ class Migration(migrations.Migration):
             options={
                 "verbose_name": "Category",
                 "verbose_name_plural": "Categorys",
+            },
+        ),
+        migrations.CreateModel(
+            name="Club",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100, verbose_name="Name")),
+                ("description", models.TextField(verbose_name="Description")),
+            ],
+            options={
+                "verbose_name": "Club",
+                "verbose_name_plural": "Clubs",
             },
         ),
         migrations.CreateModel(
@@ -107,7 +125,6 @@ class Migration(migrations.Migration):
                 (
                     "users",
                     models.ManyToManyField(
-                        blank=True,
                         related_name="clubusers",
                         to=settings.AUTH_USER_MODEL,
                         verbose_name="Users",
@@ -236,18 +253,8 @@ class Migration(migrations.Migration):
                 "verbose_name_plural": "Step's tests",
             },
         ),
-        migrations.AddField(
-            model_name="step",
-            name="subject",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="steps",
-                to="supject.subject",
-                verbose_name="Subject",
-            ),
-        ),
         migrations.CreateModel(
-            name="SubjectTitle",
+            name="TestAnswer",
             fields=[
                 (
                     "id",
@@ -258,30 +265,13 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("name", models.CharField(max_length=200, verbose_name="Name")),
-                (
-                    "category",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="supject.category",
-                        verbose_name="Category",
-                    ),
-                ),
+                ("answer", models.TextField(verbose_name="Answer")),
+                ("is_correct", models.BooleanField(verbose_name="Is correct")),
             ],
             options={
-                "verbose_name": "Subject title",
-                "verbose_name_plural": "Subject titles",
+                "verbose_name": "Test's answer",
+                "verbose_name_plural": "Test's answers",
             },
-        ),
-        migrations.AddField(
-            model_name="subject",
-            name="subject_title",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="subjects",
-                to="supject.subjecttitle",
-                verbose_name="Subject title",
-            ),
         ),
         migrations.CreateModel(
             name="TestQuestion",
@@ -335,35 +325,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name="TestAnswer",
-            fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("answer", models.TextField(verbose_name="Answer")),
-                ("is_correct", models.BooleanField(verbose_name="Is correct")),
-                (
-                    "test_quetion",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="test_answers",
-                        to="supject.testquestion",
-                        verbose_name="Question",
-                    ),
-                ),
-            ],
-            options={
-                "verbose_name": "Test's answer",
-                "verbose_name_plural": "Test's answers",
-            },
-        ),
-        migrations.CreateModel(
             name="UserTestResult",
             fields=[
                 (
@@ -396,6 +357,34 @@ class Migration(migrations.Migration):
             options={
                 "verbose_name": "Test result",
                 "verbose_name_plural": "Test results",
+            },
+        ),
+        migrations.CreateModel(
+            name="Vacancy",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100, verbose_name="Name")),
+                ("description", models.TextField(verbose_name="Description")),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="supject.category",
+                        verbose_name="Category",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "Vacancy",
+                "verbose_name_plural": "Vacancies",
             },
         ),
         migrations.CreateModel(
@@ -450,17 +439,117 @@ class Migration(migrations.Migration):
                 "verbose_name_plural": "Total test results",
             },
         ),
+        migrations.CreateModel(
+            name="SubjectTitle",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=200, verbose_name="Name")),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="supject.category",
+                        verbose_name="Category",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "Subject title",
+                "verbose_name_plural": "Subject titles",
+            },
+        ),
+        migrations.CreateModel(
+            name="Subject",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=200, verbose_name="Name")),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[("local", "Local"), ("global", "Global")],
+                        max_length=50,
+                        verbose_name="Type",
+                    ),
+                ),
+                (
+                    "subject_title",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="subjects",
+                        to="supject.subjecttitle",
+                        verbose_name="Subject title",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "Subject",
+                "verbose_name_plural": "Subjects",
+            },
+        ),
+        migrations.CreateModel(
+            name="StepFile",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=250, verbose_name="title")),
+                (
+                    "file",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="common.media",
+                        verbose_name="File",
+                    ),
+                ),
+                (
+                    "step",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="step_files",
+                        to="supject.step",
+                        verbose_name="Step",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "Step's file",
+                "verbose_name_plural": "Step's files",
+            },
+        ),
         migrations.AddField(
-            model_name="usertestresult",
-            name="total_result",
+            model_name="step",
+            name="subject",
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE,
-                related_name="total_results",
-                to="supject.usertotaltestresult",
+                related_name="steps",
+                to="supject.subject",
+                verbose_name="Subject",
             ),
         ),
         migrations.CreateModel(
-            name="Vacancy",
+            name="ClubMeeting",
             fields=[
                 (
                     "id",
@@ -472,19 +561,82 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("name", models.CharField(max_length=100, verbose_name="Name")),
-                ("description", models.TextField(verbose_name="Description")),
+                ("location", models.URLField(verbose_name="Location link")),
+                ("date", models.DateTimeField(auto_now=True)),
                 (
-                    "category",
+                    "club",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        to="supject.category",
-                        verbose_name="Category",
+                        to="supject.club",
+                        verbose_name="Club",
                     ),
                 ),
             ],
             options={
-                "verbose_name": "Vacancy",
-                "verbose_name_plural": "Vacancies",
+                "verbose_name": "Club Meeting",
+                "verbose_name_plural": "Club Meetings",
+            },
+        ),
+        migrations.AddField(
+            model_name="club",
+            name="subject",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="supject.subject",
+                verbose_name="Subject",
+            ),
+        ),
+        migrations.AddField(
+            model_name="club",
+            name="users",
+            field=models.ManyToManyField(
+                related_name="clubusers",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Users",
+            ),
+        ),
+        migrations.CreateModel(
+            name="UserSubject",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "total_test_ball",
+                    models.PositiveIntegerField(
+                        default=0, verbose_name="Total test ball"
+                    ),
+                ),
+                ("started_time", models.DateTimeField(auto_now_add=True)),
+                ("started", models.BooleanField(default=False)),
+                (
+                    "subject",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="user_subjects",
+                        to="supject.subject",
+                        verbose_name="Subject",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="User",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "User's subject",
+                "verbose_name_plural": "User's subjects",
+                "unique_together": {("user", "subject")},
             },
         ),
         migrations.CreateModel(
@@ -520,49 +672,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 "unique_together": {("user", "step")},
-            },
-        ),
-        migrations.CreateModel(
-            name="UserSubject",
-            fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                (
-                    "total_test_ball",
-                    models.PositiveIntegerField(
-                        default=0.0, verbose_name="Total test bal"
-                    ),
-                ),
-                ("started_time", models.DateTimeField(auto_now_add=True)),
-                ("started", models.BooleanField(default=False)),
-                (
-                    "subject",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="supject.subject",
-                        verbose_name="Subject",
-                    ),
-                ),
-                (
-                    "user",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to=settings.AUTH_USER_MODEL,
-                        verbose_name="User",
-                    ),
-                ),
-            ],
-            options={
-                "verbose_name": "User's subject",
-                "verbose_name_plural": "User's subjects",
-                "unique_together": {("user", "subject")},
             },
         ),
     ]

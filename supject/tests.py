@@ -6,6 +6,9 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from account.models import User, Groups
+from django.urls import reverse
+from rest_framework.test import APITestCase, APIClient
+from account.models import User
 from supject.models import Category, Subject
 from supject.serializers import CategorySerializer, SubjectSerializer
 
@@ -170,7 +173,6 @@ class TestUserPopularSubject(APITestCase):
         #
 
 
-
 # class TestSubjectView(APITestCase):
 #     def setUp(self):
 #         self.category1 = Category.objects.create(name="Category1", click_count=1)
@@ -183,8 +185,8 @@ class TestUserPopularSubject(APITestCase):
 #             email="user@example2.com", password="password"
 #         )
 
-#         SubjectTitle.objects.create(name=self.user1, category=self.category1)
-#         SubjectTitle.objects.create(name=self.user2, category=self.category2)
+# #         SubjectTitle.objects.create(name=self.user1, category=self.category1)
+# #         SubjectTitle.objects.create(name=self.user2, category=self.category2)
 
 #     def test_happy(self):
 #         url = reverse("subject-search")
@@ -233,3 +235,4 @@ class JoinDiscussionGroupViewTests(APITestCase):
         url = reverse('join_group', args=[self.user.id, self.subject.id])
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+

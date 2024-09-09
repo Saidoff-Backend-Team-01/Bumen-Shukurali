@@ -2,6 +2,8 @@ import django.db.models.deletion
 import django.utils.timezone
 from django.conf import settings
 from django.db import migrations, models
+import django.db.models.deletion
+import django.utils.timezone
 
 
 class Migration(migrations.Migration):
@@ -114,8 +116,6 @@ class Migration(migrations.Migration):
                             ("TELEGRAM", "Telegram Account"),
                             ("WITH EMAIL", "Email Account"),
                         ],
-
-                        max_length=244,
                         verbose_name="auth type",
                     ),
                 ),
@@ -194,7 +194,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name="SocialUser",
+            name="UserOtpCode",
             fields=[
                 (
                     "id",
@@ -205,42 +205,29 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
+                ("code", models.CharField(max_length=6)),
                 (
-                    "social_user_id",
-                    models.IntegerField(blank=True, null=True, verbose_name="user id"),
-                ),
-                (
-                    "provider",
+                    "type",
                     models.CharField(
                         choices=[
-                            ("google", "google"),
-                            ("facebook", "facebook"),
-                            ("telegram", "telegram"),
+                            ("register", "Register"),
+                            ("reset_password", "Reset Password"),
                         ],
-
-                        max_length=255,
-
                         verbose_name="provider",
                     ),
                 ),
                 (
-                    "email",
-                    models.EmailField(
-                        max_length=254, unique=True, verbose_name="email address"
+                    "expires_in",
+                    models.DateTimeField(
+                        blank=True, null=True, verbose_name="expires_in"
                     ),
                 ),
-                (
-                    "extra_data",
-                    models.JSONField(default=dict, verbose_name="extra data"),
-                ),
+                ("is_used", models.BooleanField(default=False, verbose_name="is_used")),
                 (
                     "user",
                     models.ForeignKey(
-                        blank=True,
-                        null=True,
                         on_delete=django.db.models.deletion.CASCADE,
                         to=settings.AUTH_USER_MODEL,
-                        verbose_name="User",
                     ),
                 ),
             ],
@@ -291,7 +278,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name="UserOtpCode",
+            name="SocialUser",
             fields=[
                 (
                     "id",
@@ -302,30 +289,40 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("code", models.CharField(max_length=6)),
                 (
-                    "type",
+                    "social_user_id",
+                    models.IntegerField(blank=True, null=True, verbose_name="user id"),
+                ),
+                (
+                    "provider",
                     models.CharField(
                         choices=[
-                            ("register", "Register"),
-                            ("reset_password", "Reset Password"),
+                            ("google", "google"),
+                            ("facebook", "facebook"),
+                            ("telegram", "telegram"),
                         ],
-                        max_length=20,
-                        verbose_name="type",
+                        max_length=255,
+                        verbose_name="provider",
                     ),
                 ),
                 (
-                    "expires_in",
-                    models.DateTimeField(
-                        blank=True, null=True, verbose_name="expires_in"
+                    "email",
+                    models.EmailField(
+                        max_length=254, unique=True, verbose_name="email address"
                     ),
                 ),
-                ("is_used", models.BooleanField(default=False, verbose_name="is_used")),
+                (
+                    "extra_data",
+                    models.JSONField(default=dict, verbose_name="extra data"),
+                ),
                 (
                     "user",
                     models.ForeignKey(
+                        blank=True,
+                        null=True,
                         on_delete=django.db.models.deletion.CASCADE,
                         to=settings.AUTH_USER_MODEL,
+                        verbose_name="User",
                     ),
                 ),
             ],
