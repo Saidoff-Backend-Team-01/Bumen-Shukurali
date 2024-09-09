@@ -39,6 +39,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path("i18n/", include("django.conf.urls.i18n")),
+    path("", include("main.urls")),
 ]
 
 urlpatterns += i18n_patterns(
@@ -59,7 +60,8 @@ urlpatterns += [
         name="schema-swagger-ui",
     ),
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
-    # path("ckeditor5/", include("django_ckeditor_5.urls")),
+    path("ckeditor5/", include("django_ckeditor_5.urls")),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

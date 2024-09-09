@@ -78,10 +78,13 @@ class Groups(models.Model):
     def __str__(self) -> str:
         return self.name
 
+    def add_member(self, user):
+        if not self.users.filter(id=user.id).exists():
+            self.users.add(user)
+
     class Meta:
         verbose_name = _("Group")
         verbose_name_plural = _("Groups")
-
 
 class UserMessage(models.Model):
     user = models.ForeignKey(verbose_name=_("User"), to=User, on_delete=models.CASCADE)
