@@ -13,6 +13,9 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.request import Request
+from django.core.cache import cache
+from rest_framework import status
 
 from .models import Groups, User, UserMessage, UserOtpCode
 from .permissions import IsGroupMember
@@ -25,6 +28,7 @@ from .serializers import (
     UserRegisterSerializer,
 )
 from .utils import generate_otp_code, send_verification_code
+from .tasks import send_code
 
 
 class UserRegisterView(CreateAPIView):
@@ -180,3 +184,61 @@ class TelegramLoginView(CreateAPIView):
         if current_timestamp - auth_date > 86400:  # 1 day in seconds
             return False
         return True
+
+
+class ForgetPasswordCodeSend(APIView):
+    def post(self, request: Request):
+        email = request.data.get('email')
+        user = User.objects.get(email=email)
+        
+        if not user:
+            return ValueError('This user was not found !!!')
+        
+        try:
+            send_code(email=email)
+            return Response({'msg': 'Code was sent to email'})
+        except:
+            return Response({'error': 'Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+
+
+
+class ForgetPasswordChecking(APIView):
+    def post(self, request: Request):
+        code = request.data.get('code')
+        email = request.data.get('email')
+
+        try:
+            user = cache.get(email)
+
+            if user == code:
+                cache.set(f'-{email}-', 'TRUE', timeout=60 * 3)
+                return Response({'msg': 'Enter new password'}, status=status.HTTP_200_OK)
+            
+            else:
+                return Response({'error': 'Code is wrong !!!'}, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return ValueError('Incorrect email or code')
+
+
+class ForgetPasswordNew(APIView):
+    def post(self, request: Request):
+        email = request.data.get('email')
+        password = request.data.get('password')
+
+
+        try:
+            user = cache.get(f'-{email}-')
+
+            if user == 'TRUE':
+                get_user = User.objects.get(email=email)
+
+                get_user.set_password(password)
+                get_user.save()
+                
+                return Response({'Msg': 'New password was saved'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Email is wrong !!!'}, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return ValueError('Incorrect email')

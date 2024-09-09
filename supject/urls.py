@@ -13,6 +13,7 @@ from .views import (
     UserClubsView,
     UserPopularSubject,
     TopUserList,
+    UserVacancyListAfterTest,
 )
 
 urlpatterns = [
@@ -40,6 +41,7 @@ urlpatterns = [
 
     ),
     path("tops/", TopUserList.as_view(), name='tops'),
+    path("vacancy/", UserVacancyListAfterTest.as_view(), name='vacancy'),
 
 
 ]
