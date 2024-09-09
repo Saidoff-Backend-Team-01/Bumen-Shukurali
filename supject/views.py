@@ -397,11 +397,10 @@ class UserPopularSubject(APIView):
 
 class TopUserList(APIView):
     def get(self, req: Request):
-        users = User.objects.all()
+        users = User.objects.all().order_by('-user_total_bal')
 
-        sorted_users = sorted(users, key=lambda user: user.user_total_bal, reverse=True)
 
-        return Response(UserSerializer(sorted_users, many=True))
+        return Response(UserSerializer(users, many=True))
 
         
         

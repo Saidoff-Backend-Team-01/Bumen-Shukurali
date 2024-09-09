@@ -21,4 +21,8 @@ google-auth==2.32.0
 facebook-sdk==3.1.0
 sentry-sdk==2.13.0
 setuptools
-
+celery
+django_celery_beat
+gunicorn
+pyfcm
+redis
