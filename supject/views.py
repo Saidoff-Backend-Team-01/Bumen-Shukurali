@@ -3,9 +3,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.exceptions import APIException, ValidationError
-<<<<<<< HEAD
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView
-=======
+
 from django.shortcuts import get_object_or_404
 from rest_framework.generics import (
     CreateAPIView,
@@ -13,7 +11,7 @@ from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveAPIView,
 )
->>>>>>> a2ae375aadd44468c4111a2f5a31c4c8659fb8c5
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
