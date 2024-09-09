@@ -2,7 +2,7 @@ from django.db.models import Count, F, Q
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-from rest_framework.exceptions import APIException, ValidationError
+from rest_framework.exceptions import APIException, ValidationError, NotFound
 
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView
 

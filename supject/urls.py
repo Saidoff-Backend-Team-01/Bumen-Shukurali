@@ -12,11 +12,7 @@ from .views import (
     SubjectTitleApiView,
     UserClubsView,
     UserPopularSubject,
-
-    VacancyList,
-
-    JoinDiscussionGroupView
-
+    JoinDiscussionGroupView,
     TopUserList,
 
 )
