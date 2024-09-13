@@ -19,7 +19,7 @@ from django.core.cache import cache
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-
+from django.utils.translation import gettext_lazy as _
 from .models import Groups, User, UserMessage, UserOtpCode
 from .permissions import IsGroupMember
 from .serializers import (
@@ -30,6 +30,7 @@ from .serializers import (
     UserOtpCodeVerifySerializer,
     UserRegisterSerializer,
 )
+
 from .utils import generate_otp_code, send_verification_code
 from .tasks import send_code
 
@@ -63,7 +64,7 @@ class UserRegisterVerifyView(CreateAPIView):
             data = self.serializer_class(data=request.data)
             if not data.is_valid():
                 return Response(
-                    status=status.HTTP_400_BAD_REQUEST, data={"message": "Invalid data"}
+                    status=status.HTTP_400_BAD_REQUEST, data={"message": _("Invalid data")}
                 )
             user = User.objects.get(email=data.data["email"])
             user_otp_code = UserOtpCode.objects.filter(
@@ -72,13 +73,13 @@ class UserRegisterVerifyView(CreateAPIView):
             if not user_otp_code.exists():
                 return Response(
                     status=status.HTTP_404_NOT_FOUND,
-                    data={"message": "otp code not found"},
+                    data={"message": _("otp code not found")},
                 )
             user_otp_code = user_otp_code.filter(expires_in__gte=timezone.now())
             if not user_otp_code.exists():
                 return Response(
                     status=status.HTTP_400_BAD_REQUEST,
-                    data={"message": "otp code was expired"},
+                    data={"message": _("otp code was expired")},
                 )
 
             user.is_active = True
@@ -87,12 +88,12 @@ class UserRegisterVerifyView(CreateAPIView):
             otp_code.is_used = True
             otp_code.save()
             return Response(
-                status=status.HTTP_200_OK, data={"message": "user is activated"}
+                status=status.HTTP_200_OK, data={"message": _("user is activated")}
             )
         except User.DoesNotExist:
             return Response(
                 status=status.HTTP_404_NOT_FOUND,
-                data={"message": "User does not exist"},
+                data={"message": _("User does not exist")},
             )
 
 
@@ -118,7 +119,7 @@ class UserMessageCreateApi(CreateAPIView):
     def perform_create(self, serializer):
         group = serializer.validated_data["group"]
         if not group.users.filter(id=self.request.user.id).exists():
-            raise PermissionDenied("You are not a member of this group.")
+            raise PermissionDenied(_("You are not a member of this group."))
         serializer.save(user=self.request.user)
 
 
@@ -130,7 +131,7 @@ class MessageListApi(ListAPIView):
         group_id = self.kwargs["group_id"]
         group = Groups.objects.get(pk=group_id)
         if self.request.user not in group.users.all():
-            raise PermissionDenied("You are not a member of this group.")
+            raise PermissionDenied(_("You are not a member of this group."))
         return UserMessage.objects.filter(group=group)
 
 
@@ -141,11 +142,11 @@ class TelegramLoginView(CreateAPIView):
     def post(self, request, *args, **kwargs):
         auth_data = self.serializer_class(data=request.data)
         if not auth_data:
-            return Response({"error": "No authentication data provided"}, status=400)
+            return Response({"error": _("No authentication data provided")}, status=400)
 
         # Step 1: Verify the data is from Telegram
         if not self.verify_telegram_authentication(auth_data):
-            return Response({"error": "Invalid authentication data"}, status=400)
+            return Response({"error": _("Invalid authentication data")}, status=400)
 
         # Step 2: Create or retrieve user
         user, created = User.objects.get_or_create(

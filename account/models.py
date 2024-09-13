@@ -27,9 +27,9 @@ class User(AbstractUser):
         _("phone number"), unique=True, max_length=20, null=True, blank=True
     )
     auth_type = models.CharField(
-        _("auth type"), choices=AuthType.choices, max_length=244
+        _("auth type"), choices=AuthType.choices, max_length=244, unique=True
     )
-    telegram_id = models.CharField(_("telegram id"), max_length=55)
+    telegram_id = models.CharField(_("telegram id"), max_length=55, null=True, blank=True)
     objects = CustomUserManager()
     device_id = models.CharField(
         _("device id"), unique=True, max_length=244, null=True, blank=True

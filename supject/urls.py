@@ -14,9 +14,7 @@ from .views import (
     UserPopularSubject,
     TopUserList,
     UserVacancyListAfterTest,
-    VacancyList,
-    JoinDiscussionGroupView
-    TopUserList,
+    JoinDiscussionGroupView,
 )
 
 urlpatterns = [
@@ -52,3 +50,5 @@ urlpatterns = [
     path("tops/", TopUserList.as_view(), name='tops'),
 ]
 
+
+]
