@@ -427,3 +427,11 @@ CELERY_IMPORTS = "company.tasks"
 
 
 FCM_SERVER_KEY = config["FCM_SERVER_KEY"]
+
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://localhost:6379/0",
+    }
+}

@@ -14,6 +14,8 @@ def send_code(email):
 
     cache.set(email, code, timeout=60 * 3)
 
+
+
     subject = "Verification code"
     message = f"Your activation code is {code}"
     send_mail(

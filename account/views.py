@@ -2,6 +2,7 @@ import hashlib
 import hmac
 import time
 from datetime import timedelta
+import uuid as uuid_lib
 
 from django.conf import settings
 from django.shortcuts import render
@@ -16,6 +17,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.request import Request
 from django.core.cache import cache
 from rest_framework import status
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 from .models import Groups, User, UserMessage, UserOtpCode
 from .permissions import IsGroupMember
@@ -186,59 +189,74 @@ class TelegramLoginView(CreateAPIView):
         return True
 
 
+code = openapi.Parameter(
+    name="code", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING
+)
+
+email = openapi.Parameter(
+    name="email", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING
+)
+
+uuids = openapi.Parameter(
+    name="uuids", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING
+)
+
 class ForgetPasswordCodeSend(APIView):
+    @swagger_auto_schema(manual_parameters=[email])
     def post(self, request: Request):
-        email = request.data.get('email')
-        user = User.objects.get(email=email)
-        
-        if not user:
-            return ValueError('This user was not found !!!')
-        
         try:
-            send_code(email=email)
+            email = request.data.get('email', None)
+            
+            try:
+                user = User.objects.get(email=email)
+            except:
+                return Response({'error': 'Not user with this email'}, status=status.HTTP_404_NOT_FOUND)
+        
+            send_code.delay(email=email)
             return Response({'msg': 'Code was sent to email'})
         except:
             return Response({'error': 'Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 
-
-
-
 class ForgetPasswordChecking(APIView):
+    @swagger_auto_schema(manual_parameters=[code, email])
     def post(self, request: Request):
-        code = request.data.get('code')
-        email = request.data.get('email')
-
         try:
-            user = cache.get(email)
+            code = request.data.get('code')
+            email = request.data.get('email')
 
-            if user == code:
-                cache.set(f'-{email}-', 'TRUE', timeout=60 * 3)
-                return Response({'msg': 'Enter new password'}, status=status.HTTP_200_OK)
+            user_code = cache.get(email)
+            uuid = str(uuid_lib.uuid4())
+            if user_code == code:
+                cache.set(uuid, email, timeout=60 * 3)
+
+                return Response({'msg': 'Enter new password', 'uuid': uuid}, status=status.HTTP_200_OK)
             
             else:
                 return Response({'error': 'Code is wrong !!!'}, status=status.HTTP_400_BAD_REQUEST)
         except:
-            return ValueError('Incorrect email or code')
+            return Response({'error':'Incorrect email or code'})
 
 
 class ForgetPasswordNew(APIView):
+    @swagger_auto_schema(manual_parameters=[code, uuids])
     def post(self, request: Request):
-        email = request.data.get('email')
+        uuid = request.data.get('uuid')
         password = request.data.get('password')
-
-
+        
         try:
-            user = cache.get(f'-{email}-')
+            user = cache.get(uuid, None)
 
-            if user == 'TRUE':
-                get_user = User.objects.get(email=email)
+            if user:
+                get_user = User.objects.get(email=user)
 
                 get_user.set_password(password)
                 get_user.save()
+
+                cache.delete(uuid)
                 
                 return Response({'Msg': 'New password was saved'}, status=status.HTTP_200_OK)
             else:
-                return Response({'error': 'Email is wrong !!!'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'error': 'UUID is wrong !!!'}, status=status.HTTP_400_BAD_REQUEST)
         except:
             return ValueError('Incorrect email')

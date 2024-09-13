@@ -24,7 +24,7 @@ urlpatterns = [
     path("messages/", UserMessageCreateApi.as_view(), name="create_message"),
     path("messages/<int:group_id>/", MessageListApi.as_view(), name="list_messages"),
     path("telegram/oauth2/", TelegramLoginView.as_view(), name="telegram-oauth2"),
-    path("codesend/", ForgetPasswordCodeSend.as_view(), name="codesend"),
-    path("passwordchecking/", ForgetPasswordChecking.as_view(), name="passwordchecking"),
-    path("newpassword/", ForgetPasswordNew.as_view(), name="newpassword"),
+    path("step_one/", ForgetPasswordCodeSend.as_view(), name="codesend"),
+    path("step_two/", ForgetPasswordChecking.as_view(), name="passwordchecking"),
+    path("step_three/", ForgetPasswordNew.as_view(), name="newpassword"),
 ]
