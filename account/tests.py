@@ -81,3 +81,5 @@ class UserMessageApiTests(APITestCase):
         url = reverse('list_messages', kwargs={'group_id': self.group.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+

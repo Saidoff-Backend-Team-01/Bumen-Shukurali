@@ -76,3 +76,8 @@ class UserStepAdmin(admin.ModelAdmin):
 @admin.register(StepTest)
 class StepTestAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(Step)
+class StepAdmin(admin.ModelAdmin):
+    pass

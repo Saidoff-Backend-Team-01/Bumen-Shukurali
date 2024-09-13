@@ -74,7 +74,8 @@ class UserSubject(models.Model):
     )
     started_time = models.DateTimeField(auto_now_add=True)
     started = models.BooleanField(default=False)
-
+    finished = models.BooleanField(default=False)
+    
     def __str__(self) -> str:
         return f"{self.user.email} - {self.subject.name}"
 

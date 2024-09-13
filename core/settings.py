@@ -47,6 +47,8 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    "main",
 ]
 
 LOCAL_APPS = ["common", "company", "news", "account", "supject"]
@@ -82,7 +84,7 @@ ROOT_URLCONF = "core.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -107,11 +109,11 @@ LOCALE_PATHS = [
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": config["DB_NAME"],
-        "HOST": config["DB_HOST"],
-        "USER": config["DB_USER"],
-        "PORT": config["DB_PORT"],
-        "PASSWORD": config["DB_PASSWORD"],
+        "NAME": config["POSTGRES_NAME"],
+        "HOST": config["POSTGRES_HOST"],
+        "USER": config["POSTGRES_USER"],
+        "PORT": config["POSTGRES_PORT"],
+        "PASSWORD": config["POSTGRES_PASSWORD"],
     }
 }
 
@@ -426,8 +428,6 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_IMPORTS = "company.tasks"
 
 
-FCM_SERVER_KEY = config["FCM_SERVER_KEY"]
-
 
 CACHES = {
     "default": {
@@ -435,3 +435,5 @@ CACHES = {
         "LOCATION": "redis://localhost:6379/0",
     }
 }
+
+FCM_SERVER_KEY = config["SOCIAL_SECRET_PASSWORD"]
