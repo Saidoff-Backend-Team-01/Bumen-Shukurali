@@ -297,7 +297,7 @@ class GetTestResultsView(RetrieveAPIView):
 class SubmitTestView(CreateAPIView):
     queryset = UserTotalTestResult.objects.all()
     serializer_class = UserTestResultSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
@@ -336,11 +336,6 @@ class SubmitTestView(CreateAPIView):
                     question_ball += user_total_test_result.step_test.ball_for_each_test
 
             total_ball += question_ball
-
-        user_total_test_result.ball = total_ball
-        user_total_test_result.percenateg = (total_ball / (len(questions) * user_total_test_result.step_test.ball_for_each_test)) * 100
-        user_total_test_result.finished = True
-        user_total_test_result.save()
 
         return Response({
             "message": "Test muvaffaqiyatli yakunlandi",
