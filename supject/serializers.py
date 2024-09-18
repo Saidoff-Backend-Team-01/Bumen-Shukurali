@@ -179,7 +179,6 @@ class UserTotalTestResultSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'user', 'step_test']
 
 
-<<<<<<< HEAD
 class UserTestsResultIDSerializer(serializers.Serializer):
     result_id = serializers.IntegerField(required=True)
 
@@ -192,10 +191,7 @@ class VacancySerializer(serializers.ModelSerializer):
         model = Vacancy
         fields = ('name', 'category', 'description')
 
-=======
-
 
 class JoinGroupSerializer(serializers.Serializer):
     user_id = serializers.IntegerField()
     subject_id = serializers.IntegerField()
->>>>>>> a2ae375aadd44468c4111a2f5a31c4c8659fb8c5

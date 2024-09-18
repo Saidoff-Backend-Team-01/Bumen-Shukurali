@@ -12,13 +12,8 @@ from .views import (
     SubjectTitleApiView,
     UserClubsView,
     UserPopularSubject,
-
-    VacancyList,
-
-    JoinDiscussionGroupView
-
-    TopUserList,
-
+    JoinDiscussionGroupView,
+    TopUserList
 )
 
 urlpatterns = [
