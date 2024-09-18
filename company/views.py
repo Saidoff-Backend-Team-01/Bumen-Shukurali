@@ -1,16 +1,18 @@
 from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from company.models import FAQ, Contacts, ContactWithUs
+from company.models import FAQ, Advertising, Contacts, ContactWithUs, SocialMedia
 from company.serializers import (
+    AdvertisingSerializer,
     ContactsSerializer,
     ContactWithUsSerializer,
     FAQSerializer,
+    SocialMediaSerializer,
 )
 
 # from .serializers import ContactsSerializer
@@ -44,3 +46,13 @@ class ContactsDetailView(APIView):
             return Response(
                 {"detail": _("Contact not found.")}, status=status.HTTP_404_NOT_FOUND
             )
+
+
+class AdvertisingListView(ListAPIView):
+    queryset = Advertising.objects.all()
+    serializer_class = AdvertisingSerializer
+
+
+class SocialMediaRead(ListAPIView):
+    queryset = SocialMedia.objects.all()
+    serializer_class = SocialMediaSerializer
