@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from common.serializers import MediaURlSerializer
 
-from .models import FAQ, Contacts, ContactWithUs
+from .models import FAQ, Contacts, ContactWithUs, ContactWithUsCategory,ContactWithUsReason,ContactWithUsMobile
 
 
 class ContactWithUsSerializer(serializers.ModelSerializer):
@@ -37,3 +37,19 @@ class SocialMediaSerializer(serializers.Serializer):
     likedin = serializers.URLField()
     facebook = serializers.URLField()
     instagram = serializers.URLField()
+
+
+class ContactWithUsCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactWithUsCategory
+        fields = ['id', 'name']
+
+class ContactWithUsReasonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactWithUsReason
+        fields = ['id', 'name']
+
+class ContactWithUsMobileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactWithUsMobile
+        fields = ['email', 'message', 'file', 'reason']

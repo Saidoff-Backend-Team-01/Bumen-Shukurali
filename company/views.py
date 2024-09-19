@@ -6,13 +6,16 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from company.models import FAQ, Advertising, Contacts, ContactWithUs, SocialMedia
+from company.models import FAQ, Advertising, Contacts, ContactWithUs, SocialMedia, ContactWithUsCategory, ContactWithUsReason, ContactWithUsMobile
 from company.serializers import (
     AdvertisingSerializer,
     ContactsSerializer,
     ContactWithUsSerializer,
     FAQSerializer,
     SocialMediaSerializer,
+    ContactWithUsCategorySerializer,
+    ContactWithUsReasonSerializer,
+    ContactWithUsMobileSerializer,
 )
 
 # from .serializers import ContactsSerializer
@@ -56,3 +59,37 @@ class AdvertisingListView(ListAPIView):
 class SocialMediaRead(ListAPIView):
     queryset = SocialMedia.objects.all()
     serializer_class = SocialMediaSerializer
+
+
+
+class ContactWithUsCategoryAPIView(APIView):
+    def get(self, request):
+        categories = ContactWithUsCategory.objects.all()
+        serializer = ContactWithUsCategorySerializer(categories, many=True)
+        return Response(serializer.data)
+    
+
+
+class ContactWithUsReasonAPIView(APIView):
+    def get(self, request):
+        category_id = request.query_params.get('category_id')
+        if category_id:
+            reasons = ContactWithUsReason.objects.filter(category_id=category_id)
+        else:
+            reasons = ContactWithUsReason.objects.all()
+        serializer = ContactWithUsReasonSerializer(reasons, many=True)
+        return Response(serializer.data)
+    
+
+class ContactWithUsMobileAPIView(APIView):
+    def get(self, request):
+        contacts = ContactWithUsMobile.objects.all()
+        serializer = ContactWithUsMobileSerializer(contacts, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = ContactWithUsMobileSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

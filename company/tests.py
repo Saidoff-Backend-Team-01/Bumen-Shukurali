@@ -41,3 +41,99 @@ class ContactsDetailViewTest(APITestCase):
         self.assertEqual(response.data['phone_number'], self.contact.phone_number)
         self.assertEqual(response.data['email'], self.contact.email)
         self.assertEqual(response.data['location'], self.contact.location)
+
+from django.urls import reverse
+from rest_framework import status
+from rest_framework.test import APITestCase
+from .models import ContactWithUsCategory, ContactWithUsReason, ContactWithUsMobile
+from common.models import Media
+
+# Test uchun model yaratish funksiyalari
+def create_category(name="General"):
+    return ContactWithUsCategory.objects.create(name=name)
+
+def create_reason(category, name="Other"):
+    return ContactWithUsReason.objects.create(name=name, category=category)
+
+def create_media():
+    # Media obyekti yaratish jarayoni (faylni saqlashga qarab bu funksiyani to'ldiring)
+    return Media.objects.create(file='test_file.txt')
+
+def create_contact(email="test@example.com", message="Test message", reason=None, file=None):
+    return ContactWithUsMobile.objects.create(email=email, message=message, reason=reason, file=file)
+
+# Test class
+class ContactWithUsTests(APITestCase):
+    def test_get_categories(self):
+        """Kategoriyalarni olish API testi"""
+        category1 = create_category(name="Support")
+        category2 = create_category(name="Feedback")
+        
+        url = reverse('contact_with_us_categories')
+        response = self.client.get(url)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data[0]['name'], category1.name)
+        self.assertEqual(response.data[1]['name'], category2.name)
+
+    def test_get_reasons(self):
+        """Belgilangan kategoriya uchun sabablardan biri olish API testi"""
+        category = create_category(name="Support")
+        reason1 = create_reason(category, name="Issue")
+        reason2 = create_reason(category, name="Complaint")
+        
+        url = reverse('contact_with_us_reasons') + f'?category_id={category.id}'
+        response = self.client.get(url)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data[0]['name'], reason1.name)
+        self.assertEqual(response.data[1]['name'], reason2.name)
+
+    def test_get_all_reasons(self):
+        """Kategoriya tanlanmaganda barcha sabablardan biri olish testi"""
+        category1 = create_category(name="Support")
+        category2 = create_category(name="Feedback")
+        create_reason(category1, name="Issue")
+        create_reason(category2, name="Other")
+        
+        url = reverse('contact_with_us_reasons')
+        response = self.client.get(url)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+    def test_create_contact(self):
+        """Yangi kontakt yuborish testi"""
+        category = create_category(name="Support")
+        reason = create_reason(category, name="Issue")
+        media = create_media()
+
+        url = reverse('contact_with_us_submit')
+        data = {
+            "email": "test@example.com",
+            "message": "Test message",
+            "reason": reason.id,
+            "file": media.id
+        }
+        response = self.client.post(url, data, format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(ContactWithUsMobile.objects.count(), 1)
+        contact = ContactWithUsMobile.objects.first()
+        self.assertEqual(contact.email, data['email'])
+        self.assertEqual(contact.message, data['message'])
+
+    def test_invalid_contact_submission(self):
+        """Kontaktni to'g'ri yubormagan holda xatolik qaytarish testi"""
+        url = reverse('contact_with_us_submit')
+        data = {
+            "email": "not-an-email",  # noto'g'ri email
+            "message": "",
+            "reason": None,
+            "file": None
+        }
+        response = self.client.post(url, data, format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
