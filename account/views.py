@@ -1,24 +1,20 @@
 import hashlib
 import hmac
 import time
-import requests
 from datetime import timedelta
-from rest_framework import serializers
-from google.oauth2 import id_token
-from google.auth.transport import requests
 
 from django.conf import settings
 from django.shortcuts import render
 from django.utils import timezone
 from rest_framework import permissions, status
-from rest_framework.exceptions import PermissionDenied, APIException
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.translation import gettext_lazy as _
-from .models import Groups, User, UserMessage, UserOtpCode, SocialUser
+from .models import Groups, User, UserMessage, UserOtpCode
 from .permissions import IsGroupMember
 from .serializers import (
     FacebookSerializer,
@@ -27,8 +23,10 @@ from .serializers import (
     UserMessageSerializer,
     UserOtpCodeVerifySerializer,
     UserRegisterSerializer,
+    UserRegisterPhoneSerializer,
+    UserPhoneVerifySerializer
 )
-from .utils import generate_otp_code, send_verification_code
+from .utils import generate_otp_code, send_verification_code, telegram_pusher
 
 
 class UserRegisterView(CreateAPIView):
@@ -93,6 +91,65 @@ class UserRegisterVerifyView(CreateAPIView):
             )
 
 
+class UserRegisterPhoneView(CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserRegisterPhoneSerializer
+
+    def perform_create(self, serializer):
+        user = serializer.save(is_active=False)
+        user.set_password(serializer.validated_data["password"])
+        user.save()
+        code = generate_otp_code()
+        new_otp_code = UserOtpCode.objects.create(
+            user=user,
+            code=code,
+            type=UserOtpCode.VerificationType.REGISTER,
+            expires_in=timezone.now() + timedelta(minutes=settings.OTP_CODE_VERIFICATION_TIME),
+        )
+        telegram_pusher(user.phone_number, new_otp_code.code, new_otp_code.expires_in)
+
+
+class UserRegisterPhoneVerifyView(CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserPhoneVerifySerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            data = self.serializer_class(data=request.data)
+            if not data.is_valid():
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST, data={"message": _("Invalid data")}
+                )
+            user = User.objects.get(phone_number=data.data["phone_number"])
+            user_otp_code = UserOtpCode.objects.filter(
+                user=user, code=data.data["code"], is_used=False
+            )
+            if not user_otp_code.exists():
+                return Response(
+                    status=status.HTTP_404_NOT_FOUND,
+                    data={"message": _("otp code not found")},
+                )
+            user_otp_code = user_otp_code.filter(expires_in__gte=timezone.now())
+            if not user_otp_code.exists():
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST,
+                    data={"message": _("otp code was expired")},
+                )
+
+            user.is_active = True
+            user.save()
+            otp_code = user_otp_code.first()
+            otp_code.is_used = True
+            otp_code.save()
+            return Response(
+                status=status.HTTP_200_OK, data={"message": _("user is activated")}
+            )
+        except User.DoesNotExist:
+            return Response(
+                status=status.HTTP_404_NOT_FOUND,
+                data={"message": _("User does not exist")},
+            )
+
 class GoogleAuth(APIView):
     def get(self, request, *args, **kwargs):
         auth_token = str(request.query_params.get("code"))
@@ -100,80 +157,6 @@ class GoogleAuth(APIView):
         if ser.is_valid():
             return Response(ser.data)
         return Response(ser.errors, status=400)
-
-    def get_queryset(self):
-        auth_token = str(self.request.query_params.get("code"))
-
-        try:
-            user = SocialUser.objects.get(auth_token=auth_token)
-        except SocialUser.DoesNotExist:
-            raise PermissionDenied(_("Token noto'g'ri yoki foydalanuvchi topilmadi."))
-
-        if self.request.user != user:
-            raise PermissionDenied(_("Siz ushbu foydalanuvchi bilan bog'liq emassiz."))
-
-        return UserMessage.objects.filter(user=user)
-
-class GoogleSerializer(serializers.Serializer):
-    auth_token = serializers.CharField()
-
-    def validate_auth_token(self, auth_token):
-        token_url = "https://oauth2.googleapis.com/token"
-        payload = {
-            "code": auth_token,
-            "client_id": settings.GOOGLE_CLIENT_ID,
-            "client_secret": settings.GOOGLE_CLIENT_SECRET,
-            "redirect_uri": settings.GOOGLE_REDIRECT_URI,
-            "grant_type": settings.GOOGLE_GRANT_TYPE,
-        }
-        headers = {"Content-Type": "application/x-www-form-urlencoded"}
-
-        response = requests.post(token_url, data=payload, headers=headers)
-
-        if response.status_code == 200:
-            id_token_str = response.json()["id_token"]
-            user_data = google.Google.validated(id_token_str)
-        else:
-            raise Exception(f"Error fetching token: {response.json()}")
-
-        if not auth_token:
-            raise APIException("Код авторизации отсутствует")
-        if not user_data:
-            raise APIException("Ошибка верификации токена Google")
-
-        email = user_data.get("email")
-        first_name = user_data.get("given_name", "")
-        last_name = user_data.get("family_name", "")
-        photo = user_data.get("picture", None)
-        birthday = user_data.get("birthday", None)
-        username = first_name + last_name
-
-        try:
-            return register.register_social_user(
-                auth_type=User.AuthType.GOOGLE,
-                email=email,
-                first_name=first_name,
-                last_name=last_name,
-                birthday=birthday,
-                username=username,
-                photo=photo,
-            )
-        except Exception as e:
-            raise serializers.ValidationError(
-                f"Ошибка при регистрации пользователя: {e}"
-            )
-
-
-class MessageListApi11(ListAPIView):
-    serializer_class = UserMessageSerializer
-    permission_classes = [permissions.IsAuthenticated, IsGroupMember]
-
-    def get_queryset(self):
-        group_id = self.kwargs["group_id"]
-        group = Groups.objects.get(pk=group_id)
-        if self.request.user not in group.users.all():
-            raise PermissionDenied(_("You are not a member of this group."))
-        return UserMessage.objects.filter(group=group)
 
 
 class FacebookAuth(CreateAPIView):
@@ -237,6 +220,7 @@ class TelegramLoginView(CreateAPIView):
                 "access": str(refresh.access_token),
             }
         )
+
 
     def verify_telegram_authentication(self, auth_data):
         bot_token = settings.TELEGRAM_BOT_TOKEN

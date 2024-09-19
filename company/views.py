@@ -4,8 +4,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from company.models import FAQ, ContactWithUs,Contacts
-from company.serializers import ContactWithUsSerializer, FAQSerializer,ContactsSerializer
+from company.models import FAQ, ContactWithUs,Contacts, PrivacyPolicy
+from company.serializers import ContactWithUsSerializer, FAQSerializer,ContactsSerializer, PrivacyPolicySerializer
 from django.utils.translation import gettext_lazy as _
 # from .serializers import ContactsSerializer
 
@@ -26,6 +26,18 @@ class FAQAPIView(APIView):
         except Exception:
             return Response(data={"message": _("Internal Server Error")}, status=500)
 
+
+class PrivacyPolicyView(APIView):
+    serializer_class = PrivacyPolicySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            queryset = PrivacyPolicy.objects.all()
+            serializer = PrivacyPolicySerializer(queryset, many=True)
+            return Response(serializer.data)
+        except Exception:
+            return Response(data={"message": _("Internal Server Error")}, status=500)
 
 
 class ContactsDetailView(APIView):

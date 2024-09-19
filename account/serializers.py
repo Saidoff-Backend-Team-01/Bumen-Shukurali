@@ -16,9 +16,20 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         fields = ("first_name", "last_name", "email", "password", "device_id")
 
 
+class UserRegisterPhoneSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("first_name", "last_name", "phone_number", "password", "device_id")
+
+
 class UserOtpCodeVerifySerializer(serializers.Serializer):
     code = serializers.IntegerField(required=True)  # todo: add validation
     email = serializers.EmailField(required=True)
+
+
+class UserPhoneVerifySerializer(serializers.Serializer):
+    code = serializers.IntegerField(required=True)
+    phone_number = serializers.CharField(required=True)
 
 
 class GoogleSerializer(serializers.Serializer):
