@@ -7,4 +7,6 @@ urlpatterns = [
     path("faqs/", FAQAPIView.as_view(), name="faqs"),
     path('contact/', ContactsDetailView.as_view(), name="contact"),
     path('privacy_policy/', PrivacyPolicyView.as_view(), name="privacy_policy")
+    path("contact/", ContactsDetailView.as_view(), name="contact"),
+    path("advertisements/", AdvertisingListView.as_view(), name="advertisements-list"),
 ]

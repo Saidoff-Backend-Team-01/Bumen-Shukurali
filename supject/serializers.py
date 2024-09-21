@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from account.serializers import UserSerializer
 from common.serializers import MediaURlSerializer
 from supject.models import (
@@ -51,6 +50,7 @@ class UserSubjectSerializer(serializers.ModelSerializer):
         model = UserSubject
         fields = ["id", "subject", "total_test_ball", "started_time", "started"]
 
+
 class UserSubjectStartSerializer(serializers.ModelSerializer):
     subject = SubjectDetailSerializer()
 
@@ -70,7 +70,11 @@ class SubjectTitleSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ["id", "name", "click_count",]
+        fields = [
+            "id",
+            "name",
+            "click_count",
+        ]
 
 
 class SubjectTitleListSerializer(serializers.ModelSerializer):
@@ -120,21 +124,22 @@ class UserPopularSubjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subject
-        fields = ('id', 'name', 'type', 'subject_title', 'start_count')
-        
-        
+        fields = ("id", "name", "type", "subject_title", "start_count")
+
+
 class SubjectSearchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubjectTitle
-        fields = ('id', 'name', 'category')
-        
-        
+        fields = ("id", "name", "category")
+
+
 class CategorySearchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'click_count')
+        fields = ("id", "name", "click_count")
+
 
 class ClubSerializer(serializers.ModelSerializer):
     subject = SubjectSerializer(read_only=True)
@@ -153,12 +158,12 @@ class ClubMeetingSerializer(serializers.ModelSerializer):
 
 class FinishTestQuestionSerializer(serializers.Serializer):
     question_id = serializers.IntegerField(required=True)
-    answer_ids = serializers.ListField(source=serializers.IntegerField())
+    answer_ids = serializers.ListField(child=serializers.IntegerField())
 
 
 class StepTestFinishSerializer(serializers.Serializer):
     result_id = serializers.IntegerField(required=True)
-    questions = serializers.ListField(source=FinishTestQuestionSerializer())
+    questions = serializers.ListField(child=FinishTestQuestionSerializer())
 
 
 class UserTestResultSerializer(serializers.ModelSerializer):
@@ -167,7 +172,7 @@ class UserTestResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserTestResult
-        fields = ['id', 'test_question', 'test_answers']
+        fields = ["id", "test_question", "test_answers"]
 
 
 class UserTotalTestResultSerializer(serializers.ModelSerializer):
@@ -175,8 +180,17 @@ class UserTotalTestResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserTotalTestResult
-        fields = ['id', 'step_test', 'user', 'ball', 'correct_answers', 'user_test_results', 'finished', 'percentage']
-        read_only_fields = ['id', 'user', 'step_test']
+        fields = [
+            "id",
+            "step_test",
+            "user",
+            "ball",
+            "correct_answers",
+            "user_test_results",
+            "finished",
+            "percentage",
+        ]
+        read_only_fields = ["id", "user", "step_test"]
 
 
 class UserTestsResultIDSerializer(serializers.Serializer):
@@ -186,7 +200,6 @@ class UserTestsResultIDSerializer(serializers.Serializer):
 class VacancySerializer(serializers.ModelSerializer):
     category = CategorySerializer()
 
-    
     class Meta:
         model = Vacancy
         fields = ('name', 'category', 'description')
@@ -195,3 +208,9 @@ class VacancySerializer(serializers.ModelSerializer):
 class JoinGroupSerializer(serializers.Serializer):
     user_id = serializers.IntegerField()
     subject_id = serializers.IntegerField()
+
+
+class UserTestResultForSubmitSerializer(serializers.Serializer):
+    result_id = serializers.IntegerField()
+    test_question = serializers.IntegerField()
+    test_answers = serializers.ListField(child=serializers.IntegerField())

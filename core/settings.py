@@ -30,12 +30,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config["SECRET_KEY"]
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(config["DEBUG"])
+DEBUG = True
 
-ALLOWED_HOSTS = config["ALLOWED_HOSTS"].split(",")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
 
 # Application definition
 
@@ -47,7 +47,6 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "main",
 ]
 
@@ -79,6 +78,11 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+
+if DEBUG:
+    INSTALLED_APPS.append("debug_toolbar")
+    MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
+
 ROOT_URLCONF = "core.urls"
 
 TEMPLATES = [
@@ -109,14 +113,19 @@ LOCALE_PATHS = [
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": config["POSTGRES_NAME"],
-        "HOST": config["POSTGRES_HOST"],
-        "USER": config["POSTGRES_USER"],
-        "PORT": config["POSTGRES_PORT"],
-        "PASSWORD": config["POSTGRES_PASSWORD"],
+        "NAME": os.getenv("DB_NAME"),
+        "HOST": os.getenv("DB_HOST"),
+        "USER": os.getenv("DB_USER"),
+        "PORT": os.getenv("DB_PORT"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
     }
 }
 
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -183,7 +192,7 @@ MODELTRANSLATION_LANGUAGES = ("en", "uz", "ru")
 
 MODELTRANSLATION_TRANSLATION_FILES = ("news.translation", "company.translation")
 
-HOST = config["HOST"]
+HOST = os.getenv("HOST")
 
 JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
 
@@ -334,8 +343,8 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = config["EMAIL_USER"]
-EMAIL_HOST_PASSWORD = config["EMAIL_PASSWORD"]
+EMAIL_HOST_USER = os.getenv("EMAIL_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
 OTP_CODE_VERIFICATION_TIME = 2
 
@@ -362,7 +371,7 @@ SWAGGER_SETTINGS = {
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=5),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
@@ -408,7 +417,7 @@ sentry_sdk.init(
     profiles_sample_rate=1.0,
 )
 
-SOCIAL_SECRET_PASSWORD = config["SOCIAL_SECRET_PASSWORD"]
+SOCIAL_SECRET_PASSWORD = os.getenv("SOCIAL_SECRET_PASSWORD")
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
@@ -419,8 +428,8 @@ SOCIAL_USER_PASSWORD = os.getenv("SOCIAL_USER_PASSWORD")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
 # Celery Configurations
-CELERY_BROKER_URL = "redis://127.0.0.1:6377/0"
-CELERY_RESULT_BACKEND = "redis://127.0.0.1:6377/0"
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TIMEZONE = "Asia/Tashkent"
 CELERY_TASK_TRACK_STARTED = True
@@ -428,4 +437,4 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_IMPORTS = "company.tasks"
 
 
-FCM_SERVER_KEY = config["SOCIAL_SECRET_PASSWORD"]
+FCM_SERVER_KEY = os.getenv("SOCIAL_SECRET_PASSWORD")

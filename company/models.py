@@ -161,3 +161,32 @@ class Notification(models.Model):
     class Meta:
         verbose_name = _("Notification")
         verbose_name_plural = _("Notifications")
+
+
+class Advertising(models.Model):
+    image = models.OneToOneField(
+        to=Media, on_delete=models.CASCADE, verbose_name=_("Image")
+    )
+    url = models.URLField(verbose_name=_("URL"))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Created at"))
+
+    def str(self) -> str:
+        return self.url
+
+    class Meta:
+        verbose_name = _("Advertising")
+        verbose_name_plural = _("Advertisings")
+
+
+class SocialMedia(models.Model):
+    telegram = models.URLField(verbose_name=_("Telegram URL"))
+    likedin = models.URLField(verbose_name=_("LinkedIN URL"))
+    facebook = models.URLField(verbose_name=_("Facebook URL"))
+    instagram = models.URLField(verbose_name=_("Instagram URL"))
+
+    class Meta:
+        verbose_name = _("Social Media")
+        verbose_name_plural = _("Social Media")
+
+    def str(self) -> str:
+        return f"{str(self.pk)} link"

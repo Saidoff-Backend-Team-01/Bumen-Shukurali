@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import FAQ, ContactWithUs, Contacts, PrivacyPolicy
+from common.serializers import MediaURlSerializer
+from .models import FAQ, Contacts, ContactWithUs
 
 class ContactWithUsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,3 +28,16 @@ class PrivacyPolicySerializer(serializers.ModelSerializer):
     class Meta:
         model = PrivacyPolicy
         fields = '__all__'
+
+
+class AdvertisingSerializer(serializers.Serializer):
+    image = MediaURlSerializer()
+    url = serializers.URLField()
+    created_at = serializers.DateTimeField()
+
+
+class SocialMediaSerializer(serializers.Serializer):
+    telegram = serializers.URLField()
+    likedin = serializers.URLField()
+    facebook = serializers.URLField()
+    instagram = serializers.URLField()

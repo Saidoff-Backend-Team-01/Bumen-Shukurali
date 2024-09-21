@@ -31,29 +31,13 @@ services:
       - ./media:/home/app/web/media
 #      - ./locale:/home/app/web/locale
     env_file: .env
-    command: gunicorn core.wsgi:application --bind 0.0.0.0:${PORT} --timeout 120
-
+    command: python3 manage.py runserver 0.0.0.0:${PORT}
     ports:
       - ${PORT}:${PORT}
 
     restart: always
-  celery:
-    build: .
-    command: celery -A core worker -l INFO
-    volumes:
-      - .:/home/app
-    environment:
-      - DEBUG=1
-      - CELERY_BROKER=${CELERY_BROKER_URL}
-      - CELERY_BACKEND=${CELERY_BAKCEND}
-    depends_on:
-      - web
-      - redis
-    env_file:
-      - .env
 
-  redis:
-    image: "redis:alpine"
+
 
 
 # gunicorn src.core.wsgi:application --bind 0.0.0.0:${PORT} --timeout 120
