@@ -97,10 +97,6 @@ class ContactWithUsReasonAPIView(APIView):
     
 
 class ContactWithUsMobileAPIView(APIView):
-    def get(self, request):
-        contacts = ContactWithUsMobile.objects.all()
-        serializer = ContactWithUsMobileSerializer(contacts, many=True)
-        return Response(serializer.data)
 
     def post(self, request):
         serializer = ContactWithUsMobileSerializer(data=request.data)
