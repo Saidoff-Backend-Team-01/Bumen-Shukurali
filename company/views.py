@@ -6,7 +6,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from company.models import FAQ, Advertising, Contacts, ContactWithUs, SocialMedia, ContactWithUsCategory, ContactWithUsReason, ContactWithUsMobile
+from company.models import FAQ, Advertising, Contacts, ContactWithUs, SocialMedia, ContactWithUsCategory, ContactWithUsReason, ContactWithUsMobile, AppInfo
 from company.serializers import (
     AdvertisingSerializer,
     ContactsSerializer,
@@ -16,6 +16,7 @@ from company.serializers import (
     ContactWithUsCategorySerializer,
     ContactWithUsReasonSerializer,
     ContactWithUsMobileSerializer,
+    AppInfoSerializer
 )
 
 # from .serializers import ContactsSerializer
@@ -34,6 +35,20 @@ class FAQAPIView(APIView):
         try:
             queryset = FAQ.objects.all()
             serializer = FAQSerializer(queryset, many=True)
+            return Response(serializer.data)
+        except Exception:
+            return Response(data={"message": _("Internal Server Error")}, status=500)
+
+
+
+class AppInfoView(APIView):
+    serializer_class = AppInfoSerializer
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            queryset = AppInfo.objects.all()
+            serializer = AppInfoSerializer(queryset, many=True)
             return Response(serializer.data)
         except Exception:
             return Response(data={"message": _("Internal Server Error")}, status=500)

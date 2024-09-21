@@ -1,7 +1,13 @@
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APITestCase
-from .models import Contacts
+from .models import Contacts, AppInfo, ContactWithUsCategory, ContactWithUsReason, ContactWithUsMobile
+from .serializers import AppInfoSerializer
+from rest_framework import status
+from common.models import Media
+
+
+
 
 class TestContactWithUsView(APITestCase):
 
@@ -42,11 +48,6 @@ class ContactsDetailViewTest(APITestCase):
         self.assertEqual(response.data['email'], self.contact.email)
         self.assertEqual(response.data['location'], self.contact.location)
 
-from django.urls import reverse
-from rest_framework import status
-from rest_framework.test import APITestCase
-from .models import ContactWithUsCategory, ContactWithUsReason, ContactWithUsMobile
-from common.models import Media
 
 # Test uchun model yaratish funksiyalari
 def create_category(name="General"):
@@ -137,3 +138,36 @@ class ContactWithUsTests(APITestCase):
         response = self.client.post(url, data, format='json')
         
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+
+# Test class
+class AppInfoViewTests(APITestCase):
+    def setUp(self):
+        # Test uchun bir nechta AppInfo ob'ektlarini yaratamiz
+        self.app_info1 = AppInfo.objects.create(title="App1", description="First app")
+        self.app_info2 = AppInfo.objects.create(title="App2", description="Second app")
+
+    def test_get_app_info(self):
+        """AppInfo ro'yxatini olish testi"""
+        url = reverse('app_info')
+        response = self.client.get(url)
+
+        # Tekshirishlar
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        app_info_queryset = AppInfo.objects.all()
+        serializer = AppInfoSerializer(app_info_queryset, many=True)
+        # print(response.data)
+        self.assertEqual(response.data, serializer.data)
+
+    def test_internal_server_error(self):
+        """Ichki xatolik yuz berganda 500 status kodi qaytarish testi"""
+        url = reverse('app_info')
+
+        # Ob'ektlarni o'chirib, ichki xatolikni sun'iy ravishda yaratamiz
+        AppInfo.objects.all().delete()
+        
+        with self.assertRaises(Exception):  # Ichki xatolik yuzaga kelishini kutamiz
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+            self.assertEqual(response.data['message'], "Internal Server Error")

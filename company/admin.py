@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import FAQ, Contacts, ContactWithUs, SocialMedia
+from .models import FAQ, Contacts, ContactWithUs, SocialMedia, AppInfo
 
 # Register your models here.
 
@@ -27,10 +27,16 @@ class SocialMediaAdmin(admin.ModelAdmin):
     list_display = ("id",)
     list_display_links = ("id",)
 
-    def has_add_permission(self) -> bool:
+    def has_add_permission(self, request) -> bool:
         if SocialMedia.objects.exists():
             return False
-        return super().has_add_permission(self.request)
+        return super().has_add_permission(request)
 
-    def has_delete_permission(self, obj=None) -> bool:
+    def has_delete_permission(self, request, obj=None) -> bool:
         return False
+
+
+@admin.register(AppInfo)
+class AppInfoAdmin(admin.ModelAdmin):
+    list_display = ("id", "title", "description")
+    list_editable = ["title", "description"]

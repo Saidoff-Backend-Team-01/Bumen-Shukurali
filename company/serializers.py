@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from common.serializers import MediaURlSerializer
 
-from .models import FAQ, Contacts, ContactWithUs, ContactWithUsCategory,ContactWithUsReason,ContactWithUsMobile
+from .models import FAQ, Contacts, ContactWithUs, ContactWithUsCategory,ContactWithUsReason,ContactWithUsMobile, AppInfo
 
 
 class ContactWithUsSerializer(serializers.ModelSerializer):
@@ -19,6 +19,11 @@ class FAQSerializer(serializers.ModelSerializer):
         model = FAQ
         fields = ("question", "answer")
 
+
+class AppInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AppInfo
+        fields = ("id","title", "description")
 
 class ContactsSerializer(serializers.ModelSerializer):
     class Meta:
