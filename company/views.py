@@ -6,7 +6,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from company.models import FAQ, Advertising, Contacts, ContactWithUs, SocialMedia, ContactWithUsCategory, ContactWithUsReason, ContactWithUsMobile, AppInfo
+from company.models import FAQ, Advertising, Contacts, ContactWithUs, SocialMedia, ContactWithUsCategory, ContactWithUsReason, ContactWithUsMobile, AppInfo, Sponsor
 from company.serializers import (
     AdvertisingSerializer,
     ContactsSerializer,
@@ -16,7 +16,8 @@ from company.serializers import (
     ContactWithUsCategorySerializer,
     ContactWithUsReasonSerializer,
     ContactWithUsMobileSerializer,
-    AppInfoSerializer
+    AppInfoSerializer,
+    SponsorSerializer
 )
 
 # from .serializers import ContactsSerializer
@@ -35,20 +36,6 @@ class FAQAPIView(APIView):
         try:
             queryset = FAQ.objects.all()
             serializer = FAQSerializer(queryset, many=True)
-            return Response(serializer.data)
-        except Exception:
-            return Response(data={"message": _("Internal Server Error")}, status=500)
-
-
-
-class AppInfoView(APIView):
-    serializer_class = AppInfoSerializer
-    permission_classes = [AllowAny]
-
-    def get(self, request, *args, **kwargs):
-        try:
-            queryset = AppInfo.objects.all()
-            serializer = AppInfoSerializer(queryset, many=True)
             return Response(serializer.data)
         except Exception:
             return Response(data={"message": _("Internal Server Error")}, status=500)
@@ -104,3 +91,30 @@ class ContactWithUsMobileAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+class AppInfoView(APIView):
+    serializer_class = AppInfoSerializer
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            queryset = AppInfo.objects.all()
+            serializer = AppInfoSerializer(queryset, many=True)
+            return Response(serializer.data)
+        except Exception:
+            return Response(data={"message": _("Internal Server Error")}, status=500)
+
+
+class SponsorsView(APIView):
+    serializer_class = SponsorSerializer
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            queryset = Sponsor.objects.all()
+            serializer = SponsorSerializer(queryset, many=True)
+            return Response(serializer.data)
+        except Exception:
+            return Response(data={"message": _("Internal Server Error")}, status=500)

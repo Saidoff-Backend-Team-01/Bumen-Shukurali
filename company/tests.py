@@ -171,3 +171,40 @@ class AppInfoViewTests(APITestCase):
             response = self.client.get(url)
             self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
             self.assertEqual(response.data['message'], "Internal Server Error")
+
+
+from django.urls import reverse
+from rest_framework import status
+from rest_framework.test import APITestCase
+from .models import Sponsor, Media
+from .serializers import SponsorSerializer
+
+class SponsorsViewTests(APITestCase):
+    def setUp(self):
+        self.media1 = Media.objects.create(file="media1.png")
+        self.media2 = Media.objects.create(file="media2.png")
+        self.sponsor1 = Sponsor.objects.create(image=self.media1, url="https://t.me/ulugby")
+        self.sponsor2 = Sponsor.objects.create(image=self.media2, url="https://t.me/ulugby")
+
+    def test_get_sponsors(self):
+        """Sponsorlar ro'yxatini olish testi"""
+        url = reverse('sponsors')
+        response = self.client.get(url)
+
+        # Tekshirishlar
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        sponsors_queryset = Sponsor.objects.all()
+        serializer = SponsorSerializer(sponsors_queryset, many=True)
+        self.assertEqual(response.data, serializer.data)
+
+    def test_internal_server_error(self):
+        """Ichki xatolik yuz berganda 500 status kodi qaytarish testi"""
+        url = reverse('sponsors')
+
+
+        Sponsor.objects.all().delete()
+
+        with self.assertRaises(Exception):
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+            self.assertEqual(response.data['message'], "Internal Server Error")

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import FAQ, Contacts, ContactWithUs, SocialMedia, AppInfo
+from .models import FAQ, Contacts, ContactWithUs, SocialMedia, AppInfo, Sponsor
 
 # Register your models here.
 
@@ -40,3 +40,9 @@ class SocialMediaAdmin(admin.ModelAdmin):
 class AppInfoAdmin(admin.ModelAdmin):
     list_display = ("id", "title", "description")
     list_editable = ["title", "description"]
+
+
+@admin.register(Sponsor)
+class SponsorAdmin(admin.ModelAdmin):
+    list_display = ("id", "image", "url")
+    list_editable = ["image", "url"]
