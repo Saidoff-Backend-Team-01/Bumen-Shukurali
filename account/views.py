@@ -6,6 +6,8 @@ from datetime import timedelta
 from django.conf import settings
 from django.shortcuts import render
 from django.utils import timezone
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, status
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import CreateAPIView, ListAPIView
@@ -27,6 +29,12 @@ from .serializers import (
     UserPhoneVerifySerializer
 )
 from .utils import generate_otp_code, send_verification_code, telegram_pusher
+
+
+code = openapi.Parameter(
+    name="code", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING
+)
+query = openapi.Parameter(name="query", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING)
 
 
 class UserRegisterView(CreateAPIView):
@@ -151,13 +159,14 @@ class UserRegisterPhoneVerifyView(CreateAPIView):
             )
 
 class GoogleAuth(APIView):
+    @swagger_auto_schema(manual_parameters=[code])
     def get(self, request, *args, **kwargs):
         auth_token = str(request.query_params.get("code"))
         ser = GoogleSerializer(data={"auth_token": auth_token})
         if ser.is_valid():
             return Response(ser.data)
         return Response(ser.errors, status=400)
-
+    
 
 class FacebookAuth(CreateAPIView):
     queryset = User.objects.all()
