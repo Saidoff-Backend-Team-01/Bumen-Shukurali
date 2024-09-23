@@ -30,15 +30,11 @@ class ContactWithUsView(CreateAPIView):
 
 class FAQAPIView(APIView):
     serializer_class = FAQSerializer
-    permission_classes = [AllowAny]
-
+    
     def get(self, request, *args, **kwargs):
-        try:
-            queryset = FAQ.objects.all()
-            serializer = FAQSerializer(queryset, many=True)
-            return Response(serializer.data)
-        except Exception:
-            return Response(data={"message": _("Internal Server Error")}, status=500)
+        queryset = FAQ.objects.all()
+        serializer = FAQSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class ContactsDetailView(APIView):
@@ -83,7 +79,7 @@ class ContactWithUsReasonAPIView(APIView):
         return Response(serializer.data)
     
 
-class ContactWithUsMobileAPIView(APIView):
+class ContactWithUsMobileAPIView(CreateAPIView):
 
     def post(self, request):
         serializer = ContactWithUsMobileSerializer(data=request.data)
@@ -96,25 +92,16 @@ class ContactWithUsMobileAPIView(APIView):
 
 class AppInfoView(APIView):
     serializer_class = AppInfoSerializer
-    permission_classes = [AllowAny]
-
     def get(self, request, *args, **kwargs):
-        try:
-            queryset = AppInfo.objects.all()
-            serializer = AppInfoSerializer(queryset, many=True)
-            return Response(serializer.data)
-        except Exception:
-            return Response(data={"message": _("Internal Server Error")}, status=500)
+        queryset = AppInfo.objects.all()
+        serializer = AppInfoSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class SponsorsView(APIView):
     serializer_class = SponsorSerializer
-    permission_classes = [AllowAny]
 
     def get(self, request, *args, **kwargs):
-        try:
-            queryset = Sponsor.objects.all()
-            serializer = SponsorSerializer(queryset, many=True)
-            return Response(serializer.data)
-        except Exception:
-            return Response(data={"message": _("Internal Server Error")}, status=500)
+        queryset = Sponsor.objects.all()
+        serializer = SponsorSerializer(queryset, many=True)
+        return Response(serializer.data)
