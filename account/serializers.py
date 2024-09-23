@@ -17,9 +17,19 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 
 class UserRegisterPhoneSerializer(serializers.ModelSerializer):
+    phone_number = serializers.CharField(required=True)
+
     class Meta:
         model = User
-        fields = ("phone_number", "password")
+        fields = ['password', 'phone_number']
+
+    def create(self, validated_data):
+        user = User(
+            phone_number=validated_data['phone_number']
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
 
 
 class UserOtpCodeVerifySerializer(serializers.Serializer):

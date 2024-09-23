@@ -2,12 +2,7 @@ import secrets
 import requests
 from django.conf import settings
 from django.core.mail import send_mail
-from dotenv import dotenv_values, load_dotenv
-load_dotenv()
-config = dotenv_values(".env")
-
-BOT_TOKEN = config["BOT_TOKEN"]
-CHANNEL_ID = config["CHANNEL_ID"]
+from core.settings import BOT_TOKEN, CHANNEL_ID
 
 def generate_otp_code():
     numbers = "0123456789"

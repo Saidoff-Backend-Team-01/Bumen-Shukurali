@@ -34,6 +34,16 @@ from .utils import generate_otp_code, send_verification_code, telegram_pusher
 code = openapi.Parameter(
     name="code", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING
 )
+
+phone_number = openapi.Parameter(
+    name="phone_number", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING
+)
+
+password = openapi.Parameter(
+    name="password", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING
+)
+
+
 query = openapi.Parameter(name="query", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING)
 
 
@@ -103,10 +113,12 @@ class UserRegisterPhoneView(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserRegisterPhoneSerializer
 
+    @swagger_auto_schema(manual_parameters=[phone_number, code])
     def perform_create(self, serializer):
         user = serializer.save(is_active=False)
         user.set_password(serializer.validated_data["password"])
         user.save()
+        
         code = generate_otp_code()
         new_otp_code = UserOtpCode.objects.create(
             user=user,
@@ -116,11 +128,14 @@ class UserRegisterPhoneView(CreateAPIView):
         )
         telegram_pusher(user.phone_number, new_otp_code.code, new_otp_code.expires_in)
 
+        return Response({"message": "Foydalanuvchi muvaffaqiyatli ro'yxatdan o'tdi!"}, status=status.HTTP_201_CREATED)
+
 
 class UserRegisterPhoneVerifyView(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserPhoneVerifySerializer
 
+    @swagger_auto_schema(manual_parameters=[password])
     def create(self, request, *args, **kwargs):
         try:
             data = self.serializer_class(data=request.data)
@@ -130,7 +145,7 @@ class UserRegisterPhoneVerifyView(CreateAPIView):
                 )
             user = User.objects.get(phone_number=data.data["phone_number"])
             user_otp_code = UserOtpCode.objects.filter(
-                user=user, code=data.data["code"], is_used=False
+                user=user, code=data.data["password"], is_used=False
             )
             if not user_otp_code.exists():
                 return Response(

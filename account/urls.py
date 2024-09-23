@@ -16,8 +16,8 @@ from .views import (
 urlpatterns = [
     path("register/", UserRegisterView.as_view(), name="register"),
     path("register/verify/", UserRegisterVerifyView.as_view(), name="register-verify"),
-    path("register/phone_number", UserRegisterPhoneView.as_view(), name="register-phone"),
-    path("register/verify/<str:code>", UserRegisterPhoneVerifyView.as_view(), name="register-verify-code"),
+    path("register/phone_number/", UserRegisterPhoneView.as_view(), name="register-phone"),
+    path("register/phone_verify/", UserRegisterPhoneVerifyView.as_view(), name="register-verify-code"),
     path("login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("google/", GoogleAuth.as_view(), name="googleauth"),
