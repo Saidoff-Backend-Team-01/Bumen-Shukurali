@@ -113,7 +113,7 @@ class UserRegisterPhoneView(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserRegisterPhoneSerializer
 
-    @swagger_auto_schema(manual_parameters=[phone_number, code])
+  
     def perform_create(self, serializer):
         user = serializer.save(is_active=False)
         user.set_password(serializer.validated_data["password"])
@@ -135,7 +135,6 @@ class UserRegisterPhoneVerifyView(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserPhoneVerifySerializer
 
-    @swagger_auto_schema(manual_parameters=[password])
     def create(self, request, *args, **kwargs):
         try:
             data = self.serializer_class(data=request.data)
