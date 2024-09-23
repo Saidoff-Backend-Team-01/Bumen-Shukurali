@@ -1,7 +1,7 @@
-from django.conf import settings
-from django.db import migrations, models
 import django.db.models.deletion
 import django_ckeditor_5.fields
+from django.conf import settings
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -11,6 +11,7 @@ class Migration(migrations.Migration):
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ("common", "0001_initial"),
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
@@ -408,7 +409,6 @@ class Migration(migrations.Migration):
                 ),
                 ("finished", models.BooleanField(default=False)),
                 ("percentage", models.IntegerField()),
-
                 (
                     "step_test",
                     models.ForeignKey(

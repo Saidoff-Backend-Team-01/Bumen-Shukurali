@@ -50,3 +50,5 @@ urlpatterns = [
     path("tops/", TopUserList.as_view(), name='tops'),
 ]
 
+
+]

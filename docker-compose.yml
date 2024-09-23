@@ -6,20 +6,13 @@ services:
     container_name: bumendb
     image: postgres
     environment:
-      POSTGRES_NAME: dbmen
-      POSTGRES_USER: menadmin
-      POSTGRES_PASSWORD: 321
-      POSTGRES_HOST: localhost
-      POSTGRES_PORT: 5432
-    volumes:
-      - bumen:/var/lib/postgresql/data
-    restart: always
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_HOST=${DB_HOST}
+      - POSTGRES_PORT=${DB_PORT}
 
-  redis:
-    container_name: bumenredis
-    image: redis
     restart: always
-    
   web:
     container_name: bumenweb
     build: 
@@ -31,23 +24,32 @@ services:
     env_file:
       - .env
     volumes:
-      - media:/bumen/data/media
-      - static:/bumen/data/static
-
+      - .:/app
+      - ./static:/home/app/web/static
+      - ./media:/home/app/web/media
+#      - ./locale:/home/app/web/locale
+    env_file: .env
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:${PORT} --timeout 120
+    ports:
+      - ${PORT}:${PORT}
     command: gunicorn --bind 0.0.0.0:8888 core.wsgi:application
     restart: always
-  
   celery:
-    container_name: bumencelery
-    depends_on:
-      - redis
-      - db
     build: .
     command: celery -A core worker -l INFO
-
-
-
-
+    volumes:
+      - .:/home/app
+    environment:
+      - DEBUG=1
+      - CELERY_BROKER=${CELERY_BROKER_URL}
+      - CELERY_BACKEND=${CELERY_BAKCEND}
+    depends_on:
+      - web
+      - redis
+    env_file:
+      - .env
+  redis:
+    image: "redis:alpine"
 
     
 volumes:

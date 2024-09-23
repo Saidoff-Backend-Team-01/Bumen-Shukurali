@@ -1,4 +1,4 @@
-Django==5.0.8
+Django==4.2
 python-dotenv
 django-phonenumbers
 black

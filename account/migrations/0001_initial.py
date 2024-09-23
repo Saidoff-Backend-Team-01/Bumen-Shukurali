@@ -2,8 +2,6 @@ import django.db.models.deletion
 import django.utils.timezone
 from django.conf import settings
 from django.db import migrations, models
-import django.db.models.deletion
-import django.utils.timezone
 
 
 class Migration(migrations.Migration):
@@ -13,6 +11,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ("auth", "0012_alter_user_first_name_max_length"),
         ("common", "0001_initial"),
+        ("auth", "0012_alter_user_first_name_max_length"),
     ]
 
     operations = [
@@ -116,10 +115,17 @@ class Migration(migrations.Migration):
                             ("TELEGRAM", "Telegram Account"),
                             ("WITH EMAIL", "Email Account"),
                         ],
+                        max_length=244,
+                        unique=True,
                         verbose_name="auth type",
                     ),
                 ),
-                ("telegram_id", models.CharField(verbose_name="telegram id")),
+                (
+                    "telegram_id",
+                    models.CharField(
+                        blank=True, max_length=55, null=True, verbose_name="telegram id"
+                    ),
+                ),
                 (
                     "device_id",
                     models.CharField(
@@ -213,7 +219,8 @@ class Migration(migrations.Migration):
                             ("register", "Register"),
                             ("reset_password", "Reset Password"),
                         ],
-                        verbose_name="provider",
+                        max_length=20,
+                        verbose_name="type",
                     ),
                 ),
                 (
@@ -278,7 +285,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name="SocialUser",
+            name="UserOtpCode",
             fields=[
                 (
                     "id",
@@ -290,31 +297,23 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "social_user_id",
-                    models.IntegerField(blank=True, null=True, verbose_name="user id"),
-                ),
-                (
-                    "provider",
+                    "type",
                     models.CharField(
                         choices=[
-                            ("google", "google"),
-                            ("facebook", "facebook"),
-                            ("telegram", "telegram"),
+                            ("register", "Register"),
+                            ("reset_password", "Reset Password"),
                         ],
-                        max_length=255,
-                        verbose_name="provider",
+                        max_length=20,
+                        verbose_name="type",
                     ),
                 ),
                 (
-                    "email",
-                    models.EmailField(
-                        max_length=254, unique=True, verbose_name="email address"
+                    "expires_in",
+                    models.DateTimeField(
+                        blank=True, null=True, verbose_name="expires_in"
                     ),
                 ),
-                (
-                    "extra_data",
-                    models.JSONField(default=dict, verbose_name="extra data"),
-                ),
+                ("is_used", models.BooleanField(default=False, verbose_name="is_used")),
                 (
                     "user",
                     models.ForeignKey(
