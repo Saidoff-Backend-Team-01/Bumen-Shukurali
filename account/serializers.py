@@ -19,11 +19,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 class UserRegisterPhoneSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "phone_number", "password", "device_id")
+        fields = ("phone_number", "password")
 
 
 class UserOtpCodeVerifySerializer(serializers.Serializer):
-    code = serializers.IntegerField(required=True)  # todo: add validation
+    code = serializers.IntegerField(required=True)
     email = serializers.EmailField(required=True)
 
 
