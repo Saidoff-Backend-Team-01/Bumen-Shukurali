@@ -35,14 +35,6 @@ code = openapi.Parameter(
     name="code", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING
 )
 
-phone_number = openapi.Parameter(
-    name="phone_number", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING
-)
-
-password = openapi.Parameter(
-    name="password", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING
-)
-
 
 query = openapi.Parameter(name="query", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING)
 
