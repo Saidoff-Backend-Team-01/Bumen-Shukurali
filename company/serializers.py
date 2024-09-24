@@ -27,7 +27,7 @@ class ContactsSerializer(serializers.ModelSerializer):
 class PrivacyPolicySerializer(serializers.ModelSerializer):
     class Meta:
         model = PrivacyPolicy
-        fields = '__all__'
+        fields = ('text')
 
 
 class AdvertisingSerializer(serializers.Serializer):
