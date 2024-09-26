@@ -114,11 +114,11 @@ LOCALE_PATHS = [
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("DB_NAME"),
-        "HOST": os.getenv("DB_HOST"),
-        "USER": os.getenv("DB_USER"),
-        "PORT": os.getenv("DB_PORT"),
-        "PASSWORD": os.getenv("DB_PASS"),
+        "NAME": os.getenv("POSTGRES_NAME"),
+        "HOST": os.getenv("POSTGRES_HOST"),
+        "USER": os.getenv("POSTGRES_USER"),
+        "PORT": os.getenv("POSTGRES_PORT"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
     }
 }
 
