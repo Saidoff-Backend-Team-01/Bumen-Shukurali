@@ -9,12 +9,13 @@ from .views import (
     UserMessageCreateApi,
     UserRegisterVerifyView,
     UserRegisterView,
+    UserLoginView
 )
 
 urlpatterns = [
     path("register/", UserRegisterView.as_view(), name="register"),
     path("register/verify/", UserRegisterVerifyView.as_view(), name="register-verify"),
-    path("login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("login/", UserLoginView.as_view(), name="login"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("google/", GoogleAuth.as_view(), name="googleauth"),
     path("facebook/", FacebookAuth.as_view(), name="facebookauth"),
@@ -22,3 +23,5 @@ urlpatterns = [
     path("messages/<int:group_id>/", MessageListApi.as_view(), name="list_messages"),
     path("telegram/oauth2/", TelegramLoginView.as_view(), name="telegram-oauth2"),
 ]
+
+    

@@ -23,6 +23,7 @@ from .serializers import (
     UserMessageSerializer,
     UserOtpCodeVerifySerializer,
     UserRegisterSerializer,
+    UserLoginSerializer
 )
 from .utils import generate_otp_code, send_verification_code
 
@@ -180,3 +181,27 @@ class TelegramLoginView(CreateAPIView):
         if current_timestamp - auth_date > 86400:  # 1 day in seconds
             return False
         return True
+
+
+class UserLoginView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = UserLoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            token = user.get_token()
+            return Response(
+                data={
+                    "message": "Login successful",
+                    "token": str(token),
+                    "user": {
+                        "email": user.email,
+                        "phone_number": user.phone_number,
+                        "username": user.username,
+                    }
+                },
+                status=status.HTTP_200_OK
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

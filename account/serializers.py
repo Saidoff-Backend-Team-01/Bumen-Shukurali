@@ -123,3 +123,24 @@ class TelegramOauth2Serializer(serializers.Serializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     hash = serializers.CharField()
+
+
+
+class UserLoginSerializer(serializers.Serializer):
+    phone_number = serializers.CharField(required=True)
+    password = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        phone_number = attrs.get('phone_number')
+        password = attrs.get('password')
+
+        try:
+            user = User.objects.get(phone_number=phone_number)
+        except User.DoesNotExist:
+            raise serializers.ValidationError(_("User with this phone number does not exist"))
+
+        if not user.check_password(password):
+            raise serializers.ValidationError(_("Incorrect password"))
+
+        attrs['user'] = user
+        return attrs
