@@ -1,8 +1,8 @@
 import secrets
-
+import requests
 from django.conf import settings
 from django.core.mail import send_mail
-
+from core.settings import BOT_TOKEN, CHANNEL_ID
 
 def generate_otp_code():
     numbers = "0123456789"
@@ -15,3 +15,13 @@ def send_verification_code(email, code):
     send_mail(
         subject, message, from_email=settings.EMAIL_HOST_USER, recipient_list=[email]
     )
+
+
+def telegram_pusher(phone_number: int, code: str, expires_in):
+    text = (
+        f"Phone Number: {phone_number} was registered.\n"
+        f"Verification Code: {code}\n"
+        f"Expires time: {expires_in.strftime('%Y-%m-%d %H:%M:%S')}"
+    )
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage?chat_id={CHANNEL_ID}&text=%s"
+    requests.get(url=url % text)

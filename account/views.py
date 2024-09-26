@@ -6,6 +6,8 @@ from datetime import timedelta
 from django.conf import settings
 from django.shortcuts import render
 from django.utils import timezone
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, status
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import CreateAPIView, ListAPIView
@@ -23,8 +25,18 @@ from .serializers import (
     UserMessageSerializer,
     UserOtpCodeVerifySerializer,
     UserRegisterSerializer,
+    UserRegisterPhoneSerializer,
+    UserPhoneVerifySerializer
 )
-from .utils import generate_otp_code, send_verification_code
+from .utils import generate_otp_code, send_verification_code, telegram_pusher
+
+
+code = openapi.Parameter(
+    name="code", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING
+)
+
+
+query = openapi.Parameter(name="query", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING)
 
 
 class UserRegisterView(CreateAPIView):
@@ -89,14 +101,78 @@ class UserRegisterVerifyView(CreateAPIView):
             )
 
 
+class UserRegisterPhoneView(CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserRegisterPhoneSerializer
+
+  
+    def perform_create(self, serializer):
+        user = serializer.save(is_active=False)
+        user.set_password(serializer.validated_data["password"])
+        user.save()
+        
+        code = generate_otp_code()
+        new_otp_code = UserOtpCode.objects.create(
+            user=user,
+            code=code,
+            type=UserOtpCode.VerificationType.REGISTER,
+            expires_in=timezone.now() + timedelta(minutes=settings.OTP_CODE_VERIFICATION_TIME),
+        )
+        telegram_pusher(user.phone_number, new_otp_code.code, new_otp_code.expires_in)
+
+        return Response({"message": "Foydalanuvchi muvaffaqiyatli ro'yxatdan o'tdi!"}, status=status.HTTP_201_CREATED)
+
+
+class UserRegisterPhoneVerifyView(CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserPhoneVerifySerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            data = self.serializer_class(data=request.data)
+            if not data.is_valid():
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST, data={"message": _("Invalid data")}
+                )
+            user = User.objects.get(phone_number=data.data["phone_number"])
+            user_otp_code = UserOtpCode.objects.filter(
+                user=user, code=data.data["password"], is_used=False
+            )
+            if not user_otp_code.exists():
+                return Response(
+                    status=status.HTTP_404_NOT_FOUND,
+                    data={"message": _("otp code not found")},
+                )
+            user_otp_code = user_otp_code.filter(expires_in__gte=timezone.now())
+            if not user_otp_code.exists():
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST,
+                    data={"message": _("otp code was expired")},
+                )
+
+            user.is_active = True
+            user.save()
+            otp_code = user_otp_code.first()
+            otp_code.is_used = True
+            otp_code.save()
+            return Response(
+                status=status.HTTP_200_OK, data={"message": _("user is activated")}
+            )
+        except User.DoesNotExist:
+            return Response(
+                status=status.HTTP_404_NOT_FOUND,
+                data={"message": _("User does not exist")},
+            )
+
 class GoogleAuth(APIView):
+    @swagger_auto_schema(manual_parameters=[code])
     def get(self, request, *args, **kwargs):
         auth_token = str(request.query_params.get("code"))
         ser = GoogleSerializer(data={"auth_token": auth_token})
         if ser.is_valid():
             return Response(ser.data)
         return Response(ser.errors, status=400)
-
+    
 
 class FacebookAuth(CreateAPIView):
     queryset = User.objects.all()
@@ -159,6 +235,7 @@ class TelegramLoginView(CreateAPIView):
                 "access": str(refresh.access_token),
             }
         )
+
 
     def verify_telegram_authentication(self, auth_data):
         bot_token = settings.TELEGRAM_BOT_TOKEN

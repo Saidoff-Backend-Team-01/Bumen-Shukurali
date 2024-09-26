@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from account.serializers import UserSerializer
 from common.serializers import MediaURlSerializer
 from supject.models import (
@@ -203,7 +202,7 @@ class VacancySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Vacancy
-        fields = ("name", "category", "description")
+        fields = ('name', 'category', 'description')
 
 
 class JoinGroupSerializer(serializers.Serializer):

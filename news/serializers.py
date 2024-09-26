@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from common.serializers import MediaURlSerializer
 from news.models import News
 
