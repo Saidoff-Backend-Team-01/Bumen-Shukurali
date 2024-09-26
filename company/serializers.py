@@ -1,9 +1,7 @@
 from rest_framework import serializers
-
+from .models import FAQ, ContactWithUs, Contacts, PrivacyPolicy
 from common.serializers import MediaURlSerializer
-
 from .models import FAQ, Contacts, ContactWithUs
-
 
 class ContactWithUsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,7 +21,13 @@ class FAQSerializer(serializers.ModelSerializer):
 class ContactsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contacts
-        fields = "__all__"
+        fields = '__all__'
+
+
+class PrivacyPolicySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PrivacyPolicy
+        fields = ('text')
 
 
 class AdvertisingSerializer(serializers.Serializer):

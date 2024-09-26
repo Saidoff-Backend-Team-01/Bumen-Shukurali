@@ -16,9 +16,30 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         fields = ("first_name", "last_name", "email", "password", "device_id")
 
 
+class UserRegisterPhoneSerializer(serializers.ModelSerializer):
+    phone_number = serializers.CharField(required=True)
+
+    class Meta:
+        model = User
+        fields = ['password', 'phone_number']
+
+    def create(self, validated_data):
+        user = User(
+            phone_number=validated_data['phone_number']
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
+
+
 class UserOtpCodeVerifySerializer(serializers.Serializer):
-    code = serializers.IntegerField(required=True)  # todo: add validation
+    code = serializers.IntegerField(required=True)
     email = serializers.EmailField(required=True)
+
+
+class UserPhoneVerifySerializer(serializers.Serializer):
+    code = serializers.IntegerField(required=True)
+    phone_number = serializers.CharField(required=True)
 
 
 class GoogleSerializer(serializers.Serializer):

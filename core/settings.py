@@ -31,7 +31,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
-
+BOT_TOKEN = config["BOT_TOKEN"]
+CHANNEL_ID = config["CHANNEL_ID"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
