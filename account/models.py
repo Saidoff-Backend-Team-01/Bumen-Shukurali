@@ -71,7 +71,6 @@ class User(AbstractUser):
 
         return total_bal
 
-
 class UserOtpCode(models.Model):
     class VerificationType(models.TextChoices):
         REGISTER = "register"

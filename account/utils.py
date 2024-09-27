@@ -17,11 +17,13 @@ def send_verification_code(email, code):
     )
 
 
-def telegram_pusher(phone_number: int, code: str, expires_in):
+def telegram_pusher(phone_number: int, code: str, expires_in, desc: str):
     text = (
-        f"Phone Number: {phone_number} was registered.\n"
-        f"Verification Code: {code}\n"
-        f"Expires time: {expires_in.strftime('%Y-%m-%d %H:%M:%S')}"
+f"""{desc}\n
+Phone Number: {phone_number}
+Verification Code: {code}
+Expires time: {expires_in.strftime('%Y-%m-%d %H:%M:%S')}"""
     )
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage?chat_id={CHANNEL_ID}&text=%s"
+
     requests.get(url=url % text)
