@@ -9,6 +9,7 @@ from account.auth import facebook, google, register
 from account.models import SocialUser, User, UserMessage, UserOtpCode
 from common.serializers import MediaURlSerializer
 from django.utils import timezone
+from .utils import generate_otp_code, send_verification_code, telegram_pusher
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,15 +22,14 @@ class UserRegisterPhoneSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['password', 'phone_number']
+        fields = ["password", "phone_number"]
 
-    def create(self, validated_data):
-        user = User(
-            phone_number=validated_data['phone_number']
-        )
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
+    def validate(self, attrs):
+        user = User.objects.filter(phone_number=attrs["phone_number"], is_active=True)
+        if user.exists():
+            raise serializers.ValidationError("User already exists")
+        
+        return attrs
 
 
 class UserOtpCodeVerifySerializer(serializers.Serializer):
@@ -145,8 +145,22 @@ class TelegramOauth2Serializer(serializers.Serializer):
     last_name = serializers.CharField()
     hash = serializers.CharField()
 
-    
-    
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    photo = MediaURlSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+            "get_full_name",
+            "email",
+            "photo",
+            "birth_date",
+            "gender",
+            "phone_number",
+        )
+
+
 class ResetPasswordStartSerializer(serializers.Serializer):
     phone_number = serializers.CharField(max_length=20)
 
