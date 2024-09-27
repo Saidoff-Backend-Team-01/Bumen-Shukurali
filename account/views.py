@@ -3,6 +3,7 @@ import hmac
 import time
 from datetime import timedelta
 
+import sentry_sdk
 from django.conf import settings
 from django.shortcuts import render
 from django.utils import timezone
@@ -111,24 +112,24 @@ class UserRegisterPhoneView(CreateAPIView):
     serializer_class = UserRegisterPhoneSerializer
 
     def perform_create(self, serializer):
-        user = serializer.save(is_active=False)
-        user.set_password(serializer.validated_data["password"])
-        user.save()
+        try:
+            user = serializer.save(is_active=False)
+            user.set_password(serializer.validated_data["password"])
+            user.save()
 
-        code = generate_otp_code()
-        new_otp_code = UserOtpCode.objects.create(
-            user=user,
-            code=code,
-            type=UserOtpCode.VerificationType.REGISTER,
-            expires_in=timezone.now()
-            + timedelta(minutes=settings.OTP_CODE_VERIFICATION_TIME),
-        )
-        telegram_pusher(user.phone_number, new_otp_code.code, new_otp_code.expires_in)
-
-        return Response(
-            {"message": "Foydalanuvchi muvaffaqiyatli ro'yxatdan o'tdi!"},
-            status=status.HTTP_201_CREATED,
-        )
+            code = generate_otp_code()
+            new_otp_code = UserOtpCode.objects.create(
+                user=user,
+                code=code,
+                type=UserOtpCode.VerificationType.REGISTER,
+                expires_in=timezone.now()
+                + timedelta(minutes=settings.OTP_CODE_VERIFICATION_TIME),
+            )
+            telegram_pusher(
+                user.phone_number, new_otp_code.code, new_otp_code.expires_in
+            )
+        except Exception as e:
+            sentry_sdk.capture_message(e)
 
 
 class UserRegisterPhoneVerifyView(CreateAPIView):

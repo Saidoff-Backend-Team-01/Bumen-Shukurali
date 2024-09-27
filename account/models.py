@@ -31,6 +31,9 @@ class User(AbstractUser):
     phone_number = models.CharField(
         _("phone number"), max_length=20, null=True, blank=True
     )
+    father_name = models.CharField(
+        _("father name"), max_length=120, null=True, blank=True
+    )
     auth_type = models.CharField(
         _("auth type"),
         choices=AuthType.choices,
