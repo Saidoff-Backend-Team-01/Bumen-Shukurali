@@ -1,11 +1,11 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models import Sum
 from django.utils.translation import gettext_lazy as _
 from rest_framework_simplejwt.tokens import RefreshToken
-from supject.models import UserTotalTestResult
-from django.db.models import Sum
 
 from common.models import Media
+from supject.models import UserTotalTestResult
 
 from .managers import CustomUserManager
 
@@ -15,30 +15,41 @@ class User(AbstractUser):
         GOOGLE = "GOOGLE", _("Google Account")
         FACEBOOK = "FACEBOOK", _("Facebook Account")
         TELEGRAM = "TELEGRAM", _("Telegram Account")
-        WITH_EMAIL = "WITH EMAIL", _("Email Account")
+        WITH_EMAIL = "WITH EMAIL", _("Email Auth")
+        WITH_PHONE = "WITH PHONE", _("Phone Auth")
 
-    username = models.CharField(max_length=123, unique=True, null=True, blank=True)
+    class GenderType(models.TextChoices):
+        MALE = "male", _("Male")
+        FEMALE = "female", _("Female")
+
+    username = models.CharField(max_length=123, null=True, blank=True)
     birth_date = models.DateField(_("birth_date"), null=True, blank=True)
     photo = models.ForeignKey(
         Media, on_delete=models.SET_NULL, null=True, blank=True, related_name="photo"
     )
-    email = models.EmailField(_("email address"), unique=True, null=True, blank=True)
+    email = models.EmailField(_("email address"), null=True, blank=True)
     phone_number = models.CharField(
-        _("phone number"), unique=True, max_length=20, null=True, blank=True
+        _("phone number"), max_length=20, null=True, blank=True
     )
     auth_type = models.CharField(
-        _("auth type"), choices=AuthType.choices, max_length=244, unique=True
+        _("auth type"),
+        choices=AuthType.choices,
+        max_length=244,
+        default=AuthType.WITH_PHONE,
     )
-    telegram_id = models.CharField(_("telegram id"), max_length=55, null=True, blank=True)
+    gender = models.CharField(
+        _("gender"), choices=GenderType.choices, null=True, blank=True
+    )
+    telegram_id = models.CharField(
+        _("telegram id"), max_length=55, null=True, blank=True
+    )
     objects = CustomUserManager()
-    device_id = models.CharField(
-        _("device id"), unique=True, max_length=244, null=True, blank=True
-    )
-    USERNAME_FIELD = "email"
+    device_id = models.CharField(_("device id"), max_length=244, null=True, blank=True)
+    USERNAME_FIELD = "phone_number"
     REQUIRED_FIELDS = []
 
     def __str__(self) -> str:
-        return self.email
+        return str(self.phone_number)
 
     class Meta:
         verbose_name = _("User")
@@ -46,14 +57,16 @@ class User(AbstractUser):
 
     def get_token(self):
         return RefreshToken.access_token
-    
+
     @property
     def user_total_bal(self):
         filtered_user_results = UserTotalTestResult.objects.filter(user=self)
-        total_bal = filtered_user_results.aggregate(total_ball=Sum("ball"))['total_ball'] / filtered_user_results.count()
+        total_bal = (
+            filtered_user_results.aggregate(total_ball=Sum("ball"))["total_ball"]
+            / filtered_user_results.count()
+        )
 
         return total_bal
-
 
 
 class UserOtpCode(models.Model):
@@ -85,6 +98,7 @@ class Groups(models.Model):
     class Meta:
         verbose_name = _("Group")
         verbose_name_plural = _("Groups")
+
 
 class UserMessage(models.Model):
     user = models.ForeignKey(verbose_name=_("User"), to=User, on_delete=models.CASCADE)
