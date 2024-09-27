@@ -1,15 +1,17 @@
+from datetime import timedelta
+from unittest import mock
+
 from django.test import TestCase
 
 # Create your tests here.
 from django.urls import reverse
-from rest_framework import status
-from rest_framework.test import APITestCase, APIClient
-from account.models import User, Groups, UserMessage, UserOtpCode
-from common.models import Media
-from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils import timezone
-from datetime import timedelta
+from rest_framework import status
+from rest_framework.test import APIClient, APITestCase
+from rest_framework_simplejwt.tokens import RefreshToken
 
+from account.models import Groups, User, UserMessage, UserOtpCode
+from common.models import Media
 
 # class UserMessageApiTests(APITestCase):
 #     def setUp(self):
@@ -23,7 +25,7 @@ from datetime import timedelta
 #         self.media = Media.objects.create(file="/Users/noutbukcom/Desktop/Najot/amaliyot/project asosiy/Bumen-Shukurali/static/gerb_uz.png")
 
 #         self.client = APIClient()
-        
+
 #         # Authenticate user1
 #         self.token = RefreshToken.for_user(self.user1).access_token
 #         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.token}')
@@ -88,51 +90,59 @@ from datetime import timedelta
 
 class AuthTests(APITestCase):
     def setUp(self):
-        self.user = User.objects.create_user(phone_number="+998901234567", password="testpassword", email="test@example.com")
-    
+        self.user = User.objects.create_user(
+            phone_number="+998901234567",
+            password="testpassword",
+            email="test@example.com",
+        )
+
     def test_login_success(self):
-        url = reverse('token_obtain_pair')
-        data = {'phone_number': '+998901234567', 'password': 'testpassword'}
-        response = self.client.post(url, data, format='json')
+        url = reverse("token_obtain_pair")
+        data = {"phone_number": "+998901234567", "password": "testpassword"}
+        response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('access', response.data) 
-    
+        self.assertIn("access", response.data)
+
     def test_login_invalid_credentials(self):
-        url = reverse('token_obtain_pair')
-        data = {'phone_number': '+998901234567', 'password': 'wrongpassword'}
-        response = self.client.post(url, data, format='json')
+        url = reverse("token_obtain_pair")
+        data = {"phone_number": "+998901234567", "password": "wrongpassword"}
+        response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_reset_password_start(self):
-        url = reverse('reset-password-start')
-        data = {'phone_number': '+998901234567'}
-        response = self.client.post(url, data, format='json')
+    @mock.patch("account.views.telegram_pusher")
+    def test_reset_password_start(self, telegram_pusher):
+        telegram_pusher.return_value = 100000
+        url = reverse("reset-password-start")
+        data = {"phone_number": "+998901234567"}
+        response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['message'], "OTP code sent to your phone.")
-    
+        self.assertEqual(response.data["message"], "OTP code sent to your phone.")
+
     def test_reset_password_verify(self):
         otp_code = UserOtpCode.objects.create(
             user=self.user,
-            code='123456',
+            code="123456",
             is_used=False,
-            expires_in=timezone.now() + timedelta(minutes=5)
+            expires_in=timezone.now() + timedelta(minutes=5),
         )
-        url = reverse('reset-password-verify')
-        data = {'phone_number': '+998901234567', 'otp_code': '123456'}
-        response = self.client.post(url, data, format='json')
+        url = reverse("reset-password-verify")
+        data = {"phone_number": "+998901234567", "otp_code": "123456"}
+        response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['message'], "OTP code verified successfully.")
+        self.assertEqual(response.data["message"], "OTP code verified successfully.")
 
     def test_reset_password_set(self):
-        url = reverse('reset-password-set')
+        url = reverse("reset-password-set")
         data = {
-            'phone_number': '+998901234567', 
-            'new_password': 'newpassword123',
-            'confirm_password': 'newpassword123'
+            "phone_number": "+998901234567",
+            "new_password": "newpassword123",
+            "confirm_password": "newpassword123",
         }
-        response = self.client.post(url, data, format='json')
+        response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['message'], "Password has been reset successfully.")
+        self.assertEqual(
+            response.data["message"], "Password has been reset successfully."
+        )
 
-        user = User.objects.get(phone_number='+998901234567')
-        self.assertTrue(user.check_password('newpassword123'))
+        user = User.objects.get(phone_number="+998901234567")
+        self.assertTrue(user.check_password("newpassword123"))
