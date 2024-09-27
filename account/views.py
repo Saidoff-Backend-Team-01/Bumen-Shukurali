@@ -3,6 +3,7 @@ import hmac
 import time
 from datetime import timedelta
 from drf_yasg.utils import swagger_auto_schema
+import sentry_sdk
 from django.conf import settings
 from django.shortcuts import render
 from django.utils import timezone
@@ -45,68 +46,68 @@ code = openapi.Parameter(name="code", in_=openapi.IN_QUERY, type=openapi.TYPE_ST
 query = openapi.Parameter(name="query", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING)
 
 
-class UserRegisterView(CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserRegisterSerializer
+# class UserRegisterView(CreateAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserRegisterSerializer
 
-    def perform_create(self, serializer):
-        user = serializer.save(is_active=False)
-        print(user.is_active)
-        user.set_password(serializer.validated_data["password"])
-        user.save()
-        code = generate_otp_code()
-        new_otp_code = UserOtpCode.objects.create(
-            user=user,
-            code=code,
-            type=UserOtpCode.VerificationType.REGISTER,
-            expires_in=timezone.now()
-            + timedelta(minutes=settings.OTP_CODE_VERIFICATION_TIME),
-        )
-        send_verification_code(user.email, new_otp_code.code)
+#     def perform_create(self, serializer):
+#         user = serializer.save(is_active=False)
+#         print(user.is_active)
+#         user.set_password(serializer.validated_data["password"])
+#         user.save()
+#         code = generate_otp_code()
+#         new_otp_code = UserOtpCode.objects.create(
+#             user=user,
+#             code=code,
+#             type=UserOtpCode.VerificationType.REGISTER,
+#             expires_in=timezone.now()
+#             + timedelta(minutes=settings.OTP_CODE_VERIFICATION_TIME),
+#         )
+#         send_verification_code(user.email, new_otp_code.code)
 
 
-class UserRegisterVerifyView(CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserOtpCodeVerifySerializer
+# class UserRegisterVerifyView(CreateAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserOtpCodeVerifySerializer
 
-    def create(self, request, *args, **kwargs):
-        try:
+#     def create(self, request, *args, **kwargs):
+#         try:
 
-            data = self.serializer_class(data=request.data)
-            if not data.is_valid():
-                return Response(
-                    status=status.HTTP_400_BAD_REQUEST,
-                    data={"message": _("Invalid data")},
-                )
-            user = User.objects.get(email=data.data["email"])
-            user_otp_code = UserOtpCode.objects.filter(
-                user=user, code=data.data["code"], is_used=False
-            )
-            if not user_otp_code.exists():
-                return Response(
-                    status=status.HTTP_404_NOT_FOUND,
-                    data={"message": _("otp code not found")},
-                )
-            user_otp_code = user_otp_code.filter(expires_in__gte=timezone.now())
-            if not user_otp_code.exists():
-                return Response(
-                    status=status.HTTP_400_BAD_REQUEST,
-                    data={"message": _("otp code was expired")},
-                )
+#             data = self.serializer_class(data=request.data)
+#             if not data.is_valid():
+#                 return Response(
+#                     status=status.HTTP_400_BAD_REQUEST,
+#                     data={"message": _("Invalid data")},
+#                 )
+#             user = User.objects.get(email=data.data["email"])
+#             user_otp_code = UserOtpCode.objects.filter(
+#                 user=user, code=data.data["code"], is_used=False
+#             )
+#             if not user_otp_code.exists():
+#                 return Response(
+#                     status=status.HTTP_404_NOT_FOUND,
+#                     data={"message": _("otp code not found")},
+#                 )
+#             user_otp_code = user_otp_code.filter(expires_in__gte=timezone.now())
+#             if not user_otp_code.exists():
+#                 return Response(
+#                     status=status.HTTP_400_BAD_REQUEST,
+#                     data={"message": _("otp code was expired")},
+#                 )
 
-            user.is_active = True
-            user.save()
-            otp_code = user_otp_code.first()
-            otp_code.is_used = True
-            otp_code.save()
-            return Response(
-                status=status.HTTP_200_OK, data={"message": _("user is activated")}
-            )
-        except User.DoesNotExist:
-            return Response(
-                status=status.HTTP_404_NOT_FOUND,
-                data={"message": _("User does not exist")},
-            )
+#             user.is_active = True
+#             user.save()
+#             otp_code = user_otp_code.first()
+#             otp_code.is_used = True
+#             otp_code.save()
+#             return Response(
+#                 status=status.HTTP_200_OK, data={"message": _("user is activated")}
+#             )
+#         except User.DoesNotExist:
+#             return Response(
+#                 status=status.HTTP_404_NOT_FOUND,
+#                 data={"message": _("User does not exist")},
+#             )
 
 
 class UserRegisterPhoneView(CreateAPIView):
@@ -115,34 +116,40 @@ class UserRegisterPhoneView(CreateAPIView):
     code = generate_otp_code()
 
     def perform_create(self, serializer):
-        phone_number = serializer.validated_data['phone_number']
-        user = User.objects.filter(phone_number=phone_number).last()
-        code = generate_otp_code()
-        
-        if user and not user.is_active:
+        try:
+          phone_number = serializer.validated_data['phone_number']
+          user = User.objects.filter(phone_number=phone_number).last()
+          code = generate_otp_code()
+
+          if user and not user.is_active:
+              new_otp_code = UserOtpCode.objects.create(
+                  user=user,
+                  code=code,
+                  type=UserOtpCode.VerificationType.REGISTER,
+                  expires_in=timezone.now() + timedelta(minutes=settings.OTP_CODE_VERIFICATION_TIME),
+              )
+              telegram_pusher(user.phone_number, new_otp_code.code, new_otp_code.expires_in, "registration")
+          else:
+              user = serializer.save(is_active=False)
+              user.set_password(serializer.validated_data["password"])
+              user.save()
+
+            code = generate_otp_code()
+
             new_otp_code = UserOtpCode.objects.create(
                 user=user,
                 code=code,
                 type=UserOtpCode.VerificationType.REGISTER,
-                expires_in=timezone.now() + timedelta(minutes=settings.OTP_CODE_VERIFICATION_TIME),
+
+                expires_in=timezone.now()
+                + timedelta(minutes=settings.OTP_CODE_VERIFICATION_TIME),
             )
-            telegram_pusher(user.phone_number, new_otp_code.code, new_otp_code.expires_in, "registration")
-        else:
-            user = serializer.save(is_active=False)
-            user.set_password(serializer.validated_data["password"])
-            user.save()
-            new_otp_code = UserOtpCode.objects.create(
-                user=user,
-                code=code,
-                type=UserOtpCode.VerificationType.REGISTER,
-                expires_in=timezone.now() + timedelta(minutes=settings.OTP_CODE_VERIFICATION_TIME),
+            telegram_pusher(
+                user.phone_number, new_otp_code.code, new_otp_code.expires_in
             )
-            telegram_pusher(user.phone_number, new_otp_code.code, new_otp_code.expires_in, "registration")
-        
-        return Response(
-            {"message": "Foydalanuvchi muvaffaqiyatli ro'yxatdan o'tdi!"},
-            status=status.HTTP_201_CREATED,
-        )
+        except Exception as e:
+            sentry_sdk.capture_message(e)
+
 
 
 class UserRegisterPhoneVerifyView(CreateAPIView):
