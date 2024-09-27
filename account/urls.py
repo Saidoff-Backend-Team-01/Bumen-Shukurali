@@ -5,19 +5,15 @@ from .views import (  # UserRegisterVerifyView,; UserRegisterView,
     FacebookAuth,
     GoogleAuth,
     MessageListApi,
+    ResetPasswordStartView,
+    ResetPasswordVerifyView,
+    SetNewPasswordView,
     TelegramLoginView,
     UserMessageCreateApi,
     UserProfileView,
-    UserRegisterVerifyView,
-    UserRegisterView,
-    UserRegisterPhoneView,
     UserRegisterPhoneVerifyView,
-    ResetPasswordStartView,
-    ResetPasswordVerifyView,
-    SetNewPasswordView
+    UserRegisterPhoneView,
 )
-
-
 
 urlpatterns = [
     # path("register/", UserRegisterView.as_view(), name="register"),
@@ -39,9 +35,17 @@ urlpatterns = [
     path("messages/<int:group_id>/", MessageListApi.as_view(), name="list_messages"),
     path("telegram/oauth2/", TelegramLoginView.as_view(), name="telegram-oauth2"),
     path("user/profile", UserProfileView.as_view(), name="profile"),
-    path('reset-password/start/', ResetPasswordStartView.as_view(), name='reset-password-start'),
-    path('reset-password/verify/', ResetPasswordVerifyView.as_view(), name='reset-password-verify'),
-    path('reset-password/set/', SetNewPasswordView.as_view(), name='reset-password-set'),
-
+    path(
+        "reset-password/start/",
+        ResetPasswordStartView.as_view(),
+        name="reset-password-start",
+    ),
+    path(
+        "reset-password/verify/",
+        ResetPasswordVerifyView.as_view(),
+        name="reset-password-verify",
+    ),
+    path(
+        "reset-password/set/", SetNewPasswordView.as_view(), name="reset-password-set"
+    ),
 ]
-
