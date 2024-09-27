@@ -2,10 +2,12 @@ import hashlib
 import hmac
 import time
 from datetime import timedelta
-
+from drf_yasg.utils import swagger_auto_schema
 from django.conf import settings
 from django.shortcuts import render
 from django.utils import timezone
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, status
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import CreateAPIView, ListAPIView
@@ -23,9 +25,21 @@ from .serializers import (
     UserMessageSerializer,
     UserOtpCodeVerifySerializer,
     UserRegisterSerializer,
-    UserLoginSerializer
+    UserRegisterPhoneSerializer,
+    UserPhoneVerifySerializer,
+    ResetPasswordStartSerializer,
+    ResetPasswordVerifySerializer,
+    SetNewPasswordSerializer
 )
-from .utils import generate_otp_code, send_verification_code
+from .utils import generate_otp_code, send_verification_code, telegram_pusher
+
+
+code = openapi.Parameter(
+    name="code", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING
+)
+
+
+query = openapi.Parameter(name="query", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING)
 
 
 class UserRegisterView(CreateAPIView):
@@ -90,14 +104,78 @@ class UserRegisterVerifyView(CreateAPIView):
             )
 
 
+class UserRegisterPhoneView(CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserRegisterPhoneSerializer
+
+  
+    def perform_create(self, serializer):
+        user = serializer.save(is_active=False)
+        user.set_password(serializer.validated_data["password"])
+        user.save()
+        
+        code = generate_otp_code()
+        new_otp_code = UserOtpCode.objects.create(
+            user=user,
+            code=code,
+            type=UserOtpCode.VerificationType.REGISTER,
+            expires_in=timezone.now() + timedelta(minutes=settings.OTP_CODE_VERIFICATION_TIME),
+        )
+        telegram_pusher(user.phone_number, new_otp_code.code, new_otp_code.expires_in, text="#registration")
+
+        return Response({"message": "Foydalanuvchi muvaffaqiyatli ro'yxatdan o'tdi!"}, status=status.HTTP_201_CREATED)
+
+
+class UserRegisterPhoneVerifyView(CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserPhoneVerifySerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            data = self.serializer_class(data=request.data)
+            if not data.is_valid():
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST, data={"message": _("Invalid data")}
+                )
+            user = User.objects.get(phone_number=data.data["phone_number"])
+            user_otp_code = UserOtpCode.objects.filter(
+                user=user, code=data.data["password"], is_used=False
+            )
+            if not user_otp_code.exists():
+                return Response(
+                    status=status.HTTP_404_NOT_FOUND,
+                    data={"message": _("otp code not found")},
+                )
+            user_otp_code = user_otp_code.filter(expires_in__gte=timezone.now())
+            if not user_otp_code.exists():
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST,
+                    data={"message": _("otp code was expired")},
+                )
+
+            user.is_active = True
+            user.save()
+            otp_code = user_otp_code.first()
+            otp_code.is_used = True
+            otp_code.save()
+            return Response(
+                status=status.HTTP_200_OK, data={"message": _("user is activated")}
+            )
+        except User.DoesNotExist:
+            return Response(
+                status=status.HTTP_404_NOT_FOUND,
+                data={"message": _("User does not exist")},
+            )
+
 class GoogleAuth(APIView):
+    @swagger_auto_schema(manual_parameters=[code])
     def get(self, request, *args, **kwargs):
         auth_token = str(request.query_params.get("code"))
         ser = GoogleSerializer(data={"auth_token": auth_token})
         if ser.is_valid():
             return Response(ser.data)
         return Response(ser.errors, status=400)
-
+    
 
 class FacebookAuth(CreateAPIView):
     queryset = User.objects.all()
@@ -183,25 +261,46 @@ class TelegramLoginView(CreateAPIView):
         return True
 
 
-class UserLoginView(APIView):
-    permission_classes = [AllowAny]
-    serializer_class = UserLoginSerializer
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            user = serializer.validated_data['user']
-            token = user.get_token()
-            return Response(
-                data={
-                    "message": "Login successful",
-                    "token": str(token),
-                    "user": {
-                        "email": user.email,
-                        "phone_number": user.phone_number,
-                        "username": user.username,
-                    }
-                },
-                status=status.HTTP_200_OK
-            )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class ResetPasswordStartView(CreateAPIView):
+    serializer_class = ResetPasswordStartSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        phone_number = serializer.validated_data['phone_number']
+        user = User.objects.get(phone_number=phone_number)
+
+        code = generate_otp_code()
+        new_otp_code =  UserOtpCode.objects.create(
+            user=user,
+            code=code,
+            is_used=False,
+            expires_in=timezone.now() + timedelta(minutes=settings.OTP_CODE_VERIFICATION_TIME)
+        )
+
+
+        telegram_pusher(phone_number, code, new_otp_code.expires_in, text="#resetpassword")
+        
+        return Response({"message": _("OTP code sent to your phone.")}, status=status.HTTP_200_OK)
+
+class ResetPasswordVerifyView(CreateAPIView):
+    serializer_class = ResetPasswordVerifySerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        return Response({"message": _("OTP code verified successfully.")}, status=status.HTTP_200_OK)
+    
+
+class SetNewPasswordView(CreateAPIView):
+    serializer_class = SetNewPasswordSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        
+        return Response({"message": _("Password has been reset successfully.")}, status=status.HTTP_200_OK)

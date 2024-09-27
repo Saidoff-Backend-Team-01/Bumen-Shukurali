@@ -16,6 +16,8 @@ from .views import (
     TopUserList,
     UserClubsView,
     UserPopularSubject,
+    JoinDiscussionGroupView,
+    TopUserList,
     UserSubjectListApiView,
 )
 

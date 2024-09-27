@@ -27,7 +27,8 @@ class User(AbstractUser):
         _("phone number"), unique=True, max_length=20, null=True, blank=True
     )
     auth_type = models.CharField(
-        _("auth type"), choices=AuthType.choices, max_length=244, unique=True
+        _("auth type"), choices=AuthType.choices, max_length=244, unique=True,
+        default=AuthType.WITH_EMAIL
     )
     telegram_id = models.CharField(_("telegram id"), max_length=55, null=True, blank=True)
     objects = CustomUserManager()
@@ -38,7 +39,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     def __str__(self) -> str:
-        return self.email
+        return f"{self.email or self.id}"
 
     class Meta:
         verbose_name = _("User")
