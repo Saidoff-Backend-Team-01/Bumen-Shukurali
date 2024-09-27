@@ -164,6 +164,7 @@ class UserRegisterPhoneVerifyView(CreateAPIView):
                 data={"message": _("User does not exist")},
             )
 
+
 class GoogleAuth(APIView):
     @swagger_auto_schema(manual_parameters=[code])
     def get(self, request, *args, **kwargs):

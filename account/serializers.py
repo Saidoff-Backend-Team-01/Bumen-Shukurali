@@ -64,7 +64,9 @@ class GoogleSerializer(serializers.Serializer):
             user_data = google.Google.validated(id_token_str)
 
         else:
-            raise Exception(f"Error fetching token: {response.json()}")
+            raise serializers.ValidationError(
+                f"Error fetching token: {response.json().get('error_description', 'Unknown error')}"
+        )
 
         if not auth_token:
             raise APIException("Код авторизации отсутствует")
