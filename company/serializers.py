@@ -1,7 +1,9 @@
 from rest_framework import serializers
 from .models import FAQ, ContactWithUs, Contacts, PrivacyPolicy
 from common.serializers import MediaURlSerializer
-from .models import FAQ, Contacts, ContactWithUs
+
+from .models import FAQ, Contacts, ContactWithUs, ContactWithUsCategory,ContactWithUsReason,ContactWithUsMobile, AppInfo, Sponsor
+
 
 class ContactWithUsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,6 +18,18 @@ class FAQSerializer(serializers.ModelSerializer):
     class Meta:
         model = FAQ
         fields = ("question", "answer")
+
+
+class AppInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AppInfo
+        fields = ("id","title", "description")
+
+
+class SponsorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sponsor
+        fields = ("id","image", "url")
 
 
 class ContactsSerializer(serializers.ModelSerializer):
@@ -41,3 +55,19 @@ class SocialMediaSerializer(serializers.Serializer):
     likedin = serializers.URLField()
     facebook = serializers.URLField()
     instagram = serializers.URLField()
+
+
+class ContactWithUsCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactWithUsCategory
+        fields = ['id', 'name']
+
+class ContactWithUsReasonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactWithUsReason
+        fields = ['id', 'name']
+
+class ContactWithUsMobileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactWithUsMobile
+        fields = ['email', 'message', 'file', 'reason']
