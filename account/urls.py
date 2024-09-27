@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from .views import (
+from .views import (  # UserRegisterVerifyView,; UserRegisterView,
     FacebookAuth,
     GoogleAuth,
     MessageListApi,
@@ -10,13 +10,11 @@ from .views import (
     UserProfileView,
     UserRegisterPhoneVerifyView,
     UserRegisterPhoneView,
-    UserRegisterVerifyView,
-    UserRegisterView,
 )
 
 urlpatterns = [
-    path("register/", UserRegisterView.as_view(), name="register"),
-    path("register/verify/", UserRegisterVerifyView.as_view(), name="register-verify"),
+    # path("register/", UserRegisterView.as_view(), name="register"),
+    # path("register/verify/", UserRegisterVerifyView.as_view(), name="register-verify"),
     path(
         "register/phone_number/", UserRegisterPhoneView.as_view(), name="register-phone"
     ),
@@ -32,5 +30,5 @@ urlpatterns = [
     path("messages/", UserMessageCreateApi.as_view(), name="create_message"),
     path("messages/<int:group_id>/", MessageListApi.as_view(), name="list_messages"),
     path("telegram/oauth2/", TelegramLoginView.as_view(), name="telegram-oauth2"),
-    path("user/profile", UserProfileView.as_view(), name="profile"),
+    path("user/profile/", UserProfileView.as_view(), name="profile"),
 ]
