@@ -8,9 +8,10 @@ from .managers import NewsManager
 
 # Create your models here.
 class News(models.Model):
-    image = models.ForeignKey(
-        Media, on_delete=models.SET_NULL, null=True, related_name="news"
-    )
+    # image = models.ForeignKey(
+    #     Media, on_delete=models.SET_NULL, null=True, related_name="news"
+    # )
+    images = models.ManyToManyField(Media, related_name="news")
     title = models.CharField(_("title"), max_length=255)
     description = models.TextField(_("description"))
     created_at = models.DateTimeField(_("create at"), auto_now_add=True)

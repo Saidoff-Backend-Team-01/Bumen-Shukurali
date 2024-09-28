@@ -9,7 +9,6 @@ from account.auth import facebook, google, register
 from account.models import SocialUser, User, UserMessage, UserOtpCode
 from common.serializers import MediaURlSerializer
 from django.utils import timezone
-from .utils import generate_otp_code, send_verification_code, telegram_pusher
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
