@@ -123,3 +123,31 @@ class SocialUser(models.Model):
     )
     email = models.EmailField(_("email address"), unique=True)
     extra_data = models.JSONField(_("extra data"), default=dict)
+
+
+class IntroQuestion(models.Model):
+    title = models.CharField(verbose_name=_("Introduction question"), max_length=200)
+    more_info = models.TextField(verbose_name=_("More info"))
+
+
+    def __str__(self) -> str:
+        return self.title
+    
+
+class IntroQuestionAnswer(models.Model):
+    text = models.TextField(verbose_name=_("Answer"))
+    intro_question = models.ForeignKey(verbose_name=_("Question"), to=IntroQuestion, on_delete=models.CASCADE)
+
+
+    def __str__(self) -> str:
+        return self.intro_question.title
+    
+
+class UserIntroQuestion(models.Model):
+    user = models.ForeignKey(verbose_name=_("User"), to=User, on_delete=models.CASCADE)
+    intro_question = models.ForeignKey(verbose_name=_("Question"), to=IntroQuestion, on_delete=models.CASCADE, blank=True, null=True)
+    answer = models.ForeignKey(verbose_name=_("Answer"), to=IntroQuestionAnswer, on_delete=models.SET_NULL, blank=True, null=True)
+    is_marked = models.BooleanField(default=True)
+
+    def __str__(self) -> str:
+        return f"{self.user.username} - {self.intro_question.title}"

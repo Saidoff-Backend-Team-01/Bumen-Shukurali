@@ -6,7 +6,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import APIException
 
 from account.auth import facebook, google, register
-from account.models import SocialUser, User, UserMessage
+from account.models import SocialUser, User, UserMessage, IntroQuestion, IntroQuestionAnswer, UserIntroQuestion
 from common.serializers import MediaURlSerializer
 
 
@@ -123,3 +123,27 @@ class TelegramOauth2Serializer(serializers.Serializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     hash = serializers.CharField()
+
+
+class IntroQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IntroQuestion
+        fields = "__all__"
+
+
+class IntroQuestionAnswerSerializer(serializers.ModelSerializer):
+    intro_question = IntroQuestionSerializer()
+
+    class Meta:
+        model = IntroQuestionAnswer
+        fields = ("id", "text", "intro_question")
+
+
+class UserIntroQuestionSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    intro_question = IntroQuestionSerializer()
+    answer = IntroQuestionAnswer()
+
+    class Meta:
+        model = UserIntroQuestion
+        fields = ("id", "intro_question", "answer", "is_marked", "user")   

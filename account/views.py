@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import Groups, User, UserMessage, UserOtpCode
+from .models import Groups, User, UserMessage, UserOtpCode, IntroQuestion, IntroQuestionAnswer, UserIntroQuestion
 from .permissions import IsGroupMember
 from .serializers import (
     FacebookSerializer,
@@ -23,6 +23,9 @@ from .serializers import (
     UserMessageSerializer,
     UserOtpCodeVerifySerializer,
     UserRegisterSerializer,
+    IntroQuestionSerializer,
+    IntroQuestionAnswerSerializer, 
+    UserIntroQuestionSerializer,
 )
 from .utils import generate_otp_code, send_verification_code
 
@@ -180,3 +183,8 @@ class TelegramLoginView(CreateAPIView):
         if current_timestamp - auth_date > 86400:  # 1 day in seconds
             return False
         return True
+
+
+class QuestionsView(ListAPIView):
+    queryset = IntroQuestion.objects.all()
+    serializer_class = IntroQuestionSerializer()

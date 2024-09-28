@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from .models import Groups, User, UserMessage, UserOtpCode
+from .models import Groups, User, UserMessage, UserOtpCode, IntroQuestion, IntroQuestionAnswer, UserIntroQuestion
 
 
 class UserMessageInlineAdmin(admin.StackedInline):
@@ -68,3 +68,8 @@ admin.site.register(UserMessage, UserMessageAdmin)
 @admin.register(UserOtpCode)
 class UserOtpCodeAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "code", "type")
+
+
+admin.site.register(IntroQuestion)
+admin.site.register(IntroQuestionAnswer)
+admin.site.register(UserIntroQuestion)

@@ -9,6 +9,7 @@ from .views import (
     UserMessageCreateApi,
     UserRegisterVerifyView,
     UserRegisterView,
+    QuestionsView,
 )
 
 urlpatterns = [
@@ -21,4 +22,5 @@ urlpatterns = [
     path("messages/", UserMessageCreateApi.as_view(), name="create_message"),
     path("messages/<int:group_id>/", MessageListApi.as_view(), name="list_messages"),
     path("telegram/oauth2/", TelegramLoginView.as_view(), name="telegram-oauth2"),
+    path("intro_questions/", QuestionsView.as_view(), name="intro_questions")
 ]
