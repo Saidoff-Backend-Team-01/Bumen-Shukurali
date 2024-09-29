@@ -4,15 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-<<<<<<< HEAD
-from rest_framework.exceptions import APIException, ValidationError, NotFound
-
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView
-
-from django.shortcuts import get_object_or_404
-=======
 from rest_framework.exceptions import APIException, NotFound, ValidationError
->>>>>>> fe0e48022090261a0c29811e09fea6cfa8371e46
 from rest_framework.generics import (
     CreateAPIView,
     ListAPIView,
