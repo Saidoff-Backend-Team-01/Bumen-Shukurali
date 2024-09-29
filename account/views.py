@@ -12,17 +12,18 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, status
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.request import Request
 from rest_framework.generics import (
     CreateAPIView,
     ListAPIView,
     RetrieveUpdateDestroyAPIView,
 )
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import Groups, User, UserMessage, UserOtpCode
+from .models import Groups, User, UserMessage, UserOtpCode, IntroQuestion, UserIntroQuestion, IntroQuestionAnswer
 from .permissions import IsGroupMember
 from .serializers import (
     FacebookSerializer,
@@ -37,6 +38,9 @@ from .serializers import (
     UserProfileSerializer,
     UserRegisterPhoneSerializer,
     UserRegisterSerializer,
+    UserIntroQuestionSerializer, 
+    IntroQuestionAnswerSerializer,
+    IntroQuestionSerializer,
 )
 from .utils import generate_otp_code, send_verification_code, telegram_pusher
 
@@ -352,3 +356,35 @@ class UserProfileView(RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         return self.request.user
+    
+
+class IntroQuestionsView(ListAPIView):
+    queryset = IntroQuestion.objects.all()
+    serializer_class = IntroQuestionSerializer
+
+
+class AnswerIntroQuestionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    
+    def post(self, req: Request, pk: int):
+        answer_id = req.data.get('answer_id')
+        is_marked = req.data.get('is_marked')
+        try:
+            intro_question = IntroQuestion.objects.get(pk=pk)
+        except:
+            return Response({'error': 'Question was not found !!!'}, status=status.HTTP_404_NOT_FOUND)
+        
+        try:
+            answer = IntroQuestionAnswer.objects.get(pk=answer_id)
+        except:
+            return Response({'error': 'Answer was not found !!!'}, status=status.HTTP_404_NOT_FOUND)
+        
+        if is_marked.lower() == 'false' or is_marked is None:
+            UserIntroQuestion.objects.create(is_marked=False, intro_question=intro_question, user=req.user)
+            return Response({'msg': 'OK'}, status=status.HTTP_201_CREATED)
+        
+
+        user_answer = UserIntroQuestion.objects.create(user=req.user, intro_question=intro_question, is_marked=True, answer=answer)
+
+        return Response(UserIntroQuestionSerializer(user_answer).data)

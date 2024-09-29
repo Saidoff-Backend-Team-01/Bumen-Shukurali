@@ -152,11 +152,11 @@ class IntroQuestion(models.Model):
 
 class IntroQuestionAnswer(models.Model):
     text = models.TextField(verbose_name=_("Answer"))
-    intro_question = models.ForeignKey(verbose_name=_("Question"), to=IntroQuestion, on_delete=models.CASCADE)
+    intro_question = models.ForeignKey(verbose_name=_("Question"), to=IntroQuestion, on_delete=models.CASCADE, related_name='answers')
 
 
     def __str__(self) -> str:
-        return self.intro_question.title
+        return self.text
     
 
 class UserIntroQuestion(models.Model):
