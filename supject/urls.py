@@ -5,16 +5,20 @@ from .views import (
     CategoryListView,
     ClubDetail,
     GetTestResultsView,
+    JoinDiscussionGroupView,
     StartStepTestView,
     StartSubjectApi,
     StepDetailAPIView,
+    StepTestFinishView,
     SubjectSearchApiView,
     SubjectTitleApiView,
+    SubmitTestView,
+    TopUserList,
     UserClubsView,
     UserPopularSubject,
     JoinDiscussionGroupView,
     TopUserList,
-
+    UserSubjectListApiView,
 )
 
 urlpatterns = [
@@ -39,11 +43,14 @@ urlpatterns = [
         "user-popular_subjects/",
         UserPopularSubject.as_view(),
         name="user-popular-subjects",
-
     ),
-
-    path('join_group/<int:user_id>/<int:subject_id>/', JoinDiscussionGroupView.as_view(), name='join_group'),
-
-    path("tops/", TopUserList.as_view(), name='tops'),
+    path(
+        "join_group/<int:user_id>/<int:subject_id>/",
+        JoinDiscussionGroupView.as_view(),
+        name="join_group",
+    ),
+    path("tops/", TopUserList.as_view(), name="tops"),
+    path("user-subjects/", UserSubjectListApiView.as_view(), name="user-subjects"),
+    path("step-test/submit/", SubmitTestView.as_view(), name="submit-test"),
+    path("finish-step-test/", StepTestFinishView.as_view(), name="finish-step-test"),
 ]
-

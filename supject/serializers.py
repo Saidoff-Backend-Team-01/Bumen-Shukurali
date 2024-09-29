@@ -213,4 +213,8 @@ class JoinGroupSerializer(serializers.Serializer):
 class UserTestResultForSubmitSerializer(serializers.Serializer):
     result_id = serializers.IntegerField()
     test_question = serializers.IntegerField()
+<<<<<<< HEAD
     test_answers = serializers.ListField(child=serializers.IntegerField())
+=======
+    test_answers = serializers.ListField(child=serializers.IntegerField())
+>>>>>>> fe0e48022090261a0c29811e09fea6cfa8371e46

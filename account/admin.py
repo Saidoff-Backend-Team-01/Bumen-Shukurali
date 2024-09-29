@@ -12,7 +12,7 @@ class UserMessageInlineAdmin(admin.StackedInline):
 
 class CustomUserAdmin(UserAdmin):
     inlines = [UserMessageInlineAdmin]
-    # list_display = ("id", "email", "first_name", "last_name")
+    list_display = ("id", "phone_number", "email", "first_name", "last_name")
 
     fieldsets = (
         (None, {"fields": ("email", "password")}),

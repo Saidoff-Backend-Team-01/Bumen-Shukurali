@@ -1,10 +1,10 @@
-import company.validators
-from django.db import migrations, models
 import django.db.models.deletion
 import django_ckeditor_5.fields
 import phonenumber_field.modelfields
 from django.conf import settings
 from django.db import migrations, models
+
+import company.validators
 
 
 class Migration(migrations.Migration):
@@ -189,28 +189,18 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                (
-                    "telegram",
-                    models.URLField(
-                        validators=[company.validators.validate_telegram_url]
-                    ),
-                ),
-                ("facebook", models.URLField()),
-                (
-                    "instagram",
-                    models.URLField(
-                        validators=[company.validators.validate_instagram_url]
-                    ),
-                ),
-                ("linkedin", models.URLField()),
+                ("telegram", models.URLField(verbose_name="Telegram URL")),
+                ("likedin", models.URLField(verbose_name="LinkedIN URL")),
+                ("facebook", models.URLField(verbose_name="Facebook URL")),
+                ("instagram", models.URLField(verbose_name="Instagram URL")),
             ],
             options={
                 "verbose_name": "Social Media",
-                "verbose_name_plural": "Social Medias",
+                "verbose_name_plural": "Social Media",
             },
         ),
         migrations.CreateModel(
-            name="Sponsor",
+            name="Advertising",
             fields=[
                 (
                     "id",
@@ -223,6 +213,10 @@ class Migration(migrations.Migration):
                 ),
                 ("url", models.URLField(verbose_name="URL")),
                 (
+                    "created_at",
+                    models.DateTimeField(auto_now_add=True, verbose_name="Created at"),
+                ),
+                (
                     "image",
                     models.OneToOneField(
                         on_delete=django.db.models.deletion.CASCADE,
@@ -232,8 +226,8 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "verbose_name": "Sponsor",
-                "verbose_name_plural": "Sponsors",
+                "verbose_name": "Advertising",
+                "verbose_name_plural": "Advertisings",
             },
         ),
         migrations.CreateModel(

@@ -6,9 +6,10 @@ from rest_framework import serializers
 from rest_framework.exceptions import APIException
 
 from account.auth import facebook, google, register
-from account.models import SocialUser, User, UserMessage, IntroQuestion, IntroQuestionAnswer, UserIntroQuestion
+from account.models import SocialUser, User, UserMessage, UserOtpCode
 from common.serializers import MediaURlSerializer
-
+from django.utils import timezone
+from .utils import generate_otp_code, send_verification_code, telegram_pusher
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,9 +17,29 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         fields = ("first_name", "last_name", "email", "password", "device_id")
 
 
+class UserRegisterPhoneSerializer(serializers.ModelSerializer):
+    phone_number = serializers.CharField(required=True)
+
+    class Meta:
+        model = User
+        fields = ["password", "phone_number"]
+
+    def validate(self, attrs):
+        user = User.objects.filter(phone_number=attrs["phone_number"], is_active=True)
+        if user.exists():
+            raise serializers.ValidationError("User already exists")
+        
+        return attrs
+
+
 class UserOtpCodeVerifySerializer(serializers.Serializer):
-    code = serializers.IntegerField(required=True)  # todo: add validation
+    code = serializers.IntegerField(required=True)
     email = serializers.EmailField(required=True)
+
+
+class UserPhoneVerifySerializer(serializers.Serializer):
+    code = serializers.IntegerField(required=True)
+    phone_number = serializers.CharField(required=True)
 
 
 class GoogleSerializer(serializers.Serializer):
@@ -125,25 +146,79 @@ class TelegramOauth2Serializer(serializers.Serializer):
     hash = serializers.CharField()
 
 
-class IntroQuestionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = IntroQuestion
-        fields = "__all__"
-
-
-class IntroQuestionAnswerSerializer(serializers.ModelSerializer):
-    intro_question = IntroQuestionSerializer()
+class UserProfileSerializer(serializers.ModelSerializer):
+    photo = MediaURlSerializer(read_only=True)
 
     class Meta:
-        model = IntroQuestionAnswer
-        fields = ("id", "text", "intro_question")
+        model = User
+        fields = (
+            "first_name",
+            "last_name",
+            "father_name",
+            "email",
+            "photo",
+            "birth_date",
+            "gender",
+            "phone_number",
+        )
 
 
-class UserIntroQuestionSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
-    intro_question = IntroQuestionSerializer()
-    answer = IntroQuestionAnswer()
+class ResetPasswordStartSerializer(serializers.Serializer):
+    phone_number = serializers.CharField(max_length=20)
 
-    class Meta:
-        model = UserIntroQuestion
-        fields = ("id", "intro_question", "answer", "is_marked", "user")   
+    def validate_phone_number(self, value):
+        if not User.objects.filter(phone_number=value).exists():
+            raise serializers.ValidationError(_("User with this phone number does not exist."))
+        return value
+
+
+
+class ResetPasswordVerifySerializer(serializers.Serializer):
+    phone_number = serializers.CharField(max_length=20)
+    otp_code = serializers.CharField(max_length=6)
+
+    def validate(self, attrs):
+        phone_number = attrs.get("phone_number")
+        otp_code = attrs.get("otp_code")
+
+        try:
+            user = User.objects.get(phone_number=phone_number)
+        except User.DoesNotExist:
+            raise serializers.ValidationError(_("User with this phone number does not exist."))
+
+        otp_record = UserOtpCode.objects.filter(user=user, code=otp_code, is_used=False)
+        if not otp_record.exists():
+            raise serializers.ValidationError(_("OTP code not found or already used."))
+
+        if otp_record.filter(expires_in__lt=timezone.now()).exists():
+            raise serializers.ValidationError(_("OTP code has expired."))
+
+        return attrs
+
+
+class SetNewPasswordSerializer(serializers.Serializer):
+    phone_number = serializers.CharField(max_length=20)
+    new_password = serializers.CharField(min_length=8)
+    confirm_password = serializers.CharField(min_length=8)
+
+    def validate(self, attrs):
+        new_password = attrs.get("new_password")
+        confirm_password = attrs.get("confirm_password")
+        
+        if new_password != confirm_password:
+            raise serializers.ValidationError(_("Passwords do not match."))
+        
+        return attrs
+
+    def save(self, **kwargs):
+        phone_number = self.validated_data.get("phone_number")
+        new_password = self.validated_data.get("new_password")
+        
+        user = User.objects.get(phone_number=phone_number)
+        user.set_password(new_password)
+        user.save()
+
+        # Mark OTP as used if necessary
+        UserOtpCode.objects.filter(user=user, is_used=False).update(is_used=True)
+        
+        return user

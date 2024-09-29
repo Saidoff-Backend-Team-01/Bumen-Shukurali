@@ -18,7 +18,6 @@ from .models import (
     Vacancy,
 )
 
-
 admin.site.register(TestQuestion)
 admin.site.register(TestAnswer)
 admin.site.register(UserTotalTestResult)
@@ -29,6 +28,7 @@ admin.site.register(ClubMeeting)
 class SubjectTitleInline(admin.StackedInline):
     model = SubjectTitle
     extra = 1
+    show_change_link = True
 
 
 @admin.register(Category)
@@ -40,6 +40,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class SubjectInline(admin.StackedInline):
     model = Subject
     extra = 1
+    show_change_link = True
 
 
 @admin.register(SubjectTitle)
@@ -63,9 +64,15 @@ class SubjectAdmin(admin.ModelAdmin):
 class UserSubjectAdmin(admin.ModelAdmin):
     list_display = ("id", "user")
 
+
 @admin.register(StepFile)
 class StepFileAdmin(admin.ModelAdmin):
     list_display = ("id", "title")
+
+
+class StepFileInlineAdmin(admin.StackedInline):
+    model = StepFile
+    extra = 1
 
 
 @admin.register(UserStep)
@@ -80,4 +87,4 @@ class StepTestAdmin(admin.ModelAdmin):
 
 @admin.register(Step)
 class StepAdmin(admin.ModelAdmin):
-    pass
+    inlines = [StepFileInlineAdmin]
