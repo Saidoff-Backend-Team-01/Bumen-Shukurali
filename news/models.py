@@ -8,10 +8,6 @@ from .managers import NewsManager
 
 # Create your models here.
 class News(models.Model):
-    # image = models.ForeignKey(
-    #     Media, on_delete=models.SET_NULL, null=True, related_name="news"
-    # )
-    images = models.ManyToManyField(Media, related_name="news")
     title = models.CharField(_("title"), max_length=255)
     description = models.TextField(_("description"))
     created_at = models.DateTimeField(_("create at"), auto_now_add=True)
@@ -24,3 +20,12 @@ class News(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class NewsImage(models.Model):
+    news = models.ForeignKey(News, on_delete=models.CASCADE, related_name='news_images')
+    image = models.ForeignKey(Media, on_delete=models.CASCADE, related_name='news_images')
+
+    class Meta:
+        verbose_name = _("news image")
+        verbose_name_plural = _("news images")
