@@ -138,7 +138,6 @@ class UserTestResultSerializer(serializers.Serializer):
     test_answers = serializers.ListField(child=serializers.IntegerField)
 
 
-
 class UserTotalTestResultSerializer(serializers.ModelSerializer):
     user_test_results = UserTestResultSerializer(many=True)
 
