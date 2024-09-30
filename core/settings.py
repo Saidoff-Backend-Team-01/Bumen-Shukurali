@@ -33,7 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # BOT_TOKEN = config["BOT_TOKEN"]
-BOT_TOKEN='7300408021:AAFXMO5WF7E4T76hLYrlll792l-qG0n8uHo'
+BOT_TOKEN = "7300408021:AAFXMO5WF7E4T76hLYrlll792l-qG0n8uHo"
 # CHANNEL_ID = config["CHANNEL_ID"]
 CHANNEL_ID = -1002437400131
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -88,7 +88,7 @@ if DEBUG:
     MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
 
 INTERNAL_IPS = [
-    '127.0.0.1',
+    "127.0.0.1",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -184,6 +184,7 @@ LANGUAGES = [
 
 STATIC_URL = "static/"
 MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
@@ -445,8 +446,6 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_IMPORTS = "company.tasks"
 
 
-
-
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
@@ -455,4 +454,3 @@ CACHES = {
 }
 
 FCM_SERVER_KEY = config["SOCIAL_SECRET_PASSWORD"]
-
