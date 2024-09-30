@@ -9,7 +9,7 @@ from account.auth import facebook, google, register
 from account.models import SocialUser, User, UserMessage, UserOtpCode
 from common.serializers import MediaURlSerializer
 from django.utils import timezone
-from .utils import generate_otp_code, send_verification_code, telegram_pusher
+from .utils import validate_uzbek_phone_number
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,7 +18,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 
 class UserRegisterPhoneSerializer(serializers.ModelSerializer):
-    phone_number = serializers.CharField(required=True)
+    # phone_number = serializers.CharField(required=True)
+    phone_number = serializers.CharField(required=True, validators=[validate_uzbek_phone_number])
 
     class Meta:
         model = User
@@ -39,7 +40,8 @@ class UserOtpCodeVerifySerializer(serializers.Serializer):
 
 class UserPhoneVerifySerializer(serializers.Serializer):
     code = serializers.IntegerField(required=True)
-    phone_number = serializers.CharField(required=True)
+    phone_number = serializers.CharField(required=True, validators=[validate_uzbek_phone_number])
+
 
 
 class GoogleSerializer(serializers.Serializer):
