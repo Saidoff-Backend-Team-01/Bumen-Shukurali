@@ -31,6 +31,9 @@ class Media(models.Model):
             if self.file.name.split(".")[-1] not in ["jpg", "jpeg", "png"]:
                 raise ValidationError(_("Invalid Image File"))
 
+    def __str__(self):
+        return f"{self.get_type_display()}: {self.file.name}"
+
     class Meta:
         verbose_name = _("Media")
         verbose_name_plural = _("Media")
