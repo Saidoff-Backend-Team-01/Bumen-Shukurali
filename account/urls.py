@@ -13,6 +13,8 @@ from .views import (  # UserRegisterVerifyView,; UserRegisterView,
     UserProfileView,
     UserRegisterPhoneVerifyView,
     UserRegisterPhoneView,
+    IntroQuestionsView,
+    AnswerIntroQuestionView,
 )
 
 urlpatterns = [
@@ -48,4 +50,7 @@ urlpatterns = [
     path(
         "reset-password/set/", SetNewPasswordView.as_view(), name="reset-password-set"
     ),
+    path("intro_questions/", IntroQuestionsView.as_view(), name='intro_questions'),
+    path("intro_question/<int:pk>/", AnswerIntroQuestionView.as_view(), name='intro_question'),
+
 ]

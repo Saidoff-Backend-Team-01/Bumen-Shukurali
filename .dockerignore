@@ -1,0 +1,7 @@
+.idea
+.gitignore
+README.md
+setup.cfg
+.pre-commit-config.yml
+.env.example
+env

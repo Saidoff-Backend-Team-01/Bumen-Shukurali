@@ -6,7 +6,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import APIException
 
 from account.auth import facebook, google, register
-from account.models import SocialUser, User, UserMessage, UserOtpCode
+from account.models import SocialUser, User, UserMessage, UserOtpCode, IntroQuestion, IntroQuestionAnswer, UserIntroQuestion
 from common.serializers import MediaURlSerializer
 from django.utils import timezone
 from .utils import validate_uzbek_phone_number
@@ -224,3 +224,26 @@ class SetNewPasswordSerializer(serializers.Serializer):
         UserOtpCode.objects.filter(user=user, is_used=False).update(is_used=True)
         
         return user
+    
+class IntroQuestionAnswerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = IntroQuestionAnswer
+        fields = ("id", "text")
+
+class IntroQuestionSerializer(serializers.ModelSerializer):
+    answers = IntroQuestionAnswerSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = IntroQuestion
+        fields = ("id", "title", "more_info", "answers")
+
+
+class UserIntroQuestionSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    intro_questions = IntroQuestionSerializer(read_only=True)
+    answer = IntroQuestionAnswerSerializer(read_only=True)
+
+    class Meta:
+        model = UserIntroQuestion
+        fields = ("id", "intro_questions", "answer", "is_marked", "user")

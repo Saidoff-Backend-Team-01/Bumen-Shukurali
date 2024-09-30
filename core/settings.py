@@ -87,6 +87,10 @@ if DEBUG:
     INSTALLED_APPS.append("debug_toolbar")
     MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
 
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
 ROOT_URLCONF = "core.urls"
 
 TEMPLATES = [
@@ -441,4 +445,14 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_IMPORTS = "company.tasks"
 
 
-FCM_SERVER_KEY = os.getenv("SOCIAL_SECRET_PASSWORD")
+
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": os.getenv("CACHE_REDIS_URL"),
+    }
+}
+
+FCM_SERVER_KEY = config["SOCIAL_SECRET_PASSWORD"]
+
