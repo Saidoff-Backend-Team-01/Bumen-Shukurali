@@ -1,11 +1,10 @@
-version: '3.7'
+version: '3.8'
+
 
 services:
   db:
-    container_name: bumen_db
-    image: postgres:15
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
+    container_name: bumendb
+    image: postgres
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
@@ -14,17 +13,16 @@ services:
       - POSTGRES_PORT=${DB_PORT}
 
     restart: always
-    env_file:
-      - .env
-
   web:
-    container_name: bumen_web
-    depends_on:
-      - db
-    build:
+    container_name: bumenweb
+    build: 
       context: ./
       dockerfile: Dockerfile
-
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
     volumes:
       - .:/app
       - ./static:/home/app/web/static
@@ -32,10 +30,9 @@ services:
 #      - ./locale:/home/app/web/locale
     env_file: .env
     command: gunicorn core.wsgi:application --bind 0.0.0.0:${PORT} --timeout 120
-
     ports:
       - ${PORT}:${PORT}
-
+    command: gunicorn --bind 0.0.0.0:8888 core.wsgi:application
     restart: always
   celery:
     build: .
@@ -51,13 +48,11 @@ services:
       - redis
     env_file:
       - .env
-
   redis:
     image: "redis:alpine"
 
-
-# gunicorn src.core.wsgi:application --bind 0.0.0.0:${PORT} --timeout 120
-
-
+    
 volumes:
-  postgres_data:
+  media:
+  static:
+  bumen:

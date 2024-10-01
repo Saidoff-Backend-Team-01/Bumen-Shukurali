@@ -16,11 +16,13 @@ djangorestframework-simplejwt
 django-ckeditor-5
 phonenumbers
 google-cloud
-sentry-sdk
 google-auth==2.32.0
 facebook-sdk==3.1.0
 sentry-sdk==2.13.0
 setuptools
-celery==5.4.0
+celery
 django_celery_beat
 django-debug-toolbar
+gunicorn
+pyfcm
+redis

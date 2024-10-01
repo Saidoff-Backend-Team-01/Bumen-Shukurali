@@ -5,7 +5,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from math import ceil
 from .models import News
-from .serializers import NewsListSerializer
+from .serializers import NewsDetailSerializer
 
 
 class PageNumberPagination(PageNumberPagination):
@@ -14,7 +14,7 @@ class PageNumberPagination(PageNumberPagination):
     
 class NewsListView(ListAPIView):
     queryset = News.published.all()
-    serializer_class = NewsListSerializer
+    serializer_class = NewsDetailSerializer
     pagination_class = PageNumberPagination
     
     def get_queryset(self):

@@ -1,92 +1,92 @@
-name: Testify Project with AutoDeployment
+# name: Testify Project with AutoDeployment
 
-on:
-  workflow_call:
-  workflow_dispatch:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+# on:
+#   workflow_call:
+#   workflow_dispatch:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    env:
-      PYTHON_VERSION: 3.9
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      DEBUG: True
-      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-      POSTGRES_NAME: ${{ secrets.POSTGRES_NAME }}
-      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-      ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
-    services:
-      postgres_main:
-        image: postgres:14
-        env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-          DEBUG: ${{ secrets.DEBUG }}
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout code
-        uses: actions/checkout@v2
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     env:
+#       PYTHON_VERSION: 3.9
+#       SECRET_KEY: ${{ secrets.SECRET_KEY }}
+#       DEBUG: True
+#       POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+#       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+#       POSTGRES_NAME: ${{ secrets.POSTGRES_NAME }}
+#       POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+#       POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+#       ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+#     services:
+#       postgres_main:
+#         image: postgres:14
+#         env:
+#           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+#           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+#           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+#           POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+#           POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+#           DEBUG: ${{ secrets.DEBUG }}
+#         ports:
+#           - 5432:5432
+#         options: >-
+#           --health-cmd pg_isready
+#           --health-interval 10s
+#           --health-timeout 5s
+#           --health-retries 5
+#     steps:
+#       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-      - name: Install requirements
-        run: |
-          pip install -r requirements.txt
-      # - name: Run tests
-      #   run: |
-      #     python manage.py test
-        env:
-          SECRET_KEY: ${{ env.SECRET_KEY }}
-          # PAYME_ID: ${{ env.PAYME_ID }}
-          # PAYME_KEY: ${{ env.PAYME_KEY }}
-          # PAYME_URL: ${{ env.PAYME_URL }}
-          # PAYME_CALL_BACK_URL: ${{ env.PAYME_CALL_BACK_URL }}
-          # PAYME_MIN_AMOUNT: ${{ env.PAYME_MIN_AMOUNT }}
-          # PAYME_ACCOUNT: ${{ env.PAYME_ACCOUNT }}
+#       - name: Setup Python ${{ matrix.python-version }}
+#         uses: actions/setup-python@v2
+#         with:
+#           python-version: 3.8
+#       - name: Install requirements
+#         run: |
+#           pip install -r requirements.txt
+#       # - name: Run tests
+#       #   run: |
+#       #     python manage.py test
+#         env:
+#           SECRET_KEY: ${{ env.SECRET_KEY }}
+#           # PAYME_ID: ${{ env.PAYME_ID }}
+#           # PAYME_KEY: ${{ env.PAYME_KEY }}
+#           # PAYME_URL: ${{ env.PAYME_URL }}
+#           # PAYME_CALL_BACK_URL: ${{ env.PAYME_CALL_BACK_URL }}
+#           # PAYME_MIN_AMOUNT: ${{ env.PAYME_MIN_AMOUNT }}
+#           # PAYME_ACCOUNT: ${{ env.PAYME_ACCOUNT }}
 
-  deploy:
-    runs-on: ubuntu-latest
-    container:
-      image: ubuntu:latest
-    steps:
-      - name: Check User
-        run: whoami
+#   deploy:
+#     runs-on: ubuntu-latest
+#     container:
+#       image: ubuntu:latest
+#     steps:
+#       - name: Check User
+#         run: whoami
 
-      - name: Install curl
-        run: apt-get update && apt-get install -y curl
+#       - name: Install curl
+#         run: apt-get update && apt-get install -y curl
 
-      - name: Deploy to server
-        uses: appleboy/ssh-action@master
+#       - name: Deploy to server
+#         uses: appleboy/ssh-action@master
 
-        with:
-          host: ${{ secrets.LIVE_SERVER_IP }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          password: ${{ secrets.SERVER_USER_PASSWORD }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
-          script: |
-            cd ${{ secrets.PROJECT_PATH }}
-            source env/bin/activate
-            cd ${{ secrets.PROJECT_PATH }}
-            git pull ${{ secrets.REPO_URL }}
+#         with:
+#           host: ${{ secrets.LIVE_SERVER_IP }}
+#           username: ${{ secrets.SERVER_USERNAME }}
+#           password: ${{ secrets.SERVER_USER_PASSWORD }}
+#           key: ${{ secrets.SSH_PRIVATE_KEY }}
+#           port: 22
+#           script: |
+#             cd ${{ secrets.PROJECT_PATH }}
+#             source env/bin/activate
+#             cd ${{ secrets.PROJECT_PATH }}
+#             git pull ${{ secrets.REPO_URL }}
 
-      # - name: Restart all services
-      #   run: reload.sh
+#       # - name: Restart all services
+#       #   run: reload.sh
