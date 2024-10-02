@@ -228,7 +228,7 @@ import json
 from account.auth import facebook, register
 
 
-class FacebookAuth(APIView):
+class FacebookAuth(CreateAPIView):
     serializer_class = FacebookSerializer
 
     def post(self, request, *args, **kwargs):
