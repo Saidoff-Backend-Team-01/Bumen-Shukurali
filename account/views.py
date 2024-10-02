@@ -233,26 +233,29 @@ class FacebookAuth(CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         ser = self.serializer_class(data=request.data)
+        try:
 
-        if ser.is_valid():
+            if ser.is_valid():
+                user_data = facebook.Facebook.validated(
+                    auth_token=ser.data["auth_token"]
+                )
+                email = user_data.get("email")
+                first_name = user_data.get("first_name", "")
+                last_name = user_data.get("last_name", "")
+                photo = user_data["picture"]["data"]["url"]
 
-            user_data = facebook.Facebook.validated(auth_token=ser.data["auth_token"])
-
-            email = user_data.get("email")
-            first_name = user_data.get("first_name", "")
-            last_name = user_data.get("last_name", "")
-            photo = user_data["picture"]["data"]["url"]
-
-            data = register.register_social_user(
-                user_id=user_data.get("id"),
-                provider=User.AuthType.FACEBOOK,
-                email=email,
-                first_name=first_name,
-                last_name=last_name,
-                photo=photo,
-            )
-            return Response(json.loads(data))
-        return Response(ser.errors, status=400)
+                data = register.register_social_user(
+                    user_id=user_data.get("id"),
+                    provider=User.AuthType.FACEBOOK,
+                    email=email,
+                    first_name=first_name,
+                    last_name=last_name,
+                    photo=photo,
+                )
+                return Response(json.loads(data))
+            return Response(ser.errors, status=400)
+        except Exception as e:
+            raise Exception(e)
 
 
 class UserMessageCreateApi(CreateAPIView):
