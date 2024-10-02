@@ -53,7 +53,9 @@ from .serializers import (
 from .utils import generate_otp_code, send_verification_code, telegram_pusher
 
 code = openapi.Parameter(name="code", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING)
-
+auth_token = openapi.Parameter(
+    name="auth_token", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING
+)
 
 query = openapi.Parameter(name="query", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING)
 
@@ -229,7 +231,6 @@ from account.auth import facebook, register
 class FacebookAuth(APIView):
     serializer_class = FacebookSerializer
 
-    @swagger_auto_schema(manual_parameters=[code])
     def post(self, request, *args, **kwargs):
         ser = self.serializer_class(data=request.data)
 
