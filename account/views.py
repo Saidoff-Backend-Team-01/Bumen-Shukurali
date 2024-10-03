@@ -53,7 +53,9 @@ from .serializers import (
 from .utils import generate_otp_code, send_verification_code, telegram_pusher
 
 code = openapi.Parameter(name="code", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING)
-
+auth_token = openapi.Parameter(
+    name="auth_token", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING
+)
 
 query = openapi.Parameter(name="query", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING)
 
@@ -221,9 +223,39 @@ class GoogleAuth(APIView):
         return Response(ser.errors, status=400)
 
 
+import json
+
+from account.auth import facebook, register
+
+
 class FacebookAuth(CreateAPIView):
-    queryset = User.objects.all()
     serializer_class = FacebookSerializer
+
+    def post(self, request, *args, **kwargs):
+        ser = self.serializer_class(data=request.data)
+        try:
+
+            if ser.is_valid():
+                user_data = facebook.Facebook.validated(
+                    auth_token=ser.data["auth_token"]
+                )
+                email = user_data.get("email")
+                first_name = user_data.get("first_name", "")
+                last_name = user_data.get("last_name", "")
+                photo = user_data["picture"]["data"]["url"]
+
+                data = register.register_social_user(
+                    user_id=user_data.get("id"),
+                    provider=User.AuthType.FACEBOOK,
+                    email=email,
+                    first_name=first_name,
+                    last_name=last_name,
+                    photo=photo,
+                )
+                return Response(json.loads(data))
+            return Response(ser.errors, status=400)
+        except Exception as e:
+            raise Exception(e)
 
 
 class UserMessageCreateApi(CreateAPIView):

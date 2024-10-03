@@ -1,15 +1,25 @@
 import requests
 import sentry_sdk
 from django.conf import settings
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 
 from account.auth import facebook, google, register
-from account.models import SocialUser, User, UserMessage, UserOtpCode, IntroQuestion, IntroQuestionAnswer, UserIntroQuestion
+from account.models import (
+    IntroQuestion,
+    IntroQuestionAnswer,
+    SocialUser,
+    User,
+    UserIntroQuestion,
+    UserMessage,
+    UserOtpCode,
+)
 from common.serializers import MediaURlSerializer
-from django.utils import timezone
+
 from .utils import validate_uzbek_phone_number
+
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,7 +29,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 class UserRegisterPhoneSerializer(serializers.ModelSerializer):
     # phone_number = serializers.CharField(required=True)
-    phone_number = serializers.CharField(required=True, validators=[validate_uzbek_phone_number])
+    phone_number = serializers.CharField(
+        required=True, validators=[validate_uzbek_phone_number]
+    )
 
     class Meta:
         model = User
@@ -29,7 +41,7 @@ class UserRegisterPhoneSerializer(serializers.ModelSerializer):
         user = User.objects.filter(phone_number=attrs["phone_number"], is_active=True)
         if user.exists():
             raise serializers.ValidationError("User already exists")
-        
+
         return attrs
 
 
@@ -40,8 +52,9 @@ class UserOtpCodeVerifySerializer(serializers.Serializer):
 
 class UserPhoneVerifySerializer(serializers.Serializer):
     code = serializers.IntegerField(required=True)
-    phone_number = serializers.CharField(required=True, validators=[validate_uzbek_phone_number])
-
+    phone_number = serializers.CharField(
+        required=True, validators=[validate_uzbek_phone_number]
+    )
 
 
 class GoogleSerializer(serializers.Serializer):
@@ -101,31 +114,6 @@ class GoogleSerializer(serializers.Serializer):
 class FacebookSerializer(serializers.Serializer):
     auth_token = serializers.CharField()
 
-    def validate_auth_token(self, auth_token):
-        user_data = facebook.Facebook.validated(auth_token=auth_token)
-
-        email = user_data.get("email")
-        first_name = user_data.get("given_name", "")
-        last_name = user_data.get("family_name", "")
-        photo = user_data.get("picture", None)
-        birthday = user_data.get("birthday", None)
-        username = first_name + last_name
-
-        try:
-            return register.register_social_user(
-                auth_type=User.AuthType.FACEBOOK,
-                email=email,
-                first_name=first_name,
-                last_name=last_name,
-                birthday=birthday,
-                username=username,
-                photo=photo,
-            )
-        except Exception as e:
-            raise serializers.ValidationError(
-                f"Ошибка при регистрации пользователя: {e}"
-            )
-
 
 class UserSerializer(serializers.ModelSerializer):
     photo = MediaURlSerializer(read_only=True)
@@ -172,9 +160,10 @@ class ResetPasswordStartSerializer(serializers.Serializer):
 
     def validate_phone_number(self, value):
         if not User.objects.filter(phone_number=value).exists():
-            raise serializers.ValidationError(_("User with this phone number does not exist."))
+            raise serializers.ValidationError(
+                _("User with this phone number does not exist.")
+            )
         return value
-
 
 
 class ResetPasswordVerifySerializer(serializers.Serializer):
@@ -188,7 +177,9 @@ class ResetPasswordVerifySerializer(serializers.Serializer):
         try:
             user = User.objects.get(phone_number=phone_number)
         except User.DoesNotExist:
-            raise serializers.ValidationError(_("User with this phone number does not exist."))
+            raise serializers.ValidationError(
+                _("User with this phone number does not exist.")
+            )
 
         otp_record = UserOtpCode.objects.filter(user=user, code=otp_code, is_used=False)
         if not otp_record.exists():
@@ -208,30 +199,32 @@ class SetNewPasswordSerializer(serializers.Serializer):
     def validate(self, attrs):
         new_password = attrs.get("new_password")
         confirm_password = attrs.get("confirm_password")
-        
+
         if new_password != confirm_password:
             raise serializers.ValidationError(_("Passwords do not match."))
-        
+
         return attrs
 
     def save(self, **kwargs):
         phone_number = self.validated_data.get("phone_number")
         new_password = self.validated_data.get("new_password")
-        
+
         user = User.objects.get(phone_number=phone_number)
         user.set_password(new_password)
         user.save()
 
         # Mark OTP as used if necessary
         UserOtpCode.objects.filter(user=user, is_used=False).update(is_used=True)
-        
+
         return user
-    
+
+
 class IntroQuestionAnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = IntroQuestionAnswer
         fields = ("id", "text")
+
 
 class IntroQuestionSerializer(serializers.ModelSerializer):
     answers = IntroQuestionAnswerSerializer(many=True, read_only=True)
