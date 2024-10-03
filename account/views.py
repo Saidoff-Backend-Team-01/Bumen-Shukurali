@@ -60,6 +60,7 @@ auth_token = openapi.Parameter(
 query = openapi.Parameter(name="query", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING)
 
 
+
 # class UserRegisterView(CreateAPIView):
 #     queryset = User.objects.all()
 #     serializer_class = UserRegisterSerializer
@@ -404,17 +405,35 @@ class IntroQuestionsView(ListAPIView):
 class AnswerIntroQuestionView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'answer_id': openapi.Schema(type=openapi.TYPE_INTEGER, description='ID of the answer', required=[]),
+        }
+    ))
     def post(self, req: Request, pk: int):
         answer_id = req.data.get("answer_id")
-        is_marked = req.data.get("is_marked")
+        
+        print(answer_id)
+
+
+        
         try:
             intro_question = IntroQuestion.objects.get(pk=pk)
+
         except:
             return Response(
                 {"error": "Question was not found !!!"},
                 status=status.HTTP_404_NOT_FOUND,
             )
+        
 
+        if answer_id is None:
+            UserIntroQuestion.objects.create(
+                is_marked=False, intro_question=intro_question, user=req.user
+            )
+            return Response({"msg": "OK"}, status=status.HTTP_201_CREATED)
+        
         try:
             answer = IntroQuestionAnswer.objects.get(pk=answer_id)
         except:
@@ -422,11 +441,6 @@ class AnswerIntroQuestionView(APIView):
                 {"error": "Answer was not found !!!"}, status=status.HTTP_404_NOT_FOUND
             )
 
-        if is_marked.lower() == "false" or is_marked is None:
-            UserIntroQuestion.objects.create(
-                is_marked=False, intro_question=intro_question, user=req.user
-            )
-            return Response({"msg": "OK"}, status=status.HTTP_201_CREATED)
 
         user_answer = UserIntroQuestion.objects.create(
             user=req.user, intro_question=intro_question, is_marked=True, answer=answer

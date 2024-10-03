@@ -11,6 +11,7 @@ from django.utils import timezone
 from PIL import Image
 
 from core.settings import BOT_TOKEN, CHANNEL_ID, MEDIA_ROOT
+from django.conf import settings
 
 
 def generate_otp_code():

@@ -189,4 +189,4 @@ class UserIntroQuestion(models.Model):
     is_marked = models.BooleanField(default=True)
 
     def __str__(self) -> str:
-        return f"{self.user.username} - {self.intro_question.title}"
+        return f"{self.pk} - {self.intro_question.title}"

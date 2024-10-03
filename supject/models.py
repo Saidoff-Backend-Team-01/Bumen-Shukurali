@@ -10,6 +10,8 @@ from common.models import Media
 class Category(models.Model):
     name = models.CharField(verbose_name=_("Name"), max_length=100, unique=True)
     click_count = models.PositiveIntegerField(verbose_name=_("Click Count"), default=0)
+    bg_image = models.OneToOneField(verbose_name=_("Image"), to=Media, on_delete=models.SET_NULL, blank=True, null=True, related_name='image')
+    icon = models.OneToOneField(verbose_name=_("Icon"), to=Media, on_delete=models.SET_NULL, blank=True, null=True, related_name='icon')
 
     def __str__(self) -> str:
         return self.name
