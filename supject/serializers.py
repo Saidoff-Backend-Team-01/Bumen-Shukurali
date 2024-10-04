@@ -8,7 +8,6 @@ from supject.models import (
     Step,
     StepFile,
     Subject,
-    SubjectTitle,
     TestAnswer,
     TestQuestion,
     UserSubject,
@@ -32,7 +31,7 @@ class SubjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subject
-        fields = ["id", "name", "type", "subject_title", "steps"]
+        fields = ["id", "name", "type", "category", "steps"]
 
 
 class SubjectDetailSerializer(serializers.ModelSerializer):
@@ -40,7 +39,7 @@ class SubjectDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subject
-        fields = ("id", "name", "type", "steps")
+        fields = ("id", "name", "type", "category", "steps")
 
 
 class UserSubjectSerializer(serializers.ModelSerializer):
@@ -59,14 +58,6 @@ class UserSubjectStartSerializer(serializers.ModelSerializer):
         fields = ["id", "subject", "total_test_ball", "started_time", "started"]
 
 
-class SubjectTitleSerializer(serializers.ModelSerializer):
-    subjects = SubjectSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = SubjectTitle
-        fields = ["id", "name", "category", "subjects"]
-
-
 class CategorySerializer(serializers.ModelSerializer):
     bg_image = MediaURlSerializer(read_only=True)
     icon = MediaURlSerializer(read_only=True)
@@ -81,14 +72,6 @@ class CategorySerializer(serializers.ModelSerializer):
             "icon",
         ]
 
-
-
-class SubjectTitleListSerializer(serializers.ModelSerializer):
-    subjects = SubjectDetailSerializer(many=True)
-
-    class Meta:
-        model = SubjectTitle
-        fields = ("id", "name", "subjects")
 
 
 class StepFilesSerializer(serializers.ModelSerializer):
@@ -134,10 +117,14 @@ class UserPopularSubjectSerializer(serializers.ModelSerializer):
 
 
 class SubjectSearchSerializer(serializers.ModelSerializer):
-
     class Meta:
-        model = SubjectTitle
-        fields = ("id", "name", "category")
+        model = Subject
+        fields = ['id', 'name', 'category']
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['name'] = instance.name
+        return representation
 
 
 class CategorySearchSerializer(serializers.ModelSerializer):

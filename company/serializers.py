@@ -57,15 +57,18 @@ class SocialMediaSerializer(serializers.Serializer):
     instagram = serializers.URLField()
 
 
+
 class ContactWithUsCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactWithUsCategory
         fields = ['id', 'name']
 
+
 class ContactWithUsReasonSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactWithUsReason
         fields = ['id', 'name']
+
 
 class ContactWithUsMobileSerializer(serializers.ModelSerializer):
     class Meta:
