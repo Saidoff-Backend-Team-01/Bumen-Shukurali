@@ -52,14 +52,21 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     def __str__(self) -> str:
-        return str(self.phone_number)
+        if self.phone_number:
+            return f"{self.phone_number}"
+        return f"{self.email}"
 
     class Meta:
         verbose_name = _("User")
         verbose_name_plural = _("Users")
 
-    def get_token(self):
-        return RefreshToken.access_token
+    def get_tokens_for_user(user):
+        refresh = RefreshToken.for_user(user)
+
+        return {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }
 
     @property
     def user_total_bal(self):
@@ -70,6 +77,7 @@ class User(AbstractUser):
         )
 
         return total_bal
+
 
 class UserOtpCode(models.Model):
     class VerificationType(models.TextChoices):
@@ -126,9 +134,9 @@ class UserMessage(models.Model):
 
 class SocialUser(models.Model):
     class RegisterType(models.TextChoices):
-        GOOGLE = "google", _("google")
-        FACEBOOK = "facebook", _("facebook")
-        TELEGRAM = "telegram", _("telegram")
+        GOOGLE = "GOOGLE", _("google")
+        FACEBOOK = "FACEBOOK", _("facebook")
+        TELEGRAM = "TELEGRAM", _("telegram")
 
     user = models.ForeignKey(
         verbose_name=_("User"), to=User, on_delete=models.CASCADE, null=True, blank=True
@@ -139,3 +147,46 @@ class SocialUser(models.Model):
     )
     email = models.EmailField(_("email address"), unique=True)
     extra_data = models.JSONField(_("extra data"), default=dict)
+
+
+class IntroQuestion(models.Model):
+    title = models.CharField(verbose_name=_("Introduction question"), max_length=200)
+    more_info = models.TextField(verbose_name=_("More info"))
+
+    def __str__(self) -> str:
+        return self.title
+
+
+class IntroQuestionAnswer(models.Model):
+    text = models.TextField(verbose_name=_("Answer"))
+    intro_question = models.ForeignKey(
+        verbose_name=_("Question"),
+        to=IntroQuestion,
+        on_delete=models.CASCADE,
+        related_name="answers",
+    )
+
+    def __str__(self) -> str:
+        return self.text
+
+
+class UserIntroQuestion(models.Model):
+    user = models.ForeignKey(verbose_name=_("User"), to=User, on_delete=models.CASCADE)
+    intro_question = models.ForeignKey(
+        verbose_name=_("Question"),
+        to=IntroQuestion,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
+    answer = models.ForeignKey(
+        verbose_name=_("Answer"),
+        to=IntroQuestionAnswer,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    is_marked = models.BooleanField(default=True)
+
+    def __str__(self) -> str:
+        return f"{self.user.username} - {self.intro_question.title}"
