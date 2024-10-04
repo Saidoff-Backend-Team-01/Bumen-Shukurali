@@ -42,8 +42,8 @@ class CategoryAPIView(APIView):
                 click_count=F("click_count") + 1
             )
             category = Category.objects.get(pk=pk)
-
-            category_serializer = CategorySerializer(category)
+            subjects = Subject.objects.filter(category=category)
+            category_serializer = SubjectSerializer(subjects, many=True)
             return Response(category_serializer.data, status=status.HTTP_200_OK)
 
         except Exception as e:
@@ -76,6 +76,7 @@ class StartSubjectApi(APIView):
         if created:
             user_subject.started = True
             user_subject.save()
+
         club, created_club = Club.objects.get_or_create(subject=subject)
         club.users.add(user)
         club.save()
@@ -205,27 +206,19 @@ class SubjectSearchApiView(ListAPIView):
         if not query_param:
             return Response(data=[])
 
-        subject = Subject.objects.filter(name__icontains=query_param)
         subject_categories = Category.objects.filter(name__icontains=query_param)
-
-        subject_serializer = SubjectSearchSerializer(subject, many=True)
         subject_categories_serializer = CategorySearchSerializer(
             subject_categories, many=True
         )
-
-        data = {
-            "subject": subject_serializer.data,
-            "subject_categories": subject_categories_serializer.data,
-        }
-        return Response(data=data)
+        return Response(data=subject_categories_serializer.data)
 
 
 class UserClubsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, req: Request):
-        user = User.objects.get(email=req.user)
-        user_subjects = UserSubject.objects.filter(user=user)
+
+        user_subjects = UserSubject.objects.filter(user=req.user)
 
         if not user_subjects.exists():
             return Response(
@@ -241,7 +234,7 @@ class UserClubsView(APIView):
         for i in user_subjects:
             clubs.append(ClubSerializer(Club.objects.get(subject=i.subject)).data)
 
-        return Response({"user": UserSerializer(user).data, "clubs": clubs})
+        return Response({"user": UserSerializer(req.user).data, "clubs": clubs})
 
 
 class ClubDetail(APIView):

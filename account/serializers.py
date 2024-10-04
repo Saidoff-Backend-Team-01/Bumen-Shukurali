@@ -81,7 +81,7 @@ class GoogleSerializer(serializers.Serializer):
         else:
             raise serializers.ValidationError(
                 f"Error fetching token: {response.json().get('error_description', 'Unknown error')}"
-        )
+            )
 
         if not auth_token:
             raise APIException("Код авторизации отсутствует")
@@ -235,10 +235,9 @@ class IntroQuestionSerializer(serializers.ModelSerializer):
 
 
 class UserIntroQuestionSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
     intro_questions = IntroQuestionSerializer(read_only=True)
     answer = IntroQuestionAnswerSerializer(read_only=True)
 
     class Meta:
         model = UserIntroQuestion
-        fields = ("id", "intro_questions", "answer", "is_marked", "user")
+        fields = ("id", "intro_questions", "answer", "is_marked")

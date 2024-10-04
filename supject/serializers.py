@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from account.serializers import UserSerializer
 from common.serializers import MediaURlSerializer
 from supject.models import (
@@ -10,6 +11,7 @@ from supject.models import (
     Subject,
     TestAnswer,
     TestQuestion,
+    UserStep,
     UserSubject,
     UserTestResult,
     UserTotalTestResult,
@@ -18,20 +20,31 @@ from supject.models import (
 
 
 class StepSerializer(serializers.ModelSerializer):
+    percentage = serializers.SerializerMethodField()
+
     class Meta:
         model = Step
 
-        fields = [
-            "id",
-        ]
+        fields = ["id", "order", "percentage"]
+
+    def get_percentage(self, obj):
+        return 0
+
+
+class UserStepSerializer(serializers.ModelSerializer):
+    step = StepSerializer()
+
+    class Meta:
+        model = UserStep
+        fields = ["step", "finished", "finished_at"]
 
 
 class SubjectSerializer(serializers.ModelSerializer):
-    steps = StepSerializer(many=True, read_only=True)
+    image = MediaURlSerializer()
 
     class Meta:
         model = Subject
-        fields = ["id", "name", "type", "category", "steps"]
+        fields = ["id", "name", "image"]
 
 
 class SubjectDetailSerializer(serializers.ModelSerializer):
@@ -39,7 +52,7 @@ class SubjectDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subject
-        fields = ("id", "name", "type", "category", "steps")
+        fields = ("id", "name", "category", "steps")
 
 
 class UserSubjectSerializer(serializers.ModelSerializer):
@@ -73,7 +86,6 @@ class CategorySerializer(serializers.ModelSerializer):
         ]
 
 
-
 class StepFilesSerializer(serializers.ModelSerializer):
     file = MediaURlSerializer()
 
@@ -87,7 +99,7 @@ class StepDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Step
-        fields = ["title", "description", "step_files"]
+        fields = ["id", "order", "title", "description", "step_files"]
 
 
 class StartStepTestSerializer(serializers.Serializer):
@@ -113,17 +125,17 @@ class UserPopularSubjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subject
-        fields = ("id", "name", "type", "subject_title", "start_count")
+        fields = ("id", "name", "subject_title", "start_count")
 
 
 class SubjectSearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
-        fields = ['id', 'name', 'category']
+        fields = ["id", "name", "category"]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['name'] = instance.name
+        representation["name"] = instance.name
         return representation
 
 
@@ -195,7 +207,7 @@ class VacancySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Vacancy
-        fields = ('name', 'category', 'description')
+        fields = ("name", "category", "description")
 
 
 class JoinGroupSerializer(serializers.Serializer):

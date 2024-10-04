@@ -29,6 +29,7 @@ class SubjectInline(admin.StackedInline):
     extra = 1
     show_change_link = True
 
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "click_count")
@@ -42,7 +43,7 @@ class StepInlineAdmin(admin.StackedInline):
 
 @admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "type")
+    list_display = ("id", "name")
     inlines = [StepInlineAdmin]
 
 
