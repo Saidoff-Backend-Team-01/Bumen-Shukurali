@@ -19,20 +19,6 @@ class Category(models.Model):
         verbose_name_plural = _("Categorys")
 
 
-class SubjectTitle(models.Model):
-    name = models.CharField(verbose_name=_("Name"), max_length=200)
-    category = models.ForeignKey(
-        verbose_name=_("Category"), to=Category, on_delete=models.CASCADE
-    )
-
-    def __str__(self) -> str:
-        return self.name
-
-    class Meta:
-        verbose_name = _("Subject title")
-        verbose_name_plural = _("Subject titles")
-
-
 class Subject(models.Model):
     class SubjectType(models.TextChoices):
         LOCAL = "local", _("Local")
@@ -42,16 +28,16 @@ class Subject(models.Model):
     type = models.CharField(
         verbose_name=_("Type"), max_length=50, choices=SubjectType.choices
     )
-    subject_title = models.ForeignKey(
-        verbose_name=_("Subject title"),
-        to=SubjectTitle,
+    category = models.ForeignKey(  # O'zgartirilgan
+        verbose_name=_("Category"),
+        to=Category,
         on_delete=models.CASCADE,
         related_name="subjects",
     )
 
     def clean(self):
-        subject_title = Subject.objects.filter(subject_title=self.subject_title).count()
-        if subject_title >= 2:
+        subject_count = Subject.objects.filter(category=self.category).count()
+        if subject_count >= 2:
             raise ValidationError(_("Invalid Subject Type"))
 
     def __str__(self) -> str:
@@ -303,3 +289,8 @@ class UserStep(models.Model):
 
     class Meta:
         unique_together = ["user", "step"]
+
+
+
+
+

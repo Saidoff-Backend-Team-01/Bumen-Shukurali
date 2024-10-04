@@ -65,7 +65,7 @@ class StartSubjectApi(APIView):
         user = request.user
         try:
             subject = Subject.objects.get(id=subject_id)
-        except SubjectTitle.DoesNotExist:
+        except Subject.DoesNotExist:
             return Response(
                 {"error": _("Subject not found")}, status=status.HTTP_404_NOT_FOUND
             )
@@ -81,20 +81,6 @@ class StartSubjectApi(APIView):
         club.save()
         subject_serializer = UserSubjectSerializer(user_subject)
         return Response(data=subject_serializer.data, status=status.HTTP_200_OK)
-
-
-class SubjectTitleApiView(ListAPIView):
-    queryset = SubjectTitle.objects.prefetch_related("subjects").all()
-    serializer_class = SubjectTitleSerializer
-
-    @swagger_auto_schema(manual_parameters=[category_id])
-    def get(self, request, *args, **kwargs):
-        query_param = request.query_params.get("category_id", None)
-        if not query_param:
-            return Response(data=[])
-        subject_titles = self.queryset.filter(category_id=query_param)
-        serializer = SubjectTitleListSerializer(subject_titles, many=True)
-        return Response(data=serializer.data)
 
 
 class StepDetailAPIView(RetrieveAPIView):
@@ -211,7 +197,7 @@ class UserPopularSubject(APIView):
 
 
 class SubjectSearchApiView(ListAPIView):
-    queryset = SubjectTitle.objects.all()
+    queryset = Category.objects.all()
 
     @swagger_auto_schema(manual_parameters=[query])
     def get(self, request, *args, **kwargs):
@@ -219,16 +205,16 @@ class SubjectSearchApiView(ListAPIView):
         if not query_param:
             return Response(data=[])
 
-        subject_titles = SubjectTitle.objects.filter(name__icontains=query_param)
+        subject = Subject.objects.filter(name__icontains=query_param)
         subject_categories = Category.objects.filter(name__icontains=query_param)
 
-        subject_titles_serializer = SubjectSearchSerializer(subject_titles, many=True)
+        subject_serializer = SubjectSearchSerializer(subject, many=True)
         subject_categories_serializer = CategorySearchSerializer(
             subject_categories, many=True
         )
 
         data = {
-            "subject_titles": subject_titles_serializer.data,
+            "subject": subject_serializer.data,
             "subject_categories": subject_categories_serializer.data,
         }
         return Response(data=data)
@@ -239,7 +225,6 @@ class UserClubsView(APIView):
 
     def get(self, req: Request):
         user = User.objects.get(email=req.user)
-
         user_subjects = UserSubject.objects.filter(user=user)
 
         if not user_subjects.exists():

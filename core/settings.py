@@ -172,6 +172,7 @@ USE_TZ = True
 LANGUAGES = [
     ("en", _("English")),
     ("uz", _("Uzbek")),
+    ('uk', _("O'zbek (Кирил)")),
     ("ru", _("Russian")),
 ]
 
@@ -192,7 +193,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = "en"
-MODELTRANSLATION_LANGUAGES = ("en", "uz", "ru")
+MODELTRANSLATION_LANGUAGES = ("en", "uz", "uk", "ru")
 
 MODELTRANSLATION_TRANSLATION_FILES = ("news.translation", "company.translation")
 

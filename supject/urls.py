@@ -11,7 +11,6 @@ from .views import (
     StepDetailAPIView,
     StepTestFinishView,
     SubjectSearchApiView,
-    SubjectTitleApiView,
     SubmitTestView,
     TopUserList,
     UserClubsView,
@@ -28,7 +27,6 @@ urlpatterns = [
         StartSubjectApi.as_view(),
         name="start-subject",
     ),
-    path("subject-titles/", SubjectTitleApiView.as_view(), name="subject-titles"),
     path(
         "userpopularsubject/", UserPopularSubject.as_view(), name="userpopularsubject"
     ),
