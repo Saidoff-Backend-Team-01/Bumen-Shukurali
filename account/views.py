@@ -419,7 +419,7 @@ class AnswerIntroQuestionView(APIView):
             )
 
         try:
-            answer = IntroQuestionAnswer.objects.get(pk=answer_id)
+            answer = IntroQuestionAnswer.objects.get(pk=int(answer_id))
         except:
             return Response(
                 {"error": "Answer was not found !!!"}, status=status.HTTP_404_NOT_FOUND

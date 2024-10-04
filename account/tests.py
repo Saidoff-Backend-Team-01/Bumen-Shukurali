@@ -14,6 +14,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from account.models import Groups, User, UserMessage, UserOtpCode
 from common.models import Media
 
+from account.models import IntroQuestion, IntroQuestionAnswer, UserIntroQuestion
+from account.serializers import IntroQuestionSerializer, UserIntroQuestionSerializer
+
 # class UserMessageApiTests(APITestCase):
 #     def setUp(self):
 #         # Create users
@@ -198,9 +201,65 @@ class UserRegisterPhoneViewTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+
         user.refresh_from_db()
 
         self.assertTrue(user.is_active)
 
         otp_code.refresh_from_db()
         self.assertTrue(otp_code.is_used)
+
+        user = User.objects.get(phone_number="+998901234567")
+        self.assertTrue(user.check_password("newpassword123"))
+
+
+
+class IntroQuestionsViewTest(APITestCase):
+    def test_list_questions_is_it_ok(self):
+
+        question = IntroQuestion.objects.create(title='Is it test ???', more_info='It is just test')
+        answer_1 = IntroQuestionAnswer.objects.create(text='Text 1', intro_question=question)
+        answer_2 = IntroQuestionAnswer.objects.create(text='Text 2', intro_question=question)
+        answer_3 = IntroQuestionAnswer.objects.create(text='Text 3', intro_question=question)
+        answer_4 = IntroQuestionAnswer.objects.create(text='Text 4', intro_question=question)
+
+        ser = IntroQuestionSerializer([question], many=True, read_only=True)
+
+        url = reverse('intro_questions')
+        res = self.client.get(url)
+
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, ser.data)
+
+
+class AnswerIntroQuestionViewTest(APITestCase):
+    def test_answer_for_question_is_it_ok(self):
+        question = IntroQuestion.objects.create(title='Is it test ???', more_info='It is just test')
+        answer_1 = IntroQuestionAnswer.objects.create(text='Text 1', intro_question=question)
+        answer_2 = IntroQuestionAnswer.objects.create(text='Text 2', intro_question=question)
+        answer_3 = IntroQuestionAnswer.objects.create(text='Text 3', intro_question=question)
+        answer_4 = IntroQuestionAnswer.objects.create(text='Text 4', intro_question=question)
+
+        user = User.objects.create_user(phone_number='998053845', password='123')
+
+
+        access = str(RefreshToken.for_user(user).access_token)
+
+
+        url = reverse('intro_question', kwargs={'pk': 1})
+        res = self.client.post(url, {'answer_id': 1}, HTTP_AUTHORIZATION=f'Bearer {access}')
+
+        user_answer = UserIntroQuestion.objects.create(user=user, intro_question=question, is_marked=True, answer=answer_2)
+
+        ser = UserIntroQuestionSerializer(user_answer)
+
+        self.assertEqual(res.data, ser.data)
+
+        
+
+        res = self.client.post(url, {'is_marked': 'false'}, HTTP_AUTHORIZATION=f'Bearer {access}')
+
+        self.assertEqual(res.data, {'msg': 'OK'})
+        
+
