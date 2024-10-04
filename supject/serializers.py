@@ -73,6 +73,7 @@ class CategorySerializer(serializers.ModelSerializer):
         ]
 
 
+
 class StepFilesSerializer(serializers.ModelSerializer):
     file = MediaURlSerializer()
 
