@@ -35,6 +35,9 @@ class Media(models.Model):
     def __str__(self) -> str:
         return str(self.file)
 
+    def __str__(self):
+        return f"{self.get_type_display()}: {self.file.name}"
+
     class Meta:
         verbose_name = _("Media")
         verbose_name_plural = _("Media")
