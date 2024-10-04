@@ -15,6 +15,7 @@ from supject.models import (
     UserSubject,
     UserTestResult,
     UserTotalTestResult,
+    Transation,
 )
 
 
@@ -135,7 +136,7 @@ class StepTestFinishSerializer(serializers.Serializer):
 class UserTestResultSerializer(serializers.Serializer):
     result_id = serializers.IntegerField
     test_question = serializers.StringRelatedField()
-    test_answers = serializers.ListField(child=serializers.IntegerField)
+    test_answers = serializers.ListField(child=serializers.IntegerField())
 
 
 class UserTotalTestResultSerializer(serializers.ModelSerializer):
@@ -145,4 +146,11 @@ class UserTotalTestResultSerializer(serializers.ModelSerializer):
         model = UserTotalTestResult
         fields = ['id', 'step_test', 'user', 'ball', 'correct_answers', 'user_test_results', 'finished', 'percentage']
         read_only_fields = ['id', 'user', 'step_test']
+
+
+class DiscountBannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transation
+        fields = ['id', 'product_name', 'discount_percentage', 'description', 'image_url', 'timestamp']
+        
 

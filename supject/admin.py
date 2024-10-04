@@ -16,6 +16,7 @@ from .models import (
     UserTestResult,
     UserTotalTestResult,
     Vacancy,
+    Transation,
 )
 
 
@@ -76,3 +77,10 @@ class UserStepAdmin(admin.ModelAdmin):
 @admin.register(StepTest)
 class StepTestAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(Transation)
+class TransationAdmin(admin.ModelAdmin):
+    list_display = ("product_name", "description", "discount_percentage", "image_url", "time")
+
+

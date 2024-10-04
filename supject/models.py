@@ -284,3 +284,15 @@ class UserStep(models.Model):
 
     class Meta:
         unique_together = ["user", "step"]
+
+
+class Transation(models.Model):
+    product_name = models.CharField(max_length=255)
+    discount_percentage = models.PositiveIntegerField()
+    description = models.TextField()
+    image_url = models.URLField(max_length=500)
+    time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.product_name} - {self.discount_percentage}% chegirma'
+
