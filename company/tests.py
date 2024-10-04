@@ -1,9 +1,10 @@
 from django.test import TestCase
 from django.urls import reverse
-from rest_framework.test import APITestCase
-from .models import Contacts, AppInfo, ContactWithUsCategory, ContactWithUsReason, ContactWithUsMobile
-from .serializers import AppInfoSerializer
+from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import status
+from rest_framework.test import APITestCase
+from .serializers import AppInfoSerializer
+from .models import Contacts, AppInfo, ContactWithUsCategory, ContactWithUsReason, ContactWithUsMobile
 from common.models import Media
 
 
@@ -109,17 +110,21 @@ class ContactWithUsTests(APITestCase):
         """Yangi kontakt yuborish testi"""
         category = create_category(name="Support")
         reason = create_reason(category, name="Issue")
-        media = create_media()
+        
+        # Faylni yuklash uchun SimpleUploadedFile ishlatamiz
+        file = SimpleUploadedFile("test_file.txt", b"Test file content.", content_type="text/plain")
 
         url = reverse('contact_with_us_submit')
         data = {
             "email": "test@example.com",
             "message": "Test message",
             "reason": reason.id,
-            "file": media.id
+            "file": file
         }
-        response = self.client.post(url, data, format='json')
         
+        response = self.client.post(url, data, format='multipart')
+
+        # Tekshirishlar
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(ContactWithUsMobile.objects.count(), 1)
         contact = ContactWithUsMobile.objects.first()
@@ -130,21 +135,20 @@ class ContactWithUsTests(APITestCase):
         """Kontaktni to'g'ri yubormagan holda xatolik qaytarish testi"""
         url = reverse('contact_with_us_submit')
         data = {
-            "email": "not-an-email",  # noto'g'ri email
+            "email": "not-an-email",
             "message": "",
-            "reason": None,
+            "reason": "",
             "file": None
         }
-        response = self.client.post(url, data, format='json')
-        
+
+        response = self.client.post(url, data, format='multipart')
+
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
 
-# Test class
 class AppInfoViewTests(APITestCase):
     def setUp(self):
-        # Test uchun bir nechta AppInfo ob'ektlarini yaratamiz
         self.app_info1 = AppInfo.objects.create(title="App1", description="First app")
         self.app_info2 = AppInfo.objects.create(title="App2", description="Second app")
 
@@ -153,21 +157,18 @@ class AppInfoViewTests(APITestCase):
         url = reverse('app_info')
         response = self.client.get(url)
 
-        # Tekshirishlar
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         app_info_queryset = AppInfo.objects.all()
         serializer = AppInfoSerializer(app_info_queryset, many=True)
-        # print(response.data)
         self.assertEqual(response.data, serializer.data)
 
     def test_internal_server_error(self):
         """Ichki xatolik yuz berganda 500 status kodi qaytarish testi"""
         url = reverse('app_info')
 
-        # Ob'ektlarni o'chirib, ichki xatolikni sun'iy ravishda yaratamiz
         AppInfo.objects.all().delete()
         
-        with self.assertRaises(Exception):  # Ichki xatolik yuzaga kelishini kutamiz
+        with self.assertRaises(Exception):
             response = self.client.get(url)
             self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
             self.assertEqual(response.data['message'], "Internal Server Error")

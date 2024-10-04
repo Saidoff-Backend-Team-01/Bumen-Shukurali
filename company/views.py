@@ -6,6 +6,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.parsers import MultiPartParser
 from yaml import serialize
 from company.models import FAQ, ContactWithUs,Contacts, PrivacyPolicy
 from company.serializers import ContactWithUsSerializer, FAQSerializer,ContactsSerializer, PrivacyPolicySerializer
@@ -41,6 +42,7 @@ class FAQAPIView(APIView):
         return Response(serializer.data)
 
 
+
 class PrivacyPolicyView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
@@ -67,9 +69,11 @@ class ContactsDetailView(APIView):
             )
 
 
+
 class AdvertisingListView(ListAPIView):
     queryset = Advertising.objects.all()
     serializer_class = AdvertisingSerializer
+
 
 
 class SocialMediaRead(ListAPIView):
@@ -97,23 +101,34 @@ class ContactWithUsReasonAPIView(APIView):
         return Response(serializer.data)
     
 
-class ContactWithUsMobileAPIView(CreateAPIView):
 
-    def post(self, request):
-        serializer = ContactWithUsMobileSerializer(data=request.data)
+class ContactWithUsMobileAPIView(CreateAPIView):
+    queryset = ContactWithUsMobile.objects.all()
+    serializer_class = ContactWithUsMobileSerializer
+    parser_classes = [MultiPartParser]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-
-
+        
+        errors = serializer.errors
+        if 'file' not in request.data:
+            errors['file'] = ["Fayl yuklanmadi!"]
+        
+        return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+               
+            
+            
 class AppInfoView(APIView):
     serializer_class = AppInfoSerializer
     def get(self, request, *args, **kwargs):
         queryset = AppInfo.objects.all()
         serializer = AppInfoSerializer(queryset, many=True)
         return Response(serializer.data)
+
 
 
 class SponsorsView(APIView):
