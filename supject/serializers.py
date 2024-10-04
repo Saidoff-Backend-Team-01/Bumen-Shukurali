@@ -68,12 +68,17 @@ class SubjectTitleSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    bg_image = MediaURlSerializer(read_only=True)
+    icon = MediaURlSerializer(read_only=True)
+
     class Meta:
         model = Category
         fields = [
             "id",
             "name",
             "click_count",
+            "bg_image",
+            "icon",
         ]
 
 
