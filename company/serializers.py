@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import FAQ, ContactWithUs, Contacts, PrivacyPolicy
 from common.serializers import MediaURlSerializer
+from common.models import Media
 
 from .models import FAQ, Contacts, ContactWithUs, ContactWithUsCategory,ContactWithUsReason,ContactWithUsMobile, AppInfo, Sponsor
 
@@ -57,7 +58,6 @@ class SocialMediaSerializer(serializers.Serializer):
     instagram = serializers.URLField()
 
 
-
 class ContactWithUsCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactWithUsCategory
@@ -68,9 +68,29 @@ class ContactWithUsReasonSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactWithUsReason
         fields = ['id', 'name']
+    
+    
+class ContactWithUsMobileSerialwizer(serializers.ModelSerializer):
+    file = serializers.PrimaryKeyRelatedField(queryset=Media.objects.all())
 
-
-class ContactWithUsMobileSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactWithUsMobile
         fields = ['email', 'message', 'file', 'reason']
+        
+        
+class ContactWithUsMobileSerializer(serializers.ModelSerializer):
+    file = serializers.FileField()
+
+    class Meta:
+        model = ContactWithUsMobile
+        fields = ['email', 'message', 'file', 'reason']
+    
+
+    def create(self, validated_data):
+        # Fayl ma'lumotlarini alohida olib, Media modelida yaratamiz
+        file_data = validated_data.pop('file')
+        media = Media.objects.create(**file_data)
+        
+        # Qolgan ma'lumotlar bilan ContactWithUsMobile obyektini yaratamiz
+        contact_with_us = ContactWithUsMobile.objects.create(file=media, **validated_data)
+        return contact_with_us

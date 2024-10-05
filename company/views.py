@@ -10,6 +10,7 @@ from rest_framework.parsers import MultiPartParser
 from yaml import serialize
 from company.models import FAQ, ContactWithUs,Contacts, PrivacyPolicy
 from company.serializers import ContactWithUsSerializer, FAQSerializer,ContactsSerializer, PrivacyPolicySerializer
+from common.serializers import MediaURlSerializer
 from django.utils.translation import gettext_lazy as _
 
 from company.models import FAQ, Advertising, Contacts, ContactWithUs, SocialMedia, ContactWithUsCategory, ContactWithUsReason, ContactWithUsMobile, AppInfo, Sponsor
@@ -102,10 +103,55 @@ class ContactWithUsReasonAPIView(APIView):
     
 
 
+# class ContactWithUsMobileAPIView(CreateAPIView):
+#     queryset = ContactWithUsMobile.objects.all()
+#     serializer_class = ContactWithUsMobileSerializer
+#     parser_classes = [MultiPartParser]
+
+#     def post(self, request, *args, **kwargs):
+#         serializer = self.get_serializer(data=request.data)
+        
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+#         errors = serializer.errors
+#         if 'file' not in request.data:
+#             errors['file'] = ["Fayl yuklanmadi!"]
+        
+#         return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+
+# class ContactWithwUsMobileAPIView(CreateAPIView):
+#     queryset = ContactWithUsMobile.objects.all()
+#     serializer_class = ContactWithUsMobileSerializer
+#     parser_classes = [MultiPartParser]
+
+#     def post(self, request, *args, **kwargs):
+#         # Faylni alohida yuklab, Media modelida saqlash
+#         media_serializer = MediaURlSerializer(data=request.data)
+#         if media_serializer.is_valid():
+#             media_obj = media_serializer.save()  # Fayl Media modelida saqlanadi
+#         else:
+#             return Response(media_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#         # Yuklangan faylni ContactWithUsMobile modeliga bog'lash
+#         contact_data = request.data.copy()
+#         contact_data['file'] = media_obj.id  # Media obyekti ID sini bog'laymiz
+
+#         serializer = self.get_serializer(data=contact_data)
+        
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    
 class ContactWithUsMobileAPIView(CreateAPIView):
     queryset = ContactWithUsMobile.objects.all()
     serializer_class = ContactWithUsMobileSerializer
-    parser_classes = [MultiPartParser]
+    parser_classes = [MultiPartParser]  # Fayl yuklash uchun MultiPartParser qo'llanadi
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

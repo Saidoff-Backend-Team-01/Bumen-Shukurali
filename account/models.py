@@ -29,7 +29,7 @@ class User(AbstractUser):
     )
     email = models.EmailField(_("email address"), null=True, blank=True)
     phone_number = models.CharField(
-        _("phone number"), max_length=20, null=True, blank=True
+        _("phone number"), max_length=20, unique=True
     )
     father_name = models.CharField(
         _("father name"), max_length=120, null=True, blank=True
