@@ -68,14 +68,6 @@ class ContactWithUsReasonSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactWithUsReason
         fields = ['id', 'name']
-    
-    
-class ContactWithUsMobileSerialwizer(serializers.ModelSerializer):
-    file = serializers.PrimaryKeyRelatedField(queryset=Media.objects.all())
-
-    class Meta:
-        model = ContactWithUsMobile
-        fields = ['email', 'message', 'file', 'reason']
         
         
 class ContactWithUsMobileSerializer(serializers.ModelSerializer):
@@ -87,10 +79,8 @@ class ContactWithUsMobileSerializer(serializers.ModelSerializer):
     
 
     def create(self, validated_data):
-        # Fayl ma'lumotlarini alohida olib, Media modelida yaratamiz
         file_data = validated_data.pop('file')
         media = Media.objects.create(**file_data)
         
-        # Qolgan ma'lumotlar bilan ContactWithUsMobile obyektini yaratamiz
         contact_with_us = ContactWithUsMobile.objects.create(file=media, **validated_data)
         return contact_with_us

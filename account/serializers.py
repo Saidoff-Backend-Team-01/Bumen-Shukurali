@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
+from rest_framework.serializers import FileField
 
 from account.auth import facebook, google, register
 from account.models import (
@@ -124,9 +125,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserMessageSerializer(serializers.ModelSerializer):
+    file = FileField()
     class Meta:
         model = UserMessage
-        fields = "__all__"
+        fields = ("user", "message", "file", "group", "status", "like")
+        
 
 
 class TelegramOauth2Serializer(serializers.Serializer):

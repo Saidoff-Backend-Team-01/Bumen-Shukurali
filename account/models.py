@@ -29,7 +29,7 @@ class User(AbstractUser):
     )
     email = models.EmailField(_("email address"), null=True, blank=True)
     phone_number = models.CharField(
-        _("phone number"), max_length=20, unique=True
+        _("phone number"), max_length=20, null=True, blank=True
     )
     father_name = models.CharField(
         _("father name"), max_length=120, null=True, blank=True
@@ -111,6 +111,10 @@ class Groups(models.Model):
 
 
 class UserMessage(models.Model):
+    class MessageType(models.TextChoices):
+        ACTIVE = "ACTIVE", _("active")
+        WAITING = "WAITING", _("waiting")
+        CANCELLED = "CANCELLED", _("cancelled")
     user = models.ForeignKey(verbose_name=_("User"), to=User, on_delete=models.CASCADE)
     message = models.TextField(verbose_name=_("Message"))
     file = models.OneToOneField(
@@ -120,6 +124,8 @@ class UserMessage(models.Model):
         blank=True,
         null=True,
     )
+    like = models.IntegerField(verbose_name=_("Like"), default=0)
+    status = models.CharField(_("status"), choices=MessageType.choices, max_length=55)
     group = models.ForeignKey(
         verbose_name=_("Group"), to=Groups, on_delete=models.CASCADE
     )

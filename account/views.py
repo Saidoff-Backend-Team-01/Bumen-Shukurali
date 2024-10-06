@@ -272,7 +272,7 @@ class UserMessageCreateApi(CreateAPIView):
 
 class MessageListApi(ListAPIView):
     serializer_class = UserMessageSerializer
-    permission_classes = [permissions.IsAuthenticated, IsGroupMember]
+    # permission_classes = [permissions.IsAuthenticated, IsGroupMember]
 
     def get_queryset(self):
         group_id = self.kwargs["group_id"]
