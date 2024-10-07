@@ -209,6 +209,7 @@ class TestQuestion(models.Model):
     class QuestionType(models.TextChoices):
         MULTIPLE = "multiple", _("Multiple")
         SINGLE = "single", _("Single")
+        ORDERING = "ordering", _("Ordering")
 
     steptest = models.ForeignKey(
         verbose_name=_("Step test"),
@@ -239,8 +240,9 @@ class TestAnswer(models.Model):
         on_delete=models.CASCADE,
         related_name="test_answers",
     )
-    answer = models.TextField(verbose_name=_("Answer"))
+    answer = CKEditor5Field(_("question"), config_name="extends")
     is_correct = models.BooleanField(verbose_name=_("Is correct"))
+    order = models.PositiveIntegerField(_("order"), null=True, blank=True)
 
     def __str__(self) -> str:
         return f"{self.pk} - {self.is_correct}"
