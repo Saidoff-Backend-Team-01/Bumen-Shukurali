@@ -52,7 +52,10 @@ DJANGO_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "main",
+
+    "colorfield"
 ]
+
 
 LOCAL_APPS = ["common", "company", "news", "account", "supject"]
 
