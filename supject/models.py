@@ -10,8 +10,22 @@ from common.models import Media
 class Category(models.Model):
     name = models.CharField(verbose_name=_("Name"), max_length=100, unique=True)
     click_count = models.PositiveIntegerField(verbose_name=_("Click Count"), default=0)
-    bg_image = models.OneToOneField(verbose_name=_("Image"), to=Media, on_delete=models.SET_NULL, blank=True, null=True, related_name='image')
-    icon = models.OneToOneField(verbose_name=_("Icon"), to=Media, on_delete=models.SET_NULL, blank=True, null=True, related_name='icon')
+    bg_image = models.OneToOneField(
+        verbose_name=_("Image"),
+        to=Media,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="image",
+    )
+    icon = models.OneToOneField(
+        verbose_name=_("Icon"),
+        to=Media,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="icon",
+    )
 
     def __str__(self) -> str:
         return self.name
@@ -21,39 +35,25 @@ class Category(models.Model):
         verbose_name_plural = _("Categorys")
 
 
-class SubjectTitle(models.Model):
-    name = models.CharField(verbose_name=_("Name"), max_length=200)
-    category = models.ForeignKey(
-        verbose_name=_("Category"), to=Category, on_delete=models.CASCADE
-    )
-
-    def __str__(self) -> str:
-        return self.name
-
-    class Meta:
-        verbose_name = _("Subject title")
-        verbose_name_plural = _("Subject titles")
-
-
 class Subject(models.Model):
     class SubjectType(models.TextChoices):
         LOCAL = "local", _("Local")
         GLOBAL = "global", _("Global")
 
     name = models.CharField(verbose_name=_("Name"), max_length=200)
-    type = models.CharField(
-        verbose_name=_("Type"), max_length=50, choices=SubjectType.choices
-    )
-    subject_title = models.ForeignKey(
-        verbose_name=_("Subject title"),
-        to=SubjectTitle,
+    category = models.ForeignKey(  # O'zgartirilgan
+        verbose_name=_("Category"),
+        to=Category,
         on_delete=models.CASCADE,
         related_name="subjects",
     )
+    image = models.OneToOneField(
+        Media, on_delete=models.CASCADE, related_name="subjects", null=True, blank=True
+    )
 
     def clean(self):
-        subject_title = Subject.objects.filter(subject_title=self.subject_title).count()
-        if subject_title >= 2:
+        subject_count = Subject.objects.filter(category=self.category).count()
+        if subject_count >= 2:
             raise ValidationError(_("Invalid Subject Type"))
 
     def __str__(self) -> str:
@@ -148,7 +148,7 @@ class Step(models.Model):
         on_delete=models.CASCADE,
         related_name="steps",
     )
-    description = models.TextField(verbose_name=_("Description"))
+    description = CKEditor5Field(_("Description"))
 
     def __str__(self) -> str:
         return self.title
@@ -209,6 +209,7 @@ class TestQuestion(models.Model):
     class QuestionType(models.TextChoices):
         MULTIPLE = "multiple", _("Multiple")
         SINGLE = "single", _("Single")
+        ORDERING = "ordering", _("Ordering")
 
     steptest = models.ForeignKey(
         verbose_name=_("Step test"),
@@ -239,8 +240,9 @@ class TestAnswer(models.Model):
         on_delete=models.CASCADE,
         related_name="test_answers",
     )
-    answer = models.TextField(verbose_name=_("Answer"))
+    answer = CKEditor5Field(_("question"), config_name="extends")
     is_correct = models.BooleanField(verbose_name=_("Is correct"))
+    order = models.PositiveIntegerField(_("order"), null=True, blank=True)
 
     def __str__(self) -> str:
         return f"{self.pk} - {self.is_correct}"

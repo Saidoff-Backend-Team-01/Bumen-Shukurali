@@ -42,8 +42,8 @@ class CategoryAPIView(APIView):
                 click_count=F("click_count") + 1
             )
             category = Category.objects.get(pk=pk)
-
-            category_serializer = CategorySerializer(category)
+            subjects = Subject.objects.filter(category=category)
+            category_serializer = SubjectSerializer(subjects, many=True)
             return Response(category_serializer.data, status=status.HTTP_200_OK)
 
         except Exception as e:
@@ -65,7 +65,7 @@ class StartSubjectApi(APIView):
         user = request.user
         try:
             subject = Subject.objects.get(id=subject_id)
-        except SubjectTitle.DoesNotExist:
+        except Subject.DoesNotExist:
             return Response(
                 {"error": _("Subject not found")}, status=status.HTTP_404_NOT_FOUND
             )
@@ -76,25 +76,12 @@ class StartSubjectApi(APIView):
         if created:
             user_subject.started = True
             user_subject.save()
+
         club, created_club = Club.objects.get_or_create(subject=subject)
         club.users.add(user)
         club.save()
         subject_serializer = UserSubjectSerializer(user_subject)
         return Response(data=subject_serializer.data, status=status.HTTP_200_OK)
-
-
-class SubjectTitleApiView(ListAPIView):
-    queryset = SubjectTitle.objects.prefetch_related("subjects").all()
-    serializer_class = SubjectTitleSerializer
-
-    @swagger_auto_schema(manual_parameters=[category_id])
-    def get(self, request, *args, **kwargs):
-        query_param = request.query_params.get("category_id", None)
-        if not query_param:
-            return Response(data=[])
-        subject_titles = self.queryset.filter(category_id=query_param)
-        serializer = SubjectTitleListSerializer(subject_titles, many=True)
-        return Response(data=serializer.data)
 
 
 class StepDetailAPIView(RetrieveAPIView):
@@ -211,7 +198,7 @@ class UserPopularSubject(APIView):
 
 
 class SubjectSearchApiView(ListAPIView):
-    queryset = SubjectTitle.objects.all()
+    queryset = Category.objects.all()
 
     @swagger_auto_schema(manual_parameters=[query])
     def get(self, request, *args, **kwargs):
@@ -219,28 +206,19 @@ class SubjectSearchApiView(ListAPIView):
         if not query_param:
             return Response(data=[])
 
-        subject_titles = SubjectTitle.objects.filter(name__icontains=query_param)
         subject_categories = Category.objects.filter(name__icontains=query_param)
-
-        subject_titles_serializer = SubjectSearchSerializer(subject_titles, many=True)
         subject_categories_serializer = CategorySearchSerializer(
             subject_categories, many=True
         )
-
-        data = {
-            "subject_titles": subject_titles_serializer.data,
-            "subject_categories": subject_categories_serializer.data,
-        }
-        return Response(data=data)
+        return Response(data=subject_categories_serializer.data)
 
 
 class UserClubsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, req: Request):
-        user = User.objects.get(email=req.user)
 
-        user_subjects = UserSubject.objects.filter(user=user)
+        user_subjects = UserSubject.objects.filter(user=req.user)
 
         if not user_subjects.exists():
             return Response(
@@ -256,7 +234,7 @@ class UserClubsView(APIView):
         for i in user_subjects:
             clubs.append(ClubSerializer(Club.objects.get(subject=i.subject)).data)
 
-        return Response({"user": UserSerializer(user).data, "clubs": clubs})
+        return Response({"user": UserSerializer(req.user).data, "clubs": clubs})
 
 
 class ClubDetail(APIView):
@@ -469,6 +447,18 @@ class SubmitTestView(CreateAPIView):
                         question_ball += (
                             user_total_test_result.step_test.ball_for_each_test
                         )
+            elif question.question_type == TestQuestion.QuestionType.ORDERING:
+                answers_order_list = []
+                for answer_id in qst["answer_ids"]:
+                    answers_order_list.append(
+                        question.test_answers.get(id=answer_id).order
+                    )
+
+                if answers_order_list == qst["answer_ids"]:
+                    question_ball += user_total_test_result.step_test.ball_for_each_test
+                else:
+                    continue
+
             else:
                 answer = question.test_answers.filter(id__in=qst["answer_ids"]).first()
                 user_test_result.test_answers.add(answer)
@@ -478,7 +468,7 @@ class SubmitTestView(CreateAPIView):
             total_ball += question_ball
 
         user_total_test_result.ball = total_ball
-        user_total_test_result.percenateg = (
+        user_total_test_result.percentage = (
             total_ball
             / (len(questions) * user_total_test_result.step_test.ball_for_each_test)
         ) * 100
@@ -489,6 +479,6 @@ class SubmitTestView(CreateAPIView):
             {
                 "message": "Test muvaffaqiyatli yakunlandi",
                 "ball": total_ball,
-                "percentage": user_total_test_result.percenateg,
+                "percentage": user_total_test_result.percentage,
             }
         )

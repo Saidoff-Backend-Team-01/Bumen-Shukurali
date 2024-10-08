@@ -8,7 +8,6 @@ from .models import (
     StepFile,
     StepTest,
     Subject,
-    SubjectTitle,
     TestAnswer,
     TestQuestion,
     UserStep,
@@ -25,8 +24,8 @@ admin.site.register(Club)
 admin.site.register(ClubMeeting)
 
 
-class SubjectTitleInline(admin.StackedInline):
-    model = SubjectTitle
+class SubjectInline(admin.StackedInline):
+    model = Subject
     extra = 1
     show_change_link = True
 
@@ -34,18 +33,6 @@ class SubjectTitleInline(admin.StackedInline):
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "click_count")
-    inlines = [SubjectTitleInline]
-
-
-class SubjectInline(admin.StackedInline):
-    model = Subject
-    extra = 1
-    show_change_link = True
-
-
-@admin.register(SubjectTitle)
-class SubjectTitleAdmin(admin.ModelAdmin):
-    list_display = ("id", "name")
     inlines = [SubjectInline]
 
 
@@ -56,7 +43,7 @@ class StepInlineAdmin(admin.StackedInline):
 
 @admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "type")
+    list_display = ("id", "name")
     inlines = [StepInlineAdmin]
 
 

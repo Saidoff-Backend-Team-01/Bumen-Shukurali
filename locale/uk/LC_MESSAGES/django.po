@@ -1,0 +1,2393 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-04 09:14+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+
+#: account/admin.py:20
+msgid "Personal info"
+msgstr "Шахсий маълумот"
+
+#: account/admin.py:24
+msgid "Permissions"
+msgstr "Рұқсатлар"
+
+#: account/models.py:15
+msgid "Google Account"
+msgstr "Google ҳисоб"
+
+#: account/models.py:16
+msgid "Facebook Account"
+msgstr "Facebook ҳисоб"
+
+#: account/models.py:17
+msgid "Telegram Account"
+msgstr "Telegram ҳисоб"
+
+#: account/models.py:18
+msgid "Email Auth"
+msgstr "Email аутентификация"
+
+#: account/models.py:19
+msgid "Phone Auth"
+msgstr "Телефон аутентификация"
+
+#: account/models.py:22
+msgid "Male"
+msgstr "Эркак"
+
+#: account/models.py:23
+msgid "Female"
+msgstr "Аёл"
+
+#: account/models.py:26
+msgid "birth_date"
+msgstr "туғилиш сана"
+
+#: account/models.py:30 account/models.py:140
+msgid "email address"
+msgstr "электрон почта манзили"
+
+#: account/models.py:32
+msgid "phone number"
+msgstr "телефон рақами"
+
+#: account/models.py:35
+msgid "father name"
+msgstr "ота исми"
+
+#: account/models.py:38
+msgid "auth type"
+msgstr "аутентификация тури"
+
+#: account/models.py:44
+msgid "gender"
+msgstr "жинс"
+
+#: account/models.py:47
+msgid "telegram id"
+msgstr "telegram идентификатори"
+
+#: account/models.py:50
+msgid "device id"
+msgstr "жасоз идентификатори"
+
+#: account/models.py:58 account/models.py:106 account/models.py:134
+#: supject/models.py:73
+msgid "User"
+msgstr "Фойдаланувчи"
+
+#: account/models.py:59 supject/models.py:112 supject/models.py:260
+#: supject/models.py:276
+msgid "Users"
+msgstr "Фойдаланувчилар"
+
+#: account/models.py:81 common/models.py:16
+msgid "type"
+msgstr "тури"
+
+#: account/models.py:82
+msgid "expires_in"
+msgstr "муйюзинда"
+
+#: account/models.py:83
+msgid "is_used"
+msgstr "фойдаланилган"
+
+#: account/models.py:90 company/models.py:107 company/models.py:118
+msgid "name"
+msgstr "исм"
+
+#: account/models.py:101 account/models.py:116
+msgid "Group"
+msgstr "Гуруҳ"
+
+#: account/models.py:102
+msgid "Groups"
+msgstr "Гуруҳлар"
+
+#: account/models.py:107
+msgid "Message"
+msgstr "Хабар"
+
+#: account/models.py:109 company/models.py:137
+#: env/lib/python3.12/site-packages/django/db/models/fields/files.py:244
+#: supject/models.py:161
+msgid "File"
+msgstr "Файл"
+
+#: account/models.py:123
+msgid "User's message"
+msgstr "Фойдаланувчининг хабар"
+
+#: account/models.py:124
+msgid "User's messages"
+msgstr "Фойдаланувчининг хабарлари"
+
+#: account/models.py:129
+msgid "google"
+msgstr "google"
+
+#: account/models.py:130
+msgid "facebook"
+msgstr "facebook"
+
+#: account/models.py:131
+msgid "telegram"
+msgstr "telegram"
+
+#: account/models.py:136
+msgid "user id"
+msgstr "фойдаланувчи идентификатори"
+
+#: account/models.py:138
+msgid "provider"
+msgstr "провайдер"
+
+#: account/models.py:141 company/models.py:155
+msgid "extra data"
+msgstr "қўшимча маълумот"
+
+#: account/serializers.py:173 account/serializers.py:189
+msgid "User with this phone number does not exist."
+msgstr "Ушбу телефон рақами билан фойдаланувчи топилмади."
+
+#: account/serializers.py:193
+msgid "OTP code not found or already used."
+msgstr "OTP коди топилмади ёки аллақачон фойдаланилган."
+
+#: account/serializers.py:196
+msgid "OTP code has expired."
+msgstr "OTP коди муддати ўтган."
+
+#: account/serializers.py:211
+msgid "Passwords do not match."
+msgstr "Пароллар мос келмайди."
+
+#: account/views.py:169
+msgid "Invalid data"
+msgstr "Нотўғри маълумот"
+
+#: account/views.py:178
+msgid "otp code not found"
+msgstr "otp коди топилмади"
+
+#: account/views.py:184
+msgid "otp code was expired"
+msgstr "otp коди муддати ўтган"
+
+#: account/views.py:193
+msgid "user is activated"
+msgstr "фойдаланувчи фаоллаштирилган"
+
+#: account/views.py:198
+msgid "User does not exist"
+msgstr "Фойдаланувчи топилмади"
+
+#: account/views.py:225 account/views.py:237
+msgid "You are not a member of this group."
+msgstr "Сиз бу гуруҳнинг аъзоси эмассиз."
+
+#: account/views.py:248
+msgid "No authentication data provided"
+msgstr "Ҳеч қандай аутентификация маълумотлари берилмаган"
+
+#: account/views.py:252
+msgid "Invalid authentication data"
+msgstr "Нотўғри аутентификация маълумотлари"
+
+#: account/views.py:317
+msgid "OTP code sent to your phone."
+msgstr "OTP коди телефонга юборалди."
+
+#: account/views.py:329
+msgid "OTP code verified successfully."
+msgstr "OTP коди муваффақиятли текширилди."
+
+#: account/views.py:342
+msgid "Password has been reset successfully."
+msgstr "Парол муваффақиятли ўзгартирилди."
+
+#: common/error_codes.py:3
+msgid "User Test Result not found"
+msgstr "Фойдаланувчи тест натижаси топилмади"
+
+#: common/error_codes.py:5
+msgid "Test answers not exists"
+msgstr "Тест жавоблари мавжуд эмас"
+
+#: common/models.py:10
+msgid "image"
+msgstr "расм"
+
+#: common/models.py:11
+msgid "video"
+msgstr "видео"
+
+#: common/models.py:12
+msgid "audio"
+msgstr "аудио"
+
+#: common/models.py:13 common/models.py:18
+#: env/lib/python3.12/site-packages/click/types.py:822
+msgid "file"
+msgstr "файл"
+
+#: common/models.py:14
+msgid "music"
+msgstr "мусиқий"
+
+#: common/models.py:29
+msgid "Invalid File Type"
+msgstr "Нотўғри файл тури"
+
+#: common/models.py:32
+msgid "Invalid Image File"
+msgstr "Нотўғри расм файли"
+
+#: common/models.py:38 common/models.py:39
+msgid "Media"
+msgstr "Медиа"
+
+#: company/models.py:44 company/models.py:45
+msgid "Contact With Us"
+msgstr "Биз билан боғланинг"
+
+#: company/models.py:57 company/models.py:136
+msgid "text"
+msgstr "матн"
+
+#: company/models.py:60 company/models.py:61
+msgid "Privacy Policy"
+msgstr "Шахсий маълумотларни муҳофаза қилиш сиёсати"
+
+#: company/models.py:68 supject/models.py:141
+msgid "Title"
+msgstr "Сарлавҳа"
+
+#: company/models.py:69 company/models.py:95 supject/models.py:96
+#: supject/models.py:115 supject/models.py:149
+msgid "Description"
+msgstr "Тавсиф"
+
+#: company/models.py:72 company/models.py:73
+msgid "App Info"
+msgstr "Ilova haqida"
+
+#: company/models.py:81 company/models.py:168
+#: env/lib/python3.12/site-packages/django/db/models/fields/files.py:420
+msgid "Image"
+msgstr "Расм"
+
+#: company/models.py:83 company/models.py:170
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2637
+msgid "URL"
+msgstr "URL"
+
+#: company/models.py:86
+msgid "Sponsor"
+msgstr "Спонсор"
+
+#: company/models.py:87
+msgid "Sponsors"
+msgstr "Спонсорлар"
+
+#: company/models.py:94 supject/models.py:11 supject/models.py:23
+#: supject/models.py:41 supject/models.py:92 supject/models.py:107
+#: supject/models.py:127
+msgid "Name"
+msgstr "Исм"
+
+#: company/models.py:99
+msgid "About Mistake"
+msgstr "Хато тўғрисида"
+
+#: company/models.py:100
+msgid "About Mistakes"
+msgstr "Хатолар тўғрисида"
+
+#: company/models.py:113 company/models.py:114
+msgid "Contact With Us Category"
+msgstr "Биз билан боғланиш категорияси"
+
+#: company/models.py:121 supject/models.py:18 supject/models.py:25
+#: supject/models.py:94
+msgid "Category"
+msgstr "Категория"
+
+#: company/models.py:130 company/models.py:131
+msgid "Contact With Us Reason"
+msgstr "Биз билан боғланиш сабаби"
+
+#: company/models.py:135
+msgid "email"
+msgstr "электрон почта"
+
+#: company/models.py:139
+msgid "Reason"
+msgstr "Сабаб"
+
+#: company/models.py:146 company/models.py:147
+msgid "Contact With Us Mobile"
+msgstr "Биз билан боғланиш мобиль"
+
+#: company/models.py:151 news/models.py:11 supject/models.py:160
+msgid "title"
+msgstr "сарлавҳа"
+
+#: company/models.py:152
+msgid "message"
+msgstr "хабар"
+
+#: company/models.py:153
+msgid "is_all_users"
+msgstr "барча фойдаланувчилар"
+
+#: company/models.py:156
+msgid "scheduled date"
+msgstr "режалаштирилган сана"
+
+#: company/models.py:162
+msgid "Notification"
+msgstr "Хабарнома"
+
+#: company/models.py:163
+msgid "Notifications"
+msgstr "Хабарномалар"
+
+#: company/models.py:171
+msgid "Created at"
+msgstr "Яратилган сана"
+
+#: company/models.py:177
+msgid "Advertising"
+msgstr "Реклама"
+
+#: company/models.py:178
+msgid "Advertisings"
+msgstr "Рекламалар"
+
+#: company/models.py:182
+msgid "Telegram URL"
+msgstr "Telegram URL"
+
+#: company/models.py:183
+msgid "LinkedIN URL"
+msgstr "LinkedIN URL"
+
+#: company/models.py:184
+msgid "Facebook URL"
+msgstr "Facebook URL"
+
+#: company/models.py:185
+msgid "Instagram URL"
+msgstr "Instagram URL"
+
+#: company/models.py:188 company/models.py:189
+msgid "Social Media"
+msgstr "Ижтимоий тармоқлар"
+
+#: company/views.py:66
+msgid "Contact not found."
+msgstr "Боғланиш топилмади."
+
+#: core/settings.py:187
+msgid "English"
+msgstr "Инглиз"
+
+#: core/settings.py:188
+msgid "Uzbek"
+msgstr "Ўзбек"
+
+#: core/settings.py:189
+msgid "O'zbek (Кирил)"
+msgstr ""
+
+#: core/settings.py:191
+msgid "Russian"
+msgstr "Рус"
+
+#: env/lib/python3.12/site-packages/click/_termui_impl.py:518
+#, python-brace-format
+msgid "{editor}: Editing failed"
+msgstr "{editor}: Тахрирлашда хато"
+
+#: env/lib/python3.12/site-packages/click/_termui_impl.py:522
+#, python-brace-format
+msgid "{editor}: Editing failed: {e}"
+msgstr "{editor}: Тахрирлашда хато: {e}"
+
+#: env/lib/python3.12/site-packages/click/core.py:1120
+msgid "Aborted!"
+msgstr "Тўхтатилди!"
+
+#: env/lib/python3.12/site-packages/click/core.py:1309
+#: env/lib/python3.12/site-packages/click/decorators.py:559
+msgid "Show this message and exit."
+msgstr "Бу хабарни кўрсатиш ва чиқиш."
+
+#: env/lib/python3.12/site-packages/click/core.py:1340
+#: env/lib/python3.12/site-packages/click/core.py:1370
+#, python-brace-format
+msgid "(Deprecated) {text}"
+msgstr "(Тасдиқланмаган) {text}"
+
+#: env/lib/python3.12/site-packages/click/core.py:1387
+msgid "Options"
+msgstr "Танловлар"
+
+#: env/lib/python3.12/site-packages/click/core.py:1413
+#, python-brace-format
+msgid "Got unexpected extra argument ({args})"
+msgid_plural "Got unexpected extra arguments ({args})"
+msgstr[0] "Кўздан кечирилмаган қўшимча аргумент ({args})"
+msgstr[1] "Кўздан кечирилмаган қўшимча аргументлар ({args})"
+
+#: env/lib/python3.12/site-packages/click/core.py:1429
+msgid "DeprecationWarning: The command {name!r} is deprecated."
+msgstr "Тасдиқланмаган эскертма: {name!r} буйруғи тасдиқланмаган."
+
+#: env/lib/python3.12/site-packages/click/core.py:1636
+msgid "Commands"
+msgstr "Буйруқлар"
+
+#: env/lib/python3.12/site-packages/click/core.py:1668
+msgid "Missing command."
+msgstr "Буйруқ топилмади."
+
+#: env/lib/python3.12/site-packages/click/core.py:1746
+msgid "No such command {name!r}."
+msgstr "Бундай буйруқ йўқ {name!r}."
+
+#: env/lib/python3.12/site-packages/click/core.py:2310
+msgid "Value must be an iterable."
+msgstr "Қиммат итерацияланувчи бўлиши керак."
+
+#: env/lib/python3.12/site-packages/click/core.py:2331
+#, python-brace-format
+msgid "Takes {nargs} values but 1 was given."
+msgid_plural "Takes {nargs} values but {len} were given."
+msgstr[0] "{nargs} қиммат олади, лекин 1 берилди."
+msgstr[1] "{nargs} қиммат олади, лекин {len} берилди."
+
+#: env/lib/python3.12/site-packages/click/core.py:2778
+#, python-brace-format
+msgid "env var: {var}"
+msgstr "env ўзгарувчиси: {var}"
+
+#: env/lib/python3.12/site-packages/click/core.py:2808
+msgid "(dynamic)"
+msgstr "(динамик)"
+
+#: env/lib/python3.12/site-packages/click/core.py:2821
+#, python-brace-format
+msgid "default: {default}"
+msgstr "умумий: {default}"
+
+#: env/lib/python3.12/site-packages/click/core.py:2834
+msgid "required"
+msgstr "талаб қилинган"
+
+#: env/lib/python3.12/site-packages/click/decorators.py:465
+#, python-format
+msgid "%(prog)s, version %(version)s"
+msgstr "%(prog)s, версия %(version)s"
+
+#: env/lib/python3.12/site-packages/click/decorators.py:528
+msgid "Show the version and exit."
+msgstr "Версияни кўрсатиш ва чиқиш."
+
+#: env/lib/python3.12/site-packages/click/exceptions.py:44
+#: env/lib/python3.12/site-packages/click/exceptions.py:80
+#, python-brace-format
+msgid "Error: {message}"
+msgstr "Хато: {message}"
+
+#: env/lib/python3.12/site-packages/click/exceptions.py:72
+#, python-brace-format
+msgid "Try '{command} {option}' for help."
+msgstr "Ёрдам учун '{command} {option}' ни синаб кўринг."
+
+#: env/lib/python3.12/site-packages/click/exceptions.py:121
+#, python-brace-format
+msgid "Invalid value: {message}"
+msgstr "Нотўғри қиймат: {message}"
+
+#: env/lib/python3.12/site-packages/click/exceptions.py:123
+#, python-brace-format
+msgid "Invalid value for {param_hint}: {message}"
+msgstr "{param_hint} учун нотўғри қиймат: {message}"
+
+#: env/lib/python3.12/site-packages/click/exceptions.py:179
+msgid "Missing argument"
+msgstr "Аргумент етишаётгани"
+
+#: env/lib/python3.12/site-packages/click/exceptions.py:181
+msgid "Missing option"
+msgstr "Танлов етишаётгани"
+
+#: env/lib/python3.12/site-packages/click/exceptions.py:183
+msgid "Missing parameter"
+msgstr "Параметр етишаётгани"
+
+#: env/lib/python3.12/site-packages/click/exceptions.py:185
+#, python-brace-format
+msgid "Missing {param_type}"
+msgstr "Етишаётгани {param_type}"
+
+#: env/lib/python3.12/site-packages/click/exceptions.py:192
+#, python-brace-format
+msgid "Missing parameter: {param_name}"
+msgstr "Параметр етишаётгани: {param_name}"
+
+#: env/lib/python3.12/site-packages/click/exceptions.py:212
+#, python-brace-format
+msgid "No such option: {name}"
+msgstr "Бундай танлов йўқ: {name}"
+
+#: env/lib/python3.12/site-packages/click/exceptions.py:224
+#, python-brace-format
+msgid "Did you mean {possibility}?"
+msgid_plural "(Possible options: {possibilities})"
+msgstr[0] "(Эҳтимол танловлар: {possibilities})"
+msgstr[1] "(Эҳтимол танловлар: {possibilities})"
+
+#: env/lib/python3.12/site-packages/click/exceptions.py:262
+msgid "unknown error"
+msgstr "ноаниқ хато"
+
+#: env/lib/python3.12/site-packages/click/exceptions.py:269
+msgid "Could not open file {filename!r}: {message}"
+msgstr "Файлни очиш мумкин эмас {filename!r}: {message}"
+
+#: env/lib/python3.12/site-packages/click/parser.py:231
+msgid "Argument {name!r} takes {nargs} values."
+msgstr "Аргумент {name!r} {nargs} қиймат олади."
+
+#: env/lib/python3.12/site-packages/click/parser.py:413
+msgid "Option {name!r} does not take a value."
+msgstr "Танлов {name!r} қиймат олмайди."
+
+#: env/lib/python3.12/site-packages/click/parser.py:474
+msgid "Option {name!r} requires an argument."
+msgid_plural "Option {name!r} requires {nargs} arguments."
+msgstr[0] "Танлов {name!r} аргумент талаб қилади."
+msgstr[1] "Танлов {name!r} {nargs} аргумент талаб қилади."
+
+#: env/lib/python3.12/site-packages/click/shell_completion.py:319
+msgid "Shell completion is not supported for Bash versions older than 4.4."
+msgstr ""
+"Shell тўлдириш 4.4 дан қадимги Bash версиялари учун қўллаб-қувватланмайди."
+
+#: env/lib/python3.12/site-packages/click/shell_completion.py:326
+msgid "Couldn't detect Bash version, shell completion is not supported."
+msgstr ""
+"Bash версиясини аниқлаш мумкин эмас, shell тўлдириш қўллаб-қувватланмайди."
+
+#: env/lib/python3.12/site-packages/click/termui.py:158
+msgid "Repeat for confirmation"
+msgstr "Тасдиқлаш учун такрорланг"
+
+#: env/lib/python3.12/site-packages/click/termui.py:174
+msgid "Error: The value you entered was invalid."
+msgstr "Хато: Киритган қийматингиз нотўғри бўлди."
+
+#: env/lib/python3.12/site-packages/click/termui.py:176
+#, python-brace-format
+msgid "Error: {e.message}"
+msgstr "Хато: {e.message}"
+
+#: env/lib/python3.12/site-packages/click/termui.py:187
+msgid "Error: The two entered values do not match."
+msgstr "Хато: Икки киритилган қийматлар мос келмаяпти."
+
+#: env/lib/python3.12/site-packages/click/termui.py:243
+msgid "Error: invalid input"
+msgstr "Хато: нотўғри киритиш"
+
+#: env/lib/python3.12/site-packages/click/termui.py:773
+msgid "Press any key to continue..."
+msgstr "Давом этиш учун исталган тугмани босинг..."
+
+#: env/lib/python3.12/site-packages/click/types.py:266
+#, python-brace-format
+msgid ""
+"Choose from:\n"
+"\t{choices}"
+msgstr ""
+"Танланг:\n"
+"\t{choices}"
+
+#: env/lib/python3.12/site-packages/click/types.py:298
+msgid "{value!r} is not {choice}."
+msgid_plural "{value!r} is not one of {choices}."
+msgstr[0] "{value!r} {choice} эмас."
+msgstr[1] "{value!r} {choices} дан бири эмас."
+
+#: env/lib/python3.12/site-packages/click/types.py:392
+msgid "{value!r} does not match the format {format}."
+msgid_plural "{value!r} does not match the formats {formats}."
+msgstr[0] "{value!r} форматга мос келмайди {format}."
+msgstr[1] "{value!r} форматларга мос келмайди {formats}."
+
+#: env/lib/python3.12/site-packages/click/types.py:414
+msgid "{value!r} is not a valid {number_type}."
+msgstr "{value!r} допустимий {number_type} эмас."
+
+#: env/lib/python3.12/site-packages/click/types.py:470
+#, python-brace-format
+msgid "{value} is not in the range {range}."
+msgstr "{value} диапазонда эмас {range}."
+
+#: env/lib/python3.12/site-packages/click/types.py:611
+msgid "{value!r} is not a valid boolean."
+msgstr "{value!r} допустимий boolean эмас."
+
+#: env/lib/python3.12/site-packages/click/types.py:635
+msgid "{value!r} is not a valid UUID."
+msgstr "{value!r} допустимий UUID эмас."
+
+#: env/lib/python3.12/site-packages/click/types.py:824
+msgid "directory"
+msgstr "директория"
+
+#: env/lib/python3.12/site-packages/click/types.py:826
+msgid "path"
+msgstr "йўл"
+
+#: env/lib/python3.12/site-packages/click/types.py:877
+msgid "{name} {filename!r} does not exist."
+msgstr "{name} {filename!r} мавжуд эмас."
+
+#: env/lib/python3.12/site-packages/click/types.py:886
+msgid "{name} {filename!r} is a file."
+msgstr "{name} {filename!r} файл."
+
+#: env/lib/python3.12/site-packages/click/types.py:894
+#, python-brace-format
+msgid "{name} '{filename}' is a directory."
+msgstr "{name} '{filename}' директория."
+
+#: env/lib/python3.12/site-packages/click/types.py:903
+msgid "{name} {filename!r} is not readable."
+msgstr "{name} {filename!r} ўқиш мумкин эмас."
+
+#: env/lib/python3.12/site-packages/click/types.py:912
+#, fuzzy
+#| msgid "{name} {filename!r} is not readable."
+msgid "{name} {filename!r} is not writable."
+msgstr "{name} {filename!r} ўқиш мумкин эмас."
+
+#: env/lib/python3.12/site-packages/click/types.py:921
+#, fuzzy
+#| msgid "{name} {filename!r} is not readable."
+msgid "{name} {filename!r} is not executable."
+msgstr "{name} {filename!r} ўқиш мумкин эмас."
+
+#: env/lib/python3.12/site-packages/click/types.py:988
+#, fuzzy, python-brace-format
+#| msgid "{len_type} values are required, but {len_value} was given."
+msgid "{len_type} values are required, but {len_value} was given."
+msgid_plural "{len_type} values are required, but {len_value} were given."
+msgstr[0] "{len_type} ќиматлари талаб қилинади, лекин {len_value} берилди."
+
+#: env/lib/python3.12/site-packages/django/contrib/messages/apps.py:16
+msgid "Messages"
+msgstr "Хабарлар"
+
+#: env/lib/python3.12/site-packages/django/contrib/sitemaps/apps.py:8
+msgid "Site Maps"
+msgstr "Сайт хариталари"
+
+#: env/lib/python3.12/site-packages/django/contrib/staticfiles/apps.py:9
+msgid "Static Files"
+msgstr "Статик файллар"
+
+#: env/lib/python3.12/site-packages/django/contrib/syndication/apps.py:7
+msgid "Syndication"
+msgstr "Синдикатсия"
+
+#. Translators: String used to replace omitted page numbers in elided page
+#. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
+#: env/lib/python3.12/site-packages/django/core/paginator.py:30
+msgid "…"
+msgstr "…"
+
+#: env/lib/python3.12/site-packages/django/core/paginator.py:32
+msgid "That page number is not an integer"
+msgstr "Ушбу бет рақами бутун сон эмас"
+
+#: env/lib/python3.12/site-packages/django/core/paginator.py:33
+msgid "That page number is less than 1"
+msgstr "Ушбу бет рақами 1 дан кам"
+
+#: env/lib/python3.12/site-packages/django/core/paginator.py:34
+msgid "That page contains no results"
+msgstr "Ушбу бетда натижалар йўқ"
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:22
+msgid "Enter a valid value."
+msgstr "Тўғри қиймат киритинг."
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:70
+#, fuzzy
+#| msgid "Enter a valid date."
+msgid "Enter a valid domain name."
+msgstr "Тўғри сана киритинг."
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:152
+#: env/lib/python3.12/site-packages/django/forms/fields.py:768
+msgid "Enter a valid URL."
+msgstr "Тўғри URL киритинг."
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:213
+msgid "Enter a valid integer."
+msgstr "Тўғри бутун сон киритинг."
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:224
+msgid "Enter a valid email address."
+msgstr "Тўғри электрон почта манзили киритинг."
+
+#. Translators: "letters" means latin letters: a-z and A-Z.
+#: env/lib/python3.12/site-packages/django/core/validators.py:307
+msgid ""
+"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
+msgstr ""
+"Хатолар, рақамлар, паст чизиқлар ёки дефислардан иборат бўлган тўғри “slug” "
+"киритинг."
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:315
+msgid ""
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
+"hyphens."
+msgstr ""
+"Юникод ҳарфлари, рақамлар, паст чизиқлар ёки дефислардан иборат бўлган тўғри "
+"“slug” киритинг."
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:327
+#: env/lib/python3.12/site-packages/django/core/validators.py:336
+#: env/lib/python3.12/site-packages/django/core/validators.py:350
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2215
+#, fuzzy, python-format
+#| msgid "Enter a valid email address."
+msgid "Enter a valid %(protocol)s address."
+msgstr "Тўғри электрон почта манзили киритинг."
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:329
+msgid "IPv4"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:338
+#: env/lib/python3.12/site-packages/django/utils/ipv6.py:30
+msgid "IPv6"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:352
+msgid "IPv4 or IPv6"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:393
+msgid "Enter only digits separated by commas."
+msgstr "Фақат фойдаланиш учун сонларни киритинг."
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:399
+#, python-format
+msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
+msgstr "Ушбу қиймат %(limit_value)s бўлиши керак (ўзгартириш %(show_value)s)."
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:434
+#, python-format
+msgid "Ensure this value is less than or equal to %(limit_value)s."
+msgstr "Ушбу қиймат %(limit_value)s дан кам ёки унга тенг бўлиши керак."
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:443
+#, python-format
+msgid "Ensure this value is greater than or equal to %(limit_value)s."
+msgstr "Ушбу қиймат %(limit_value)s дан катта ёки унга тенг бўлиши керак."
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:452
+#, python-format
+msgid "Ensure this value is a multiple of step size %(limit_value)s."
+msgstr "Ушбу қиймат босqич ҳажми %(limit_value)s га мос келиши керак."
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:459
+#, python-format
+msgid ""
+"Ensure this value is a multiple of step size %(limit_value)s, starting from "
+"%(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and so on."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:491
+#, python-format
+msgid ""
+"Ensure this value has at least %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at least %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+"Ушбу қийматда камида %(limit_value)d белгилар бўлиши керак (ўзгартириш "
+"%(show_value)d)."
+msgstr[1] ""
+"Ушбу қийматда камида %(limit_value)d белгилар бўлиши керак (ўзгартириш "
+"%(show_value)d)."
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:509
+#, python-format
+msgid ""
+"Ensure this value has at most %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at most %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+"Ушбу қийматда камида %(limit_value)d белгилар бўлиши керак (ўзгартириш "
+"%(show_value)d)."
+msgstr[1] ""
+"Ушбу қийматда камида %(limit_value)d белгилар бўлиши керак (ўзгартириш "
+"%(show_value)d)."
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:532
+#: env/lib/python3.12/site-packages/django/forms/fields.py:359
+#: env/lib/python3.12/site-packages/django/forms/fields.py:398
+msgid "Enter a number."
+msgstr "Рақам киритинг."
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:534
+#, python-format
+msgid "Ensure that there are no more than %(max)s digit in total."
+msgid_plural "Ensure that there are no more than %(max)s digits in total."
+msgstr[0] "Жамида %(max)s дан ортиқ рақам бўлмаслиги керак."
+msgstr[1] "Жамида %(max)s дан ортиқ рақам бўлмаслиги керак."
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:539
+#, python-format
+msgid "Ensure that there are no more than %(max)s decimal place."
+msgid_plural "Ensure that there are no more than %(max)s decimal places."
+msgstr[0] "Жамида %(max)s дан ортиқ ўзгартириш бўлмаслиги керак."
+msgstr[1] "Жамида %(max)s дан ортиқ ўзгартириш бўлмаслиги керак."
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:544
+#, python-format
+msgid ""
+"Ensure that there are no more than %(max)s digit before the decimal point."
+msgid_plural ""
+"Ensure that there are no more than %(max)s digits before the decimal point."
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:615
+#, python-format
+msgid ""
+"File extension “%(extension)s” is not allowed. Allowed extensions are: "
+"%(allowed_extensions)s."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:677
+msgid "Null characters are not allowed."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/base.py:1571
+#: env/lib/python3.12/site-packages/django/forms/models.py:908
+msgid "and"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/base.py:1573
+#, python-format
+msgid "%(model_name)s with this %(field_labels)s already exists."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/constraints.py:22
+#, python-format
+msgid "Constraint “%(name)s” is violated."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:134
+#, python-format
+msgid "Value %(value)r is not a valid choice."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:135
+msgid "This field cannot be null."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:136
+msgid "This field cannot be blank."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:137
+#, python-format
+msgid "%(model_name)s with this %(field_label)s already exists."
+msgstr ""
+
+#. Translators: The 'lookup_type' is one of 'date', 'year' or
+#. 'month'. Eg: "Title must be unique for pub_date year"
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:141
+#, python-format
+msgid ""
+"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:180
+#, python-format
+msgid "Field of type: %(field_type)s"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1156
+#, python-format
+msgid "“%(value)s” value must be either True or False."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1157
+#, python-format
+msgid "“%(value)s” value must be either True, False, or None."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1159
+msgid "Boolean (Either True or False)"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1209
+#, python-format
+msgid "String (up to %(max_length)s)"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1211
+msgid "String (unlimited)"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1320
+msgid "Comma-separated integers"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1421
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
+"format."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1425
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1560
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
+"date."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1429
+msgid "Date (without time)"
+msgstr ""
+"“%(value)s” qiymati нотўғри форматда. У YYYY-MM-DD HH\n"
+"uuuuuu\n"
+"[TZ] форматда бўлиши кераk."
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1556
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[."
+"uuuuuu]][TZ] format."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1564
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+"[TZ]) but it is an invalid date/time."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1569
+#, fuzzy
+#| msgid "Date (without time)"
+msgid "Date (with time)"
+msgstr ""
+"“%(value)s” qiymati нотўғри форматда. У YYYY-MM-DD HH\n"
+"uuuuuu\n"
+"[TZ] форматда бўлиши кераk."
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1696
+#, python-format
+msgid "“%(value)s” value must be a decimal number."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1698
+#, fuzzy
+#| msgid "December"
+msgid "Decimal number"
+msgstr "декабр"
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1859
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in [DD] [[HH:]MM:]ss[."
+"uuuuuu] format."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1863
+#, fuzzy
+#| msgid "Description"
+msgid "Duration"
+msgstr "Тавсиф"
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1915
+#, fuzzy
+#| msgid "email address"
+msgid "Email address"
+msgstr "электрон почта манзили"
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1940
+#, fuzzy
+#| msgid "File"
+msgid "File path"
+msgstr "Файл"
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2018
+#, python-format
+msgid "“%(value)s” value must be a float."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2020
+#, fuzzy
+#| msgid "phone number"
+msgid "Floating point number"
+msgstr "телефон рақами"
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2060
+#, fuzzy, python-format
+#| msgid "Value must be an iterable."
+msgid "“%(value)s” value must be an integer."
+msgstr "Қиммат итерацияланувчи бўлиши керак."
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2062
+msgid "Integer"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2158
+msgid "Big (8 byte) integer"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2175
+msgid "Small integer"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2183
+#, fuzzy
+#| msgid "email address"
+msgid "IPv4 address"
+msgstr "электрон почта манзили"
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2214
+#, fuzzy
+#| msgid "email address"
+msgid "IP address"
+msgstr "электрон почта манзили"
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2305
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2306
+#, python-format
+msgid "“%(value)s” value must be either None, True or False."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2308
+msgid "Boolean (Either True, False or None)"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2359
+msgid "Positive big integer"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2374
+msgid "Positive integer"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2389
+msgid "Positive small integer"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2405
+#, python-format
+msgid "Slug (up to %(max_length)s)"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2441
+msgid "Text"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2521
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
+"format."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2525
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
+"invalid time."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2529
+msgid "Time"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2661
+msgid "Raw binary data"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2726
+#, fuzzy, python-format
+#| msgid "{value!r} is not a valid UUID."
+msgid "“%(value)s” is not a valid UUID."
+msgstr "{value!r} допустимий UUID эмас."
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2728
+msgid "Universally unique identifier"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/json.py:24
+#, fuzzy
+#| msgid "Subject"
+msgid "A JSON object"
+msgstr "Мавзу"
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/json.py:26
+#, fuzzy
+#| msgid "Value must be an iterable."
+msgid "Value must be valid JSON."
+msgstr "Қиммат итерацияланувчи бўлиши керак."
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:932
+#, python-format
+msgid "%(model)s instance with %(field)s %(value)r does not exist."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:934
+msgid "Foreign Key (type determined by related field)"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1228
+msgid "One-to-one relationship"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1285
+#, python-format
+msgid "%(from)s-%(to)s relationship"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1287
+#, python-format
+msgid "%(from)s-%(to)s relationships"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1335
+msgid "Many-to-many relationship"
+msgstr ""
+
+#. Translators: If found as last label character, these punctuation
+#. characters will prevent the default label_suffix to be appended to the label
+#: env/lib/python3.12/site-packages/django/forms/boundfield.py:185
+msgid ":?.!"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:95
+#, fuzzy
+#| msgid "A valid timezone is required."
+msgid "This field is required."
+msgstr "Тўғри вақт мўйлаши талаб қилинган."
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:308
+#, fuzzy
+#| msgid "Enter a number."
+msgid "Enter a whole number."
+msgstr "Рақам киритинг."
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:479
+#: env/lib/python3.12/site-packages/django/forms/fields.py:1260
+msgid "Enter a valid date."
+msgstr "Тўғри сана киритинг."
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:502
+#: env/lib/python3.12/site-packages/django/forms/fields.py:1261
+msgid "Enter a valid time."
+msgstr "Тўғри вақтни киритинг."
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:529
+msgid "Enter a valid date/time."
+msgstr "Тўғри сана ва вақтни киритинг."
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:563
+msgid "Enter a valid duration."
+msgstr "Тўғри давомийликни киритинг."
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:564
+#, python-brace-format
+msgid "The number of days must be between {min_days} and {max_days}."
+msgstr "Кунлар сони {min_days} ва {max_days} орасида бўлиши керак."
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:633
+msgid "No file was submitted. Check the encoding type on the form."
+msgstr "Ҳеч қандай файл юборилмади. Формада кодлаш типини текширинг."
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:634
+msgid "No file was submitted."
+msgstr "Ҳеч қандай файл юборилмади."
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:635
+msgid "The submitted file is empty."
+msgstr "Юборилган файл бўш."
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:637
+#, python-format
+msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid_plural ""
+"Ensure this filename has at most %(max)d characters (it has %(length)d)."
+msgstr[0] ""
+"Файл номи энг камидан %(max)d белгидан иборат бўлиши керак (ўзида %(length)d "
+"бор)."
+msgstr[1] ""
+"Файл номи энг камидан %(max)d белгидан иборат бўлиши керак (ўзида %(length)d "
+"бор)."
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:642
+msgid "Please either submit a file or check the clear checkbox, not both."
+msgstr ""
+"Илтимос, ёки файл юборинг ёки тозалаш чекбоксини белгиланг, иккисини ҳам "
+"эмас."
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:710
+msgid ""
+"Upload a valid image. The file you uploaded was either not an image or a "
+"corrupted image."
+msgstr "Тўғри расм юкланг. Сиз юклаган файл ёки расм эмас, ёки бузилган расм."
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:882
+#: env/lib/python3.12/site-packages/django/forms/fields.py:968
+#: env/lib/python3.12/site-packages/django/forms/models.py:1592
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr "Тўғри танловни танланг. %(value)s мавжуд танловлардан бири эмас."
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:970
+#: env/lib/python3.12/site-packages/django/forms/fields.py:1089
+#: env/lib/python3.12/site-packages/django/forms/models.py:1590
+msgid "Enter a list of values."
+msgstr "Қимматлар рўйхатини киритинг."
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:1090
+msgid "Enter a complete value."
+msgstr "Тўлиқ қимматни киритинг."
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:1329
+msgid "Enter a valid UUID."
+msgstr "Тўғри UUID киритинг."
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:1359
+msgid "Enter a valid JSON."
+msgstr "Тўғри JSON киритинг."
+
+#. Translators: This is the default suffix added to form field labels
+#: env/lib/python3.12/site-packages/django/forms/forms.py:94
+msgid ":"
+msgstr ":"
+
+#: env/lib/python3.12/site-packages/django/forms/forms.py:230
+#, python-format
+msgid "(Hidden field %(name)s) %(error)s"
+msgstr "(Япиқ поле %(name)s) %(error)s"
+
+#: env/lib/python3.12/site-packages/django/forms/formsets.py:61
+#, python-format
+msgid ""
+"ManagementForm data is missing or has been tampered with. Missing fields: "
+"%(field_names)s. You may need to file a bug report if the issue persists."
+msgstr ""
+"ManagementForm маълумотлари йўқ ёки ўзгартирилган. Йўқ бўлган полелар: "
+"%(field_names)s. Агар муаммо давом этса, хато ҳақида хабар беришингиз мумкин."
+
+#: env/lib/python3.12/site-packages/django/forms/formsets.py:65
+#, python-format
+msgid "Please submit at most %(num)d form."
+msgid_plural "Please submit at most %(num)d forms."
+msgstr[0] "Илтимос, энг кўпи билан %(num)d форма юборинг."
+msgstr[1] "Илтимос, энг кўпи билан %(num)d формани юборинг."
+
+#: env/lib/python3.12/site-packages/django/forms/formsets.py:70
+#, python-format
+msgid "Please submit at least %(num)d form."
+msgid_plural "Please submit at least %(num)d forms."
+msgstr[0] "Илтимос, энг камидан %(num)d форма юборинг."
+msgstr[1] "Илтимос, энг камидан %(num)d формани юборинг."
+
+#: env/lib/python3.12/site-packages/django/forms/formsets.py:484
+#: env/lib/python3.12/site-packages/django/forms/formsets.py:491
+#: supject/models.py:142
+msgid "Order"
+msgstr "Тартиб"
+
+#: env/lib/python3.12/site-packages/django/forms/formsets.py:499
+msgid "Delete"
+msgstr "Ўчириш"
+
+#: env/lib/python3.12/site-packages/django/forms/models.py:901
+#, python-format
+msgid "Please correct the duplicate data for %(field)s."
+msgstr "Илтимос, %(field)s учун такрor маълумотни тўғрилашингиз керак."
+
+#: env/lib/python3.12/site-packages/django/forms/models.py:906
+#, python-format
+msgid "Please correct the duplicate data for %(field)s, which must be unique."
+msgstr ""
+"Илтимос, уникал бўлиши керак бўлган %(field)s учун такрор маълумотни "
+"тўғрилашингиз керак."
+
+#: env/lib/python3.12/site-packages/django/forms/models.py:913
+#, python-format
+msgid ""
+"Please correct the duplicate data for %(field_name)s which must be unique "
+"for the %(lookup)s in %(date_field)s."
+msgstr ""
+"%(lookup)s учун %(date_field)s да уникал бўлиши керак бўлган %(field_name)s "
+"учун такрор маълумотни тўғрилашингиз керак."
+
+#: env/lib/python3.12/site-packages/django/forms/models.py:922
+msgid "Please correct the duplicate values below."
+msgstr "Илтимос, қуйидаги такрор қимматларни тўғрилашингиз керак."
+
+#: env/lib/python3.12/site-packages/django/forms/models.py:1359
+msgid "The inline value did not match the parent instance."
+msgstr "Инлайн қиммати ота-она инстанцияси билан мос келмади."
+
+#: env/lib/python3.12/site-packages/django/forms/models.py:1450
+msgid "Select a valid choice. That choice is not one of the available choices."
+msgstr "Тўғри танловни танланг. У танлов мавжуд танловлардан бири эмас."
+
+#: env/lib/python3.12/site-packages/django/forms/models.py:1594
+#, python-format
+msgid "“%(pk)s” is not a valid value."
+msgstr "“%(pk)s” тўғри қиммат эмас."
+
+#: env/lib/python3.12/site-packages/django/forms/utils.py:227
+#, python-format
+msgid ""
+"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
+"may be ambiguous or it may not exist."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/widgets.py:461
+msgid "Clear"
+msgstr "Тозалаш"
+
+#: env/lib/python3.12/site-packages/django/forms/widgets.py:462
+msgid "Currently"
+msgstr "Ҳозирги"
+
+#: env/lib/python3.12/site-packages/django/forms/widgets.py:463
+msgid "Change"
+msgstr "Ўзгартириш"
+
+#: env/lib/python3.12/site-packages/django/forms/widgets.py:800
+msgid "Unknown"
+msgstr "Номаълум"
+
+#: env/lib/python3.12/site-packages/django/forms/widgets.py:801
+msgid "Yes"
+msgstr "Ҳа"
+
+#: env/lib/python3.12/site-packages/django/forms/widgets.py:802
+msgid "No"
+msgstr "Йўқ"
+
+#. Translators: Please do not add spaces around commas.
+#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:873
+msgid "yes,no,maybe"
+msgstr "ҳа,йўқ,балки"
+
+#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:903
+#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:920
+#, python-format
+msgid "%(size)d byte"
+msgid_plural "%(size)d bytes"
+msgstr[0] "%(size)d байт"
+msgstr[1] "%(size)d байт"
+
+#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:922
+#, python-format
+msgid "%s KB"
+msgstr "%s КБ"
+
+#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:924
+#, python-format
+msgid "%s MB"
+msgstr "%s МБ"
+
+#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:926
+#, python-format
+msgid "%s GB"
+msgstr "%s ГБ"
+
+#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:928
+#, python-format
+msgid "%s TB"
+msgstr "%s ТБ"
+
+#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:930
+#, python-format
+msgid "%s PB"
+msgstr "%s ПБ"
+
+#: env/lib/python3.12/site-packages/django/utils/dateformat.py:74
+msgid "p.m."
+msgstr "к.ч."
+
+#: env/lib/python3.12/site-packages/django/utils/dateformat.py:75
+msgid "a.m."
+msgstr "т.ч."
+
+#: env/lib/python3.12/site-packages/django/utils/dateformat.py:80
+msgid "PM"
+msgstr "КП"
+
+#: env/lib/python3.12/site-packages/django/utils/dateformat.py:81
+msgid "AM"
+msgstr "ТК"
+
+#: env/lib/python3.12/site-packages/django/utils/dateformat.py:153
+msgid "midnight"
+msgstr "тун"
+
+#: env/lib/python3.12/site-packages/django/utils/dateformat.py:155
+msgid "noon"
+msgstr "таң"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:7
+msgid "Monday"
+msgstr "душанба"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:8
+msgid "Tuesday"
+msgstr "сешанба"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:9
+msgid "Wednesday"
+msgstr "чоршанба"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:10
+msgid "Thursday"
+msgstr "пайшанба"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:11
+msgid "Friday"
+msgstr "жума"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:12
+msgid "Saturday"
+msgstr "шанба"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:13
+msgid "Sunday"
+msgstr "якшанба"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:16
+msgid "Mon"
+msgstr "душ"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:17
+msgid "Tue"
+msgstr "сеш"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:18
+msgid "Wed"
+msgstr "чор"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:19
+msgid "Thu"
+msgstr "пай"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:20
+msgid "Fri"
+msgstr "жум"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:21
+msgid "Sat"
+msgstr "шан"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:22
+msgid "Sun"
+msgstr "якш"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:25
+msgid "January"
+msgstr "январ"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:26
+msgid "February"
+msgstr "феврал"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:27
+msgid "March"
+msgstr "март"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:28
+msgid "April"
+msgstr "апрел"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:29
+msgid "May"
+msgstr "май"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:30
+msgid "June"
+msgstr "июнь"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:31
+msgid "July"
+msgstr "июль"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:32
+msgid "August"
+msgstr "август"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:33
+msgid "September"
+msgstr "сентябр"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:34
+msgid "October"
+msgstr "октябр"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:35
+msgid "November"
+msgstr "ноябр"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:36
+msgid "December"
+msgstr "декабр"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:39
+msgid "jan"
+msgstr "янв"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:40
+msgid "feb"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:41
+msgid "mar"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:42
+msgid "apr"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:43
+#, fuzzy
+#| msgid "May"
+msgid "may"
+msgstr "май"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:44
+#, fuzzy
+#| msgid "Sun"
+msgid "jun"
+msgstr "якш"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:45
+msgid "jul"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:46
+msgid "aug"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:47
+msgid "sep"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:48
+msgid "oct"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:49
+msgid "nov"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:50
+msgid "dec"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:53
+msgctxt "abbrev. month"
+msgid "Jan."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:54
+msgctxt "abbrev. month"
+msgid "Feb."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:55
+#, fuzzy
+#| msgid "March"
+msgctxt "abbrev. month"
+msgid "March"
+msgstr "март"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:56
+#, fuzzy
+#| msgid "April"
+msgctxt "abbrev. month"
+msgid "April"
+msgstr "апрел"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:57
+#, fuzzy
+#| msgid "May"
+msgctxt "abbrev. month"
+msgid "May"
+msgstr "май"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:58
+#, fuzzy
+#| msgid "June"
+msgctxt "abbrev. month"
+msgid "June"
+msgstr "июнь"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:59
+#, fuzzy
+#| msgid "July"
+msgctxt "abbrev. month"
+msgid "July"
+msgstr "июль"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:60
+msgctxt "abbrev. month"
+msgid "Aug."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:61
+msgctxt "abbrev. month"
+msgid "Sept."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:62
+msgctxt "abbrev. month"
+msgid "Oct."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:63
+msgctxt "abbrev. month"
+msgid "Nov."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:64
+msgctxt "abbrev. month"
+msgid "Dec."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:67
+#, fuzzy
+#| msgid "January"
+msgctxt "alt. month"
+msgid "January"
+msgstr "январ"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:68
+#, fuzzy
+#| msgid "February"
+msgctxt "alt. month"
+msgid "February"
+msgstr "феврал"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:69
+#, fuzzy
+#| msgid "March"
+msgctxt "alt. month"
+msgid "March"
+msgstr "март"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:70
+#, fuzzy
+#| msgid "April"
+msgctxt "alt. month"
+msgid "April"
+msgstr "апрел"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:71
+#, fuzzy
+#| msgid "May"
+msgctxt "alt. month"
+msgid "May"
+msgstr "май"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:72
+#, fuzzy
+#| msgid "June"
+msgctxt "alt. month"
+msgid "June"
+msgstr "июнь"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:73
+#, fuzzy
+#| msgid "July"
+msgctxt "alt. month"
+msgid "July"
+msgstr "июль"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:74
+#, fuzzy
+#| msgid "August"
+msgctxt "alt. month"
+msgid "August"
+msgstr "август"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:75
+#, fuzzy
+#| msgid "September"
+msgctxt "alt. month"
+msgid "September"
+msgstr "сентябр"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:76
+#, fuzzy
+#| msgid "October"
+msgctxt "alt. month"
+msgid "October"
+msgstr "октябр"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:77
+#, fuzzy
+#| msgid "November"
+msgctxt "alt. month"
+msgid "November"
+msgstr "ноябр"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:78
+#, fuzzy
+#| msgid "December"
+msgctxt "alt. month"
+msgid "December"
+msgstr "декабр"
+
+#: env/lib/python3.12/site-packages/django/utils/ipv6.py:8
+msgid "This is not a valid IPv6 address."
+msgstr "Бу тўғри IPv6 манзили эмас."
+
+#: env/lib/python3.12/site-packages/django/utils/text.py:75
+#, python-format
+msgctxt "String to return when truncating text"
+msgid "%(truncated_text)s…"
+msgstr "%(truncated_text)s…"
+
+#: env/lib/python3.12/site-packages/django/utils/text.py:286
+msgid "or"
+msgstr "ёки"
+
+#. Translators: This string is used as a separator between list elements
+#: env/lib/python3.12/site-packages/django/utils/text.py:305
+#: env/lib/python3.12/site-packages/django/utils/timesince.py:135
+msgid ", "
+msgstr ", "
+
+#: env/lib/python3.12/site-packages/django/utils/timesince.py:8
+#, python-format
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] "%(num)d йил"
+msgstr[1] "%(num)d йил"
+
+#: env/lib/python3.12/site-packages/django/utils/timesince.py:9
+#, python-format
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] "%(num)d ой"
+msgstr[1] "%(num)d ой"
+
+#: env/lib/python3.12/site-packages/django/utils/timesince.py:10
+#, python-format
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] "%(num)d ҳафта"
+msgstr[1] "%(num)d ҳафта"
+
+#: env/lib/python3.12/site-packages/django/utils/timesince.py:11
+#, python-format
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] "%(num)d кун"
+msgstr[1] "%(num)d кун"
+
+#: env/lib/python3.12/site-packages/django/utils/timesince.py:12
+#, python-format
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] "%(num)d соат"
+msgstr[1] "%(num)d соат"
+
+#: env/lib/python3.12/site-packages/django/utils/timesince.py:13
+#, python-format
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] "%(num)d дақиқа"
+msgstr[1] "%(num)d дақиқа"
+
+#: env/lib/python3.12/site-packages/django/views/csrf.py:29
+msgid "Forbidden"
+msgstr "Ман қилинган"
+
+#: env/lib/python3.12/site-packages/django/views/csrf.py:30
+msgid "CSRF verification failed. Request aborted."
+msgstr "CSRF текшириш муваффақиятсиз бўлди. Сўров тўхтатилди."
+
+#: env/lib/python3.12/site-packages/django/views/csrf.py:34
+msgid ""
+"You are seeing this message because this HTTPS site requires a “Referer "
+"header” to be sent by your web browser, but none was sent. This header is "
+"required for security reasons, to ensure that your browser is not being "
+"hijacked by third parties."
+msgstr ""
+"Сиз бу хабарни кўряпсиз, чунки бу HTTPS сайти ўз веб-браузерингиз томонидан "
+"“Referer сариқ хабари” юборилишини талаб қилади, лекин юборилмади. Бу сариқ "
+"хабар тавсия этиш учун керак, сиз браузерингиз учинчи томонлар томонидан "
+"олиб қўйилишига йўл қўймаслиги учун."
+
+#: env/lib/python3.12/site-packages/django/views/csrf.py:40
+msgid ""
+"If you have configured your browser to disable “Referer” headers, please re-"
+"enable them, at least for this site, or for HTTPS connections, or for “same-"
+"origin” requests."
+msgstr ""
+"Агар сиз браузерингизни “Referer” сариқ хабарида ўчирган бўлсангиз, илтимос "
+"уларни қайтадан ишга туширинг, камида бу сайт учун, ёки HTTPS уланишлари "
+"учун, ёки “бири-бирига тўғри” сўровлар учун."
+
+#: env/lib/python3.12/site-packages/django/views/csrf.py:45
+msgid ""
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
+"including the “Referrer-Policy: no-referrer” header, please remove them. The "
+"CSRF protection requires the “Referer” header to do strict referer checking. "
+"If you’re concerned about privacy, use alternatives like <a "
+"rel=\"noreferrer\" …> for links to third-party sites."
+msgstr ""
+"Агар сиз <meta name=\"referrer\" content=\"no-referrer\"> тегини ишлатсangiz "
+"ёки “Referrer-Policy: no-referrer” сариқ хабари киритган бўлсангиз, илтимос "
+"уларни ўчиринг. CSRF ҳимояси “Referer” сариқ хабарини қатъий текшириш учун "
+"талаб қилади. Агар сиз шахсийлик ҳақида хавотирда бўлсангиз, учинчи томон "
+"сайтларига уланишлар учун <a rel=\"noreferrer\" …> каби альтернативаларни "
+"ишлатинг."
+
+#: env/lib/python3.12/site-packages/django/views/csrf.py:54
+msgid ""
+"You are seeing this message because this site requires a CSRF cookie when "
+"submitting forms. This cookie is required for security reasons, to ensure "
+"that your browser is not being hijacked by third parties."
+msgstr ""
+"Сиз бу хабарни кўряпсиз, чунки бу сайт форма юборганда CSRF печаткаси талаб "
+"қилади. Бу печатка хавфсизлик сабаблари учун талаб қилинади, сиз "
+"браузерингиз учинчи томонлар томонидан олиб қўйилишига йўл қўймаслиги учун."
+
+#: env/lib/python3.12/site-packages/django/views/csrf.py:60
+msgid ""
+"If you have configured your browser to disable cookies, please re-enable "
+"them, at least for this site, or for “same-origin” requests."
+msgstr ""
+"Агар сиз браузерингизни печаткаларни ўчириш учун конфигурациялаган "
+"бўлсангиз, илтимос уларни қайтадан ишга туширинг, камида бу сайт учун, ёки "
+"“бири-бирига тўғри” сўровлар учун."
+
+#: env/lib/python3.12/site-packages/django/views/csrf.py:66
+msgid "More information is available with DEBUG=True."
+msgstr "DEBUG=True бўлган ҳолда кўпроқ маълумот мавжуд."
+
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:44
+msgid "No year specified"
+msgstr "Йил кўрсатилмади"
+
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:64
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:115
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:214
+msgid "Date out of range"
+msgstr "Сана диапазондан ташқари"
+
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:94
+msgid "No month specified"
+msgstr "Ой кўрсатилмади"
+
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:147
+msgid "No day specified"
+msgstr "Кун кўрсатилмади"
+
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:194
+msgid "No week specified"
+msgstr "Ҳафта кўрсатилмади"
+
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:349
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:380
+#, python-format
+msgid "No %(verbose_name_plural)s available"
+msgstr "Мавжуд бўлган %(verbose_name_plural)s йўқ"
+
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:652
+#, python-format
+msgid ""
+"Future %(verbose_name_plural)s not available because %(class_name)s."
+"allow_future is False."
+msgstr ""
+"Келажак %(verbose_name_plural)s мавжуд эмас, чунки %(class_name)s."
+"allow_future False."
+
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:692
+#, python-format
+msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/generic/detail.py:56
+#, python-format
+msgid "No %(verbose_name)s found matching the query"
+msgstr "Саволга мос келадиган %(verbose_name)s топилмади."
+
+#: env/lib/python3.12/site-packages/django/views/generic/list.py:70
+msgid "Page is not “last”, nor can it be converted to an int."
+msgstr "Саҳифа “охирги” эмас, ёки у but int га конвертланиши мумкин эмас."
+
+#: env/lib/python3.12/site-packages/django/views/generic/list.py:77
+#, python-format
+msgid "Invalid page (%(page_number)s): %(message)s"
+msgstr "Нотўғри саҳифа (%(page_number)s): %(message)s"
+
+#: env/lib/python3.12/site-packages/django/views/generic/list.py:169
+#, python-format
+msgid "Empty list and “%(class_name)s.allow_empty” is False."
+msgstr "Бўш рўйхат ва “%(class_name)s.allow_empty” False."
+
+#: env/lib/python3.12/site-packages/django/views/static.py:49
+msgid "Directory indexes are not allowed here."
+msgstr "Бу ерда каталог индекслари рўйхатдан ўтказилмайди."
+
+#: env/lib/python3.12/site-packages/django/views/static.py:51
+#, python-format
+msgid "“%(path)s” does not exist"
+msgstr "“%(path)s” мавжуд эмас"
+
+#: env/lib/python3.12/site-packages/django/views/static.py:68
+#: env/lib/python3.12/site-packages/django/views/templates/directory_index.html:8
+#: env/lib/python3.12/site-packages/django/views/templates/directory_index.html:11
+#, python-format
+msgid "Index of %(directory)s"
+msgstr "%(directory)s индекс"
+
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:7
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:204
+msgid "The install worked successfully! Congratulations!"
+msgstr "Ўрнатиш муваффақиятли ишлади! Табриклаймиз!"
+
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:206
+#, python-format
+msgid ""
+"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
+msgstr ""
+"Django %(version)s учун <a href=\"https://docs.djangoproject.com/en/"
+"%(version)s/releases/\" target=\"_blank\" rel=\"noopener\">анонс иловасини</"
+"a> кўринг."
+
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:208
+#, python-format
+msgid ""
+"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
+"%(version)s/ref/settings/#debug\" target=\"_blank\" "
+"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
+"configured any URLs."
+msgstr ""
+"Сиз бу саҳифани кўряпсиз, чунки <a href=\"https://docs.djangoproject.com/en/"
+"%(version)s/ref/settings/#debug\" target=\"_blank\" "
+"rel=\"noopener\">DEBUG=True</a> конфигурация файлингизда мавжуд ва сиз ҳеч "
+"қандай URL'лар конфигурация қилмадиңиз."
+
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:217
+msgid "Django Documentation"
+msgstr "Django Ҳужжатлари"
+
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:218
+msgid "Topics, references, &amp; how-to’s"
+msgstr "Мавзулар, справочники, ва нўҳалари"
+
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:226
+msgid "Tutorial: A Polling App"
+msgstr "Дастур: Оvoz berish ilovasi"
+
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:227
+msgid "Get started with Django"
+msgstr "Django билан бошланг'"
+
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:235
+msgid "Django Community"
+msgstr "Django Жамоаси"
+
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:236
+msgid "Connect, get help, or contribute"
+msgstr "Байланиш, ёрдам олиш ёки иштирок этиш"
+
+#: env/lib/python3.12/site-packages/django_ckeditor_5/views.py:77
+msgid "Page not found."
+msgstr "Саҳифа топилмади."
+
+#: env/lib/python3.12/site-packages/django_ckeditor_5/widgets.py:43
+msgid "Check the correct settings.CKEDITOR_5_CONFIGS "
+msgstr "Тўғри параметрларни текширинг.CKEDITOR_5_CONFIGS"
+
+#: env/lib/python3.12/site-packages/isort/main.py:158
+msgid "show this help message and exit"
+msgstr "бу ёрдам хабарини кўрсатинг ва чиқинг"
+
+#: env/lib/python3.12/site-packages/kombu/transport/qpid.py:1311
+#, python-format
+msgid "Attempting to connect to qpid with SASL mechanism %s"
+msgstr "SASL механизми %s билан qpid'га уланишга уринади"
+
+#: env/lib/python3.12/site-packages/kombu/transport/qpid.py:1316
+#, python-format
+msgid "Connected to qpid with SASL mechanism %s"
+msgstr "SASL механизми %s билан qpid'га уланди"
+
+#: env/lib/python3.12/site-packages/kombu/transport/qpid.py:1334
+#, python-format
+msgid "Unable to connect to qpid with SASL mechanism %s"
+msgstr "SASL механизми %s билан qpid'га уланиш мумкин эмас"
+
+#: env/lib/python3.12/site-packages/modeltranslation/widgets.py:32
+msgid "None"
+msgstr "Ҳеч нарса"
+
+#: env/lib/python3.12/site-packages/timezone_field/rest_framework.py:10
+msgid "A valid timezone is required."
+msgstr "Тўғри вақт мўйлаши талаб қилинган."
+
+#: news/models.py:12
+msgid "description"
+msgstr "тавсиф"
+
+#: news/models.py:13
+msgid "create at"
+msgstr "созишда"
+
+#: news/models.py:14
+msgid "is publish"
+msgstr "нашр қилинган"
+
+#: news/models.py:18 news/models.py:19
+msgid "news"
+msgstr "хабарлар"
+
+#: news/models.py:30
+msgid "news image"
+msgstr "хабарлар расми"
+
+#: news/models.py:31
+msgid "news images"
+msgstr "хабарлар расмлари"
+
+#: supject/models.py:12
+msgid "Click Count"
+msgstr "Басиш Сони"
+
+#: supject/models.py:19
+msgid "Categorys"
+msgstr "Категориялар"
+
+#: supject/models.py:32 supject/models.py:46
+msgid "Subject title"
+msgstr "Мавзу номи"
+
+#: supject/models.py:33
+msgid "Subject titles"
+msgstr "Мавзу номлари"
+
+#: supject/models.py:38
+msgid "Local"
+msgstr "Махаллий"
+
+#: supject/models.py:39
+msgid "Global"
+msgstr "Глобал"
+
+#: supject/models.py:43
+msgid "Type"
+msgstr "Тур"
+
+#: supject/models.py:55
+msgid "Invalid Subject Type"
+msgstr "Нотўғри Мавзу Тур"
+
+#: supject/models.py:61 supject/models.py:67 supject/models.py:109
+#: supject/models.py:144
+msgid "Subject"
+msgstr "Мавзу"
+
+#: supject/models.py:62
+msgid "Subjects"
+msgstr "Мавзулар"
+
+#: supject/models.py:76
+msgid "Total test ball"
+msgstr "Жами тест тўплами"
+
+#: supject/models.py:86
+msgid "User's subject"
+msgstr "Фойдаланувчининг мавзуси"
+
+#: supject/models.py:87
+msgid "User's subjects"
+msgstr "Фойдаланувчининг мавзулари"
+
+#: supject/models.py:102
+msgid "Vacancy"
+msgstr "Вакансия"
+
+#: supject/models.py:103
+msgid "Vacancies"
+msgstr "Вакансиялар"
+
+#: supject/models.py:122 supject/models.py:130
+msgid "Club"
+msgstr "Клуб"
+
+#: supject/models.py:123
+msgid "Clubs"
+msgstr "Клублар"
+
+#: supject/models.py:128
+msgid "Location link"
+msgstr "Жойлашув ҳаволаси"
+
+#: supject/models.py:136
+msgid "Club Meeting"
+msgstr "Клуб йиғилиши"
+
+#: supject/models.py:137
+msgid "Club Meetings"
+msgstr "Клуб йиғилишлари"
+
+#: supject/models.py:155 supject/models.py:163 supject/models.py:184
+msgid "Step"
+msgstr "Қадам"
+
+#: supject/models.py:156
+msgid "Steps"
+msgstr "Қадамлар"
+
+#: supject/models.py:173
+msgid "Step's file"
+msgstr "Қадам файли"
+
+#: supject/models.py:174
+msgid "Step's files"
+msgstr "Қадам файллари"
+
+#: supject/models.py:186
+msgid "Bal for each question"
+msgstr "Ҳар бир савол учун бал"
+
+#: supject/models.py:187
+msgid "Question Count"
+msgstr "Саволлар сони"
+
+#: supject/models.py:189
+msgid "Test type"
+msgstr "Синф тури"
+
+#: supject/models.py:191
+msgid "Test time limit"
+msgstr "Синф учун вақт чеклови"
+
+#: supject/models.py:197
+msgid "Step's test"
+msgstr "Қадамнинг синови"
+
+#: supject/models.py:198
+msgid "Step's tests"
+msgstr "Қадамнинг синовлари"
+
+#: supject/models.py:203
+msgid "easy"
+msgstr "осон"
+
+#: supject/models.py:204
+msgid "medium"
+msgstr "ўрта"
+
+#: supject/models.py:205
+msgid "hard"
+msgstr "қийин"
+
+#: supject/models.py:208
+msgid "Multiple"
+msgstr "Коп"
+
+#: supject/models.py:209
+msgid "Single"
+msgstr "Ягдон"
+
+#: supject/models.py:212 supject/models.py:273
+msgid "Step test"
+msgstr "Қадам синови"
+
+#: supject/models.py:218
+msgid "Question type"
+msgstr "Савол тури"
+
+#: supject/models.py:220
+msgid "question"
+msgstr "савол"
+
+#: supject/models.py:229
+msgid "Test's question"
+msgstr "Синов саволи"
+
+#: supject/models.py:230
+msgid "Test's questions"
+msgstr "Синов саволлари"
+
+#: supject/models.py:235 supject/models.py:256
+msgid "Question"
+msgstr "Савол"
+
+#: supject/models.py:240
+msgid "Answer"
+msgstr "Жавоб"
+
+#: supject/models.py:241
+msgid "Is correct"
+msgstr "Тўғри"
+
+#: supject/models.py:247
+msgid "Test's answer"
+msgstr "Синовнинг жавоби"
+
+#: supject/models.py:248
+msgid "Test's answers"
+msgstr "Синовнинг жавоблари"
+
+#: supject/models.py:267
+msgid "Test result"
+msgstr "Синов натижаси"
+
+#: supject/models.py:268
+msgid "Test results"
+msgstr "Синов натижалари"
+
+#: supject/models.py:278
+msgid "Bal"
+msgstr "Бал"
+
+#: supject/models.py:280
+msgid "Count of correct answers"
+msgstr "Тўғри жавоблар сони"
+
+#: supject/models.py:283
+msgid "Test Results"
+msgstr "Синов натижалари"
+
+#: supject/models.py:292
+msgid "Total test result"
+msgstr "Жами синов натижаси"
+
+#: supject/models.py:293
+msgid "Total test results"
+msgstr "Жами синов натижалари"
+
+#: supject/views.py:51
+#, python-brace-format
+msgid "Category was not found {e}"
+msgstr "Категория топилмади {e}"
+
+#: supject/views.py:70
+msgid "Subject not found"
+msgstr "Мавзу топилмади"
+
+#: supject/views.py:126
+msgid "You were not allowed to pass next step"
+msgstr "Сизга келгуси қадамдан ўтишга рухсат берилмади"
+
+#: supject/views.py:131
+msgid "You didn't start subject yet"
+msgstr "Сиз ҳали мавзуни бошламагансиз"
+
+#: supject/views.py:135
+msgid "Step does not exists"
+msgstr "Қадам мавжуд эмас"
+
+#: supject/views.py:138
+msgid "Steptest does not exists"
+msgstr "Қадам синови мавжуд эмас"
+
+#: supject/views.py:195
+msgid "No subjects found"
+msgstr "Ҳеч қандай мавзу топилмади"
+
+#: supject/views.py:249
+msgid "You do not have subjects so we can not enter you to club"
+msgstr "Сизда мавзулар йўқ, шунинг учун биз сизни клубга кирита олмаймиз"
+
+#: supject/views.py:365
+msgid "Test result not found"
+msgstr "Синов натижаси топилмади"
+
+#~ msgid "Uzbek (Cyrillic)"
+#~ msgstr "Ўзбек (Кирил)"
+
+#~ msgid "{len_type} value is required, but {len_value} was given."
+#~ msgid_plural "{len_type} values are required, but {len_value} were given."
+#~ msgstr[0] "{len_type} qiymati talab qilinadi, lekin {len_value} berildi."
+#~ msgstr[1] "{len_type} qiymatlari talab qilinadi, lekin {len_value} berildi."
+
+#~ msgid "Enter a valid IPv4 address."
+#~ msgstr "Тўғри IPv4 манзили киритинг."
+
+#~ msgid "Enter a valid IPv6 address."
+#~ msgstr "Тўғри IPv6 манзили киритинг."
+
+#~ msgid "Enter a valid IPv4 or IPv6 address."
+#~ msgstr "Тўғри IPv4 ёки IPv6 манзили киритинг."
+
+#, python-format
+#~ msgid "%(datetime)s"
+#~ msgstr "%(datetime)s"
+
+#, python-format
+#~ msgid ""
+#~ "%(datetime)s вақт zonasi %(current_timezone)s да талқин қилинмади; бу "
+#~ "аниқсиз бўлиш мумкин ёки мавжуд эмас."
+#~ msgstr ""
+#~ "%(datetime)s вақт зонси %(current_timezone)s да талқин қилинмади; бу "
+#~ "аниқсиз бўлиш мумкин ёки мавжуд эмас."
+
+#, python-format
+#~ msgid "Day is out of range for month"
+#~ msgstr "Кун ой учун диапазондан ташқари"
+
+#, python-format
+#~ msgid "Month is out of range for year"
+#~ msgstr "Ой йил учун диапазондан ташқари"
+
+msgid "Home"
+msgstr "Бош саҳифа"
