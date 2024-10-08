@@ -179,12 +179,10 @@ class UserIntroQuestion(models.Model):
         blank=True,
         null=True,
     )
-    answer = models.ForeignKey(
+    answer = models.ManyToManyField(
         verbose_name=_("Answer"),
         to=IntroQuestionAnswer,
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
+        related_name= 'answers'
     )
     is_marked = models.BooleanField(default=True)
 

@@ -49,6 +49,7 @@ from .serializers import (
     UserProfileSerializer,
     UserRegisterPhoneSerializer,
     UserRegisterSerializer,
+    AnswerIntroQuestionSerializer
 )
 from .utils import generate_otp_code, send_verification_code, telegram_pusher
 
@@ -402,20 +403,13 @@ class IntroQuestionsView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class AnswerIntroQuestionView(APIView):
+class AnswerIntroQuestionView(CreateAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = AnswerIntroQuestionSerializer
 
-    @swagger_auto_schema(request_body=openapi.Schema(
-        type=openapi.TYPE_OBJECT,
-        properties={
-            'answer_id': openapi.Schema(type=openapi.TYPE_INTEGER, description='ID of the answer', required=[]),
-        }
-    ))
+
     def post(self, req: Request, pk: int):
-        answer_id = req.data.get("answer_id")
-        
-        print(answer_id)
-
+        answer_ids = req.data.get("answer_ids")
 
         
         try:
@@ -428,22 +422,35 @@ class AnswerIntroQuestionView(APIView):
             )
         
 
-        if answer_id is None:
+        if bool(answer_ids) is False:
             UserIntroQuestion.objects.create(
                 is_marked=False, intro_question=intro_question, user=req.user
             )
             return Response({"msg": "OK"}, status=status.HTTP_201_CREATED)
         
         try:
-            answer = IntroQuestionAnswer.objects.get(pk=answer_id)
+            answer_base = UserIntroQuestion.objects.create(
+                  is_marked=True, intro_question=intro_question, user=req.user
+            )
+            for answer_id in answer_ids:
+                answer = IntroQuestionAnswer.objects.get(pk=answer_id)
+
+                if answer is None:
+                    continue
+
+                answer_base.answer.add(answer)
+                answer_base.save()
         except:
             return Response(
                 {"error": "Answer was not found !!!"}, status=status.HTTP_404_NOT_FOUND
             )
 
 
-        user_answer = UserIntroQuestion.objects.create(
-            user=req.user, intro_question=intro_question, is_marked=True, answer=answer
-        )
 
-        return Response(UserIntroQuestionSerializer(user_answer).data)
+        return Response(UserIntroQuestionSerializer(answer_base).data)
+
+
+# {
+#   "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcyODc0NjkzMiwiaWF0IjoxNzI4MzE0OTMyLCJqdGkiOiI2M2YxOTg4ZGI3Njg0NGI1OGQzNDQ5ZDViNDc0M2E4NSIsInVzZXJfaWQiOjF9.mZcjV9u22SSIcqaDD9_aJfADzNmvHjPExwJB4IM2AdY",
+#   "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI4MzIyMTMyLCJpYXQiOjE3MjgzMTQ5MzIsImp0aSI6IjQzMWZlZjg1ODM2MzRjYjA4M2JlNThkYTEyMTAyMjdjIiwidXNlcl9pZCI6MX0.hxujKIBKt7bAl3FtZkudHbx_1PU-GDUO0M0FptHtYLg"
+# }
