@@ -30,6 +30,12 @@ class CategoryListView(ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+
+class DiscountListView(ListAPIView):
+    queryset = Transation.objects.all()
+    serializer_class = DiscountBannerSerializer
+
+
 class CategoryAPIView(APIView):
     def get(self, request, pk):
         categories = Category.objects.all().order_by("-click_count")

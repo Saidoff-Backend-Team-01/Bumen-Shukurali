@@ -151,6 +151,6 @@ class UserTotalTestResultSerializer(serializers.ModelSerializer):
 class DiscountBannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transation
-        fields = ['id', 'product_name', 'discount_percentage', 'description', 'image_url', 'timestamp']
-        
+        fields = ['id', 'product_name', 'discount_percentage', 'description', 'image_url']
+
 

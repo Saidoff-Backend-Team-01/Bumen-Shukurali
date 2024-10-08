@@ -11,6 +11,7 @@ from .views import (
     SubjectTitleApiView,
     GetTestResultsView,
     SubmitTestView,
+    DiscountListView
 )
 
 urlpatterns = [
@@ -28,4 +29,5 @@ urlpatterns = [
     path("club/<int:pk>/", ClubDetail.as_view(), name='club'),
     path("subject/get-test/", GetTestResultsView.as_view(), name='get_test'),
     path("subject/submit-test/", SubmitTestView.as_view(), name='submit-test'),
+    path("subject/discount", DiscountListView.as_view(), name='discount'),
     ]
