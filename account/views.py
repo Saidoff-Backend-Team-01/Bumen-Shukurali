@@ -49,6 +49,7 @@ from .serializers import (
     UserProfileSerializer,
     UserRegisterPhoneSerializer,
     UserRegisterSerializer,
+    AnswerIntroQuestionSerializer
 )
 from .utils import generate_otp_code, send_verification_code, telegram_pusher
 
@@ -58,6 +59,7 @@ auth_token = openapi.Parameter(
 )
 
 query = openapi.Parameter(name="query", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING)
+
 
 
 # class UserRegisterView(CreateAPIView):
@@ -228,34 +230,31 @@ import json
 from account.auth import facebook, register
 
 
-class FacebookAuth(CreateAPIView):
+class FacebookAuth(APIView):
     serializer_class = FacebookSerializer
 
     def post(self, request, *args, **kwargs):
         ser = self.serializer_class(data=request.data)
-        try:
 
-            if ser.is_valid():
-                user_data = facebook.Facebook.validated(
-                    auth_token=ser.data["auth_token"]
-                )
-                email = user_data.get("email")
-                first_name = user_data.get("first_name", "")
-                last_name = user_data.get("last_name", "")
-                photo = user_data["picture"]["data"]["url"]
+        if ser.is_valid():
 
-                data = register.register_social_user(
-                    user_id=user_data.get("id"),
-                    provider=User.AuthType.FACEBOOK,
-                    email=email,
-                    first_name=first_name,
-                    last_name=last_name,
-                    photo=photo,
-                )
-                return Response(json.loads(data))
-            return Response(ser.errors, status=400)
-        except Exception as e:
-            raise Exception(e)
+            user_data = facebook.Facebook.validated(auth_token=ser.data["auth_token"])
+
+            email = user_data.get("email")
+            first_name = user_data.get("first_name", "")
+            last_name = user_data.get("last_name", "")
+            photo = user_data["picture"]["data"]["url"]
+
+            data = register.register_social_user(
+                user_id=user_data.get("id"),
+                provider=User.AuthType.FACEBOOK,
+                email=email,
+                first_name=first_name,
+                last_name=last_name,
+                photo=photo,
+            )
+            return Response(json.loads(data))
+        return Response(ser.errors, status=400)
 
 
 class UserMessageCreateApi(CreateAPIView):
@@ -404,23 +403,15 @@ class IntroQuestionsView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class AnswerIntroQuestionView(APIView):
+class AnswerIntroQuestionView(CreateAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = AnswerIntroQuestionSerializer
 
-    @swagger_auto_schema(
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                "answer_id": openapi.Schema(
-                    type=openapi.TYPE_INTEGER,
-                    description="ID of the answer",
-                    required=[],
-                ),
-            },
-        )
-    )
+
     def post(self, req: Request, pk: int):
-        answer_id = req.data.get("answer_ids")
+        answer_ids = req.data.get("answer_ids")
+
+        
         try:
             intro_question = IntroQuestion.objects.get(pk=pk)
 
@@ -429,22 +420,37 @@ class AnswerIntroQuestionView(APIView):
                 {"error": "Question was not found !!!"},
                 status=status.HTTP_404_NOT_FOUND,
             )
+        
 
-        if answer_id is None:
-            UserIntroQuestion.objects.get_or_create(
+        if bool(answer_ids) is False:
+            UserIntroQuestion.objects.create(
                 is_marked=False, intro_question=intro_question, user=req.user
             )
             return Response({"msg": "OK"}, status=status.HTTP_201_CREATED)
-
+        
         try:
-            answer = IntroQuestionAnswer.objects.get(pk=int(answer_id))
+            answer_base = UserIntroQuestion.objects.create(
+                  is_marked=True, intro_question=intro_question, user=req.user
+            )
+            for answer_id in answer_ids:
+                answer = IntroQuestionAnswer.objects.get(pk=answer_id)
+
+                if answer is None:
+                    continue
+
+                answer_base.answer.add(answer)
+                answer_base.save()
         except:
             return Response(
                 {"error": "Answer was not found !!!"}, status=status.HTTP_404_NOT_FOUND
             )
 
-        user_answer, created = UserIntroQuestion.objects.get_or_create(
-            user=req.user, intro_question=intro_question, is_marked=True, answer=answer
-        )
 
-        return Response(UserIntroQuestionSerializer(user_answer).data)
+
+        return Response(UserIntroQuestionSerializer(answer_base).data)
+
+
+# {
+#   "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcyODc0NjkzMiwiaWF0IjoxNzI4MzE0OTMyLCJqdGkiOiI2M2YxOTg4ZGI3Njg0NGI1OGQzNDQ5ZDViNDc0M2E4NSIsInVzZXJfaWQiOjF9.mZcjV9u22SSIcqaDD9_aJfADzNmvHjPExwJB4IM2AdY",
+#   "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI4MzIyMTMyLCJpYXQiOjE3MjgzMTQ5MzIsImp0aSI6IjQzMWZlZjg1ODM2MzRjYjA4M2JlNThkYTEyMTAyMjdjIiwidXNlcl9pZCI6MX0.hxujKIBKt7bAl3FtZkudHbx_1PU-GDUO0M0FptHtYLg"
+# }
