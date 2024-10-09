@@ -447,6 +447,18 @@ class SubmitTestView(CreateAPIView):
                         question_ball += (
                             user_total_test_result.step_test.ball_for_each_test
                         )
+            elif question.question_type == TestQuestion.QuestionType.ORDERING:
+                answers_order_list = []
+                for answer_id in qst["answer_ids"]:
+                    answers_order_list.append(
+                        question.test_answers.get(id=answer_id).order
+                    )
+
+                if answers_order_list == qst["answer_ids"]:
+                    question_ball += user_total_test_result.step_test.ball_for_each_test
+                else:
+                    continue
+
             else:
                 answer = question.test_answers.filter(id__in=qst["answer_ids"]).first()
                 user_test_result.test_answers.add(answer)
@@ -456,7 +468,7 @@ class SubmitTestView(CreateAPIView):
             total_ball += question_ball
 
         user_total_test_result.ball = total_ball
-        user_total_test_result.percenateg = (
+        user_total_test_result.percentage = (
             total_ball
             / (len(questions) * user_total_test_result.step_test.ball_for_each_test)
         ) * 100
@@ -467,6 +479,6 @@ class SubmitTestView(CreateAPIView):
             {
                 "message": "Test muvaffaqiyatli yakunlandi",
                 "ball": total_ball,
-                "percentage": user_total_test_result.percenateg,
+                "percentage": user_total_test_result.percentage,
             }
         )
