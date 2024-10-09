@@ -420,7 +420,7 @@ class AnswerIntroQuestionView(APIView):
         )
     )
     def post(self, req: Request, pk: int):
-        answer_id = req.data.get("answer_id")
+        answer_id = req.data.get("answer_ids")
         try:
             intro_question = IntroQuestion.objects.get(pk=pk)
 
