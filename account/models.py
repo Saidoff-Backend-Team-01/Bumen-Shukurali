@@ -28,9 +28,7 @@ class User(AbstractUser):
         Media, on_delete=models.SET_NULL, null=True, blank=True, related_name="photo"
     )
     email = models.EmailField(_("email address"), null=True, blank=True)
-    phone_number = models.CharField(
-        _("phone number"), max_length=20, null=True, blank=True
-    )
+    phone_number = models.CharField(_("phone number"), max_length=30, unique=True)
     father_name = models.CharField(
         _("father name"), max_length=120, null=True, blank=True
     )
@@ -86,7 +84,7 @@ class UserOtpCode(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     code = models.CharField(max_length=6)
-    type = models.CharField(_("type"), max_length=20, choices=VerificationType.choices)
+    type = models.CharField(_("type"), max_length=50, choices=VerificationType.choices)
     expires_in = models.DateTimeField(_("expires_in"), null=True, blank=True)
     is_used = models.BooleanField(_("is_used"), default=False)
 
@@ -124,8 +122,9 @@ class UserMessage(models.Model):
         blank=True,
         null=True,
     )
+    created_at = models.DateTimeField(auto_now_add=True) 
     like = models.IntegerField(verbose_name=_("Like"), default=0)
-    status = models.CharField(_("status"), choices=MessageType.choices, max_length=55)
+    status = models.CharField(_("status"), choices=MessageType.choices, max_length=55, default=MessageType.WAITING)
     group = models.ForeignKey(
         verbose_name=_("Group"), to=Groups, on_delete=models.CASCADE
     )

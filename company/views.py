@@ -167,14 +167,12 @@ class ContactWithUsMobileAPIView(CreateAPIView):
         return Response(errors, status=status.HTTP_400_BAD_REQUEST)
                
             
-            
 class AppInfoView(APIView):
     serializer_class = AppInfoSerializer
     def get(self, request, *args, **kwargs):
         queryset = AppInfo.objects.all()
         serializer = AppInfoSerializer(queryset, many=True)
         return Response(serializer.data)
-
 
 
 class SponsorsView(APIView):

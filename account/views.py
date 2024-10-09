@@ -270,16 +270,55 @@ class UserMessageCreateApi(CreateAPIView):
         serializer.save(user=self.request.user)
 
 
+# class MessageListApi(ListAPIView):
+#     serializer_class = UserMessageSerializer
+#     # permission_classes = [permissions.IsAuthenticated, IsGroupMember]
+
+#     def get_queryset(self):
+#         group_id = self.kwargs["group_id"]
+#         group = Groups.objects.get(pk=group_id)
+#         if self.request.user not in group.users.all():
+#             raise PermissionDenied(_("You are not a member of this group."))
+#         return UserMessage.objects.filter(group=group)
+
 class MessageListApi(ListAPIView):
     serializer_class = UserMessageSerializer
-    # permission_classes = [permissions.IsAuthenticated, IsGroupMember]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        group_id = self.kwargs["group_id"]
-        group = Groups.objects.get(pk=group_id)
-        if self.request.user not in group.users.all():
-            raise PermissionDenied(_("You are not a member of this group."))
-        return UserMessage.objects.filter(group=group)
+        group_id = self.request.query_params.get('group_id', None)
+        queryset = UserMessage.objects.all()
+
+        if group_id:
+            queryset = queryset.filter(group_id=group_id)
+
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def patch(self, request, *args, **kwargs):
+        """
+        Update the status of a user message if the user is an admin.
+        """
+        message_id = request.data.get('message_id')
+        new_status = request.data.get('status')
+
+        if not message_id or not new_status:
+            return Response({"error": "message_id and status are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not request.user.is_staff:
+            raise PermissionDenied(_("You do not have permission to perform this action."))
+
+        try:
+            message = UserMessage.objects.get(id=message_id)
+            message.status = new_status
+            message.save()
+            return Response({"success": _("Message status updated successfully.")}, status=status.HTTP_200_OK)
+        except UserMessage.DoesNotExist:
+            return Response({"error": _("Message not found.")}, status=status.HTTP_404_NOT_FOUND)
 
 
 class TelegramLoginView(CreateAPIView):

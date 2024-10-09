@@ -124,11 +124,25 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ("first_name", "last_name", "email", "photo", "birth_date")
 
 
+# class UserMessageSerializer(serializers.ModelSerializer):
+#     file = serializers.FileField()
+#     user_photo = serializers.SerializerMethodField()
+
+#     class Meta:
+#         model = UserMessage
+#         fields = ("user", "message", "file", "group", "status", "like", "user_photo")
+
+#     def get_user_photo(self, obj):
+#         return obj.user.photo.url if obj.user.photo else None
+
+
 class UserMessageSerializer(serializers.ModelSerializer):
-    file = FileField()
+    full_name = serializers.CharField(source='user.get_full_name', read_only=True)
+    user_photo = serializers.ImageField(source='user.photo', read_only=True)  # Assuming the user has a `photo` field
+    
     class Meta:
         model = UserMessage
-        fields = ("user", "message", "file", "group", "status", "like")
+        fields = ['full_name', 'user_photo', 'message', 'created_at', 'like']
         
 
 
