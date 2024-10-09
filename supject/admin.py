@@ -17,6 +17,8 @@ from .models import (
     UserTotalTestResult,
     Vacancy,
     Transation,
+    Transaction,
+    UserCard
 )
 
 
@@ -83,4 +85,13 @@ class StepTestAdmin(admin.ModelAdmin):
 class TransationAdmin(admin.ModelAdmin):
     list_display = ("product_name", "description", "discount_percentage", "image_url", "time")
 
+
+@admin.register(Transaction)
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = ("amount", "transaction_type")
+
+
+@admin.register(UserCard)
+class UserCardAdmin(admin.ModelAdmin):
+    list_display = ("card_number", "expiry_date")
 

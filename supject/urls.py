@@ -11,7 +11,9 @@ from .views import (
     SubjectTitleApiView,
     GetTestResultsView,
     SubmitTestView,
-    DiscountListView
+    DiscountListView,
+    TransactionListCreateView,
+    UserCardRetrieveUpdateView
 )
 
 urlpatterns = [
@@ -30,4 +32,6 @@ urlpatterns = [
     path("subject/get-test/", GetTestResultsView.as_view(), name='get_test'),
     path("subject/submit-test/", SubmitTestView.as_view(), name='submit-test'),
     path("subject/discount", DiscountListView.as_view(), name='discount'),
+    path("subject/Transaction", TransactionListCreateView.as_view(), name='transaction'),
+    path("subject/user_card", UserCardRetrieveUpdateView.as_view(), name='user_card'),
     ]

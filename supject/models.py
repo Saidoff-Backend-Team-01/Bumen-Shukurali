@@ -4,7 +4,10 @@ from django_ckeditor_5.fields import CKEditor5Field
 
 from account.models import User
 from common.models import Media
+from supject.validators import card_number_validator, expiry_date_validator
 
+
+# from django.contrib.auth.models import User
 
 # Create your models here.
 class Category(models.Model):
@@ -295,4 +298,38 @@ class Transation(models.Model):
 
     def __str__(self):
         return f'{self.product_name} - {self.discount_percentage}% chegirma'
+
+
+class Transaction(models.Model):
+    TRANSACTION_TYPES = [
+        ('KIRIM', 'Kirim'),
+        ('CHIQUIM', 'Chiqim'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(_('amount'), max_digits=12, decimal_places=2)
+    transaction_type = models.CharField(_('transaction_type'), max_length=10, choices=TRANSACTION_TYPES)
+    timestamp = models.DateTimeField(_('timestamp'), auto_now_add=True)
+
+    def __str__(self):
+        return f"Card of {self.amount}"
+
+    class Meta:
+        verbose_name = _("Transaction")
+        verbose_name_plural = _("Transaction")
+
+
+class UserCard(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    card_number = models.CharField(_('card_number'), max_length=16, validators=[card_number_validator])
+    expiry_date = models.CharField(_('expiry_date'), max_length=5, validators=[expiry_date_validator])
+    cvv = models.CharField(max_length=4)
+
+    def __str__(self):
+        return f"Card of {self.card_number}"
+
+    class Meta:
+        verbose_name = _("UserCard")
+        verbose_name_plural = _("UserCard")
+
 

@@ -9,6 +9,11 @@ from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveAPIView,
 )
+
+from rest_framework import generics, permissions
+from .models import Transaction, UserCard
+from .serializers import TransactionSerializer, UserCardSerializer
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -347,3 +352,23 @@ class SubmitTestView(CreateAPIView):
             "ball": total_ball,
             "percentage": user_total_test_result.percenateg
         })
+
+
+class TransactionListCreateView(generics.ListCreateAPIView):
+    serializer_class = TransactionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Transaction.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class UserCardRetrieveUpdateView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserCardSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return UserCard.objects.filter(user=self.request.user)
+

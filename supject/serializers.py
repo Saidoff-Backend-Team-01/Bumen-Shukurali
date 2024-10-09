@@ -16,6 +16,8 @@ from supject.models import (
     UserTestResult,
     UserTotalTestResult,
     Transation,
+    UserCard,
+    Transaction
 )
 
 
@@ -154,3 +156,13 @@ class DiscountBannerSerializer(serializers.ModelSerializer):
         fields = ['id', 'product_name', 'discount_percentage', 'description', 'image_url']
 
 
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = ['amount', 'transaction_type', 'timestamp']
+
+
+class UserCardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserCard
+        fields = ['user', 'card_number', 'expiry_date']  # Do not include CVV
