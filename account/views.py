@@ -51,6 +51,8 @@ from .serializers import (
     UserRegisterSerializer,
 )
 from .utils import generate_otp_code, send_verification_code, telegram_pusher
+import json
+from account.auth import facebook, register
 
 code = openapi.Parameter(name="code", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING)
 auth_token = openapi.Parameter(
@@ -214,31 +216,28 @@ class UserRegisterPhoneVerifyView(CreateAPIView):
 
 
 class GoogleAuth(APIView):
-    @swagger_auto_schema(manual_parameters=[code])
-    def get(self, request, *args, **kwargs):
-        auth_token = str(request.query_params.get("code"))
+    @swagger_auto_schema(request_body=GoogleSerializer)
+    def post(self, request, *args, **kwargs):
+        auth_token = str(request.data.get("code"))
         ser = GoogleSerializer(data={"auth_token": auth_token})
         if ser.is_valid():
-            return Response(ser.data)
+            return Response(ser.data, status=200)
         return Response(ser.errors, status=400)
-
-
-import json
-
-from account.auth import facebook, register
 
 
 class FacebookAuth(CreateAPIView):
     serializer_class = FacebookSerializer
 
     def post(self, request, *args, **kwargs):
+        print("Incoming request data:", request.data)
         ser = self.serializer_class(data=request.data)
         try:
 
             if ser.is_valid():
-                user_data = facebook.Facebook.validated(
-                    auth_token=ser.data["auth_token"]
-                )
+                # user_data = facebook.Facebook.validated(
+                #     auth_token=ser.data["auth_token"]
+                # )
+                user_data = facebook.Facebook.validated(auth_token=ser.validated_data["auth_token"])
                 email = user_data.get("email")
                 first_name = user_data.get("first_name", "")
                 last_name = user_data.get("last_name", "")
@@ -255,7 +254,8 @@ class FacebookAuth(CreateAPIView):
                 return Response(json.loads(data))
             return Response(ser.errors, status=400)
         except Exception as e:
-            raise Exception(e)
+            return Response({'error': str(e)}, status=500)
+
 
 
 class UserMessageCreateApi(CreateAPIView):

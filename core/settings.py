@@ -45,6 +45,8 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
 
 DJANGO_APPS = [
     "jazzmin",
+    "daphne",
+    "channels",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -53,6 +55,7 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
     "main",
 ]
+
 
 LOCAL_APPS = ["common", "company", "news", "account", "supject"]
 
@@ -67,6 +70,9 @@ THIRD_PARTY_APPS = [
     "django_ckeditor_5",
     "rest_framework_simplejwt",
     "django_celery_beat",
+
+    "colorfield"
+
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -109,7 +115,19 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "core.wsgi.application"
+# WSGI_APPLICATION = "core.wsgi.application"
+
+ASGI_APPLICATION = "core.asgi.application"
+
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 LOCALE_PATHS = [
     BASE_DIR / "locale/",
