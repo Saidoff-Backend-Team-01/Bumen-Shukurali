@@ -138,7 +138,6 @@ class TelegramOauth2Serializer(serializers.Serializer):
     hash = serializers.CharField()
 
 
-<<<<<<< Updated upstream
 class UserProfileSerializer(serializers.ModelSerializer):
     photo = MediaURlSerializer(read_only=True)
 
@@ -242,6 +241,3 @@ class UserIntroQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserIntroQuestion
         fields = ("id", "intro_questions", "answer", "is_marked")
-=======
-
->>>>>>> Stashed changes
