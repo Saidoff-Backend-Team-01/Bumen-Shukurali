@@ -138,11 +138,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserMessageSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(source='user.get_full_name', read_only=True)
-    user_photo = serializers.ImageField(source='user.photo', read_only=True)  # Assuming the user has a `photo` field
+    user_photo = serializers.ImageField(source='user.photo.file', read_only=True) 
     
     class Meta:
         model = UserMessage
-        fields = ['full_name', 'user_photo', 'message', 'created_at', 'like']
+        fields = ['full_name', 'user_photo', 'message', 'created_at', 'like', 'status', 'file']
         
 
 
@@ -258,3 +258,10 @@ class UserIntroQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserIntroQuestion
         fields = ("id", "intro_questions", "answer", "is_marked")
+
+
+class LogoutSerializer(serializers.ModelSerializer):
+    refresh_token = serializers.CharField()
+    
+    def validate(self, attrs):
+        return attrs

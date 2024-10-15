@@ -151,7 +151,7 @@ class ContactWithUsReasonAPIView(APIView):
 class ContactWithUsMobileAPIView(CreateAPIView):
     queryset = ContactWithUsMobile.objects.all()
     serializer_class = ContactWithUsMobileSerializer
-    parser_classes = [MultiPartParser]  # Fayl yuklash uchun MultiPartParser qo'llanadi
+    parser_classes = [MultiPartParser]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

@@ -15,6 +15,7 @@ from .views import (  # UserRegisterVerifyView,; UserRegisterView,
     UserRegisterPhoneView,
     IntroQuestionsView,
     AnswerIntroQuestionView,
+    LogoutAPIView,
 )
 
 urlpatterns = [
@@ -29,6 +30,7 @@ urlpatterns = [
         name="register-verify-code",
     ),
     path("login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path('logout/', LogoutAPIView.as_view(), name='logout'),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("google/", GoogleAuth.as_view(), name="googleauth"),

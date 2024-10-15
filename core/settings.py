@@ -33,7 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # BOT_TOKEN = config["BOT_TOKEN"]
-BOT_TOKEN = "7300408021:AAFXMO5WF7E4T76hLYrlll792l-qG0n8uHo"
+BOT_TOKEN = "7300408021:AAFWIKoJGHNleG3zjiIVbwp5Myl5D2CxD4s"
 # CHANNEL_ID = config["CHANNEL_ID"]
 CHANNEL_ID = -1002437400131
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -66,26 +66,15 @@ THIRD_PARTY_APPS = [
     "drf_yasg",
     "django_ckeditor_5",
     "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
     "django_celery_beat",
-    'channels',
-    "corsheaders",
-    'dj_rest_auth',
-    'allauth',
-    'allauth.socialaccount',
-    'rest_framework.authtoken',
-    'dj_rest_auth.registration',
-    'chat',
 ]
 
-SITE_ID = 1
-
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
-
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.locale.LocaleMiddleware",  # new
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -94,20 +83,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
-
-ASGI_APPLICATION = 'core.asgi.application'
-
-
-# Redis konfiguratsiyasi
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],  # Redis porti va manzili
-        },
-    },
-}
 
 if DEBUG:
     INSTALLED_APPS.append("debug_toolbar")
@@ -385,12 +360,10 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
 OTP_CODE_VERIFICATION_TIME = 2
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-        ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        "rest_framework_simplejwt.authentication.JWTAuthentication",]
-}  
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    )
+}
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
@@ -411,8 +384,8 @@ from datetime import timedelta
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=5),
-    "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": False,
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": False,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,

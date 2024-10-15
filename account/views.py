@@ -49,6 +49,7 @@ from .serializers import (
     UserProfileSerializer,
     UserRegisterPhoneSerializer,
     UserRegisterSerializer,
+    LogoutSerializer,
 )
 from .utils import generate_otp_code, send_verification_code, telegram_pusher
 
@@ -270,17 +271,6 @@ class UserMessageCreateApi(CreateAPIView):
         serializer.save(user=self.request.user)
 
 
-# class MessageListApi(ListAPIView):
-#     serializer_class = UserMessageSerializer
-#     # permission_classes = [permissions.IsAuthenticated, IsGroupMember]
-
-#     def get_queryset(self):
-#         group_id = self.kwargs["group_id"]
-#         group = Groups.objects.get(pk=group_id)
-#         if self.request.user not in group.users.all():
-#             raise PermissionDenied(_("You are not a member of this group."))
-#         return UserMessage.objects.filter(group=group)
-
 class MessageListApi(ListAPIView):
     serializer_class = UserMessageSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -300,9 +290,6 @@ class MessageListApi(ListAPIView):
         return Response(serializer.data)
 
     def patch(self, request, *args, **kwargs):
-        """
-        Update the status of a user message if the user is an admin.
-        """
         message_id = request.data.get('message_id')
         new_status = request.data.get('status')
 
@@ -370,8 +357,7 @@ class TelegramLoginView(CreateAPIView):
         auth_date = int(auth_data["auth_date"])
         current_timestamp = int(time.time())
 
-        # Allow a certain time window for authentication
-        if current_timestamp - auth_date > 86400:  # 1 day in seconds
+        if current_timestamp - auth_date > 86400:
             return False
         return True
 
@@ -487,3 +473,20 @@ class AnswerIntroQuestionView(APIView):
         )
 
         return Response(UserIntroQuestionSerializer(user_answer).data)
+
+
+class LogoutAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        serializer = LogoutSerializer(data = request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        try:
+            refresh_token = serializer.validated_data['refresh_token']
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({"detail": "Logout successful"}, status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
+        
