@@ -44,7 +44,10 @@ urlpatterns = [
 ]
 
 urlpatterns += i18n_patterns(
-    path("admin/", admin.site.urls),
+    path('admin/', admin.site.urls),
+    path('auth/', include('dj_rest_auth.urls')),
+    path('auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('conversations/', include('chat.urls'))  # new
 )
 urlpatterns += [
     path("api/company/", include("company.urls")),

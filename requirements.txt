@@ -26,3 +26,5 @@ django-debug-toolbar
 gunicorn
 pyfcm
 redis
+django-cors-headers==4.4.0
+'dj-rest-auth[with_social]'
