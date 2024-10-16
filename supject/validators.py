@@ -6,12 +6,12 @@ from django.core.exceptions import ValidationError
 
 def card_number_validator(value):
     if not re.match(r'^\d{16}$', value):
-        raise ValidationError("Enter a valid phone number.")
+        raise ValidationError("Enter a valid card number.")
 
 
 def expiry_date_validator(value):
     if not re.match(r'^\d{2}/\d{2}$', value):
-        raise ValidationError("Enter a valid phone number.")
+        raise ValidationError("Enter a valid expiry_date.")
 
     month, year = map(int, value.split('/'))
     current_year = timezone.now().year % 100
@@ -19,4 +19,5 @@ def expiry_date_validator(value):
 
     if (year < current_year) or (year == current_year and month < current_month):
         raise ValidationError('Karta muddati utgan.')
+
 
