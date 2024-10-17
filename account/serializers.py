@@ -260,8 +260,8 @@ class UserIntroQuestionSerializer(serializers.ModelSerializer):
         fields = ("id", "intro_questions", "answer", "is_marked")
 
 
-class LogoutSerializer(serializers.ModelSerializer):
-    refresh_token = serializers.CharField()
-    
-    def validate(self, attrs):
-        return attrs
+
+
+class LogoutSerializer(serializers.Serializer):
+    model = User
+    refresh_token = serializers.CharField(required=True)

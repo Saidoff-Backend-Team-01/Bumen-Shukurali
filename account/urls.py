@@ -32,7 +32,6 @@ urlpatterns = [
     path("login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path('logout/', LogoutAPIView.as_view(), name='logout'),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("google/", GoogleAuth.as_view(), name="googleauth"),
     path("facebook/", FacebookAuth.as_view(), name="facebookauth"),
     path("messages/", UserMessageCreateApi.as_view(), name="create_message"),

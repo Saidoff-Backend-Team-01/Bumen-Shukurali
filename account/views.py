@@ -475,18 +475,19 @@ class AnswerIntroQuestionView(APIView):
         return Response(UserIntroQuestionSerializer(user_answer).data)
 
 
+
 class LogoutAPIView(APIView):
     permission_classes = [IsAuthenticated]
     
+    @swagger_auto_schema(request_body=LogoutSerializer)
     def post(self, request):
-        serializer = LogoutSerializer(data = request.data)
+        serializer = LogoutSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        
+        refresh_token = serializer.validated_data['refresh_token']
+
         try:
-            refresh_token = serializer.validated_data['refresh_token']
             token = RefreshToken(refresh_token)
             token.blacklist()
-            return Response({"detail": "Logout successful"}, status=status.HTTP_205_RESET_CONTENT)
-        except Exception as e:
+            return Response({"detail": "Logout successful"}, status=status.HTTP_200_OK)
+        except Exception:
             return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
-        
