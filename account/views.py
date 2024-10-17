@@ -5,7 +5,7 @@ from datetime import timedelta
 
 import sentry_sdk
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from drf_yasg import openapi
@@ -448,3 +448,25 @@ class AnswerIntroQuestionView(APIView):
         )
 
         return Response(UserIntroQuestionSerializer(user_answer).data)
+
+
+class GroupUserListApiView(ListAPIView):
+    # serializer_class = UserProfileSerializer
+    # permission_classes = [permissions.IsAuthenticated, IsGroupMember]
+
+    # def get_queryset(self):
+    #     group_id = self.kwargs["group_id"]
+    #     group = get_object_or_404(Groups, pk=group_id)
+
+    #     if not group.users.filter(id=self.request.user.id).exists():
+    #         raise PermissionDenied(_("You are not a member of this group."))
+
+    #     return group.users.all()
+
+    serializer_class = UserProfileSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        group_id = self.kwargs["group_id"]
+        group = get_object_or_404(Groups, pk=group_id)
+        return group.users.all()

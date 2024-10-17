@@ -15,6 +15,7 @@ from .views import (  # UserRegisterVerifyView,; UserRegisterView,
     UserRegisterPhoneView,
     IntroQuestionsView,
     AnswerIntroQuestionView,
+    GroupUserListApiView
 )
 
 urlpatterns = [
@@ -52,5 +53,6 @@ urlpatterns = [
     ),
     path("intro_questions/", IntroQuestionsView.as_view(), name='intro_questions'),
     path("intro_question/<int:pk>/", AnswerIntroQuestionView.as_view(), name='intro_question'),
+    path("groups/<int:group_id>/users/", GroupUserListApiView.as_view(), name="group-user-list"),
 
 ]
