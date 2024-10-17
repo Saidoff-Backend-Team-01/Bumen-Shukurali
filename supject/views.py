@@ -280,6 +280,30 @@ class StepTestFinishView(CreateAPIView):
                 test_question=question,
                 total_result=user_total_test_result,
             )
+
+            # Tartiblanadigan savollar
+            if question.question_type == TestQuestion.QuestionType.ORDERING:
+                correct_answers = list(question.test_answers.order_by('order').values_list('id', flat=True))
+
+                user_answers = qst["answer_ids"]
+                correct_count = 0
+
+                # if correct_answers == user_answers:
+                #     question_ball += user_total_test_result.step_test.ball_for_each_test
+                # else:
+                #     continue
+
+                for idx, user_answer in enumerate(user_answers):
+                    if idx < len(correct_answers) and user_answer == correct_answers[idx]:
+                        correct_count += 1
+                    else:
+                        continue
+
+                total_answers = len(correct_answers)
+                correct_percentage = correct_count / total_answers
+
+                question_ball += correct_percentage * user_total_test_result.step_test.ball_for_each_test
+
             if question.question_type == TestQuestion.QuestionType.MULTIPLE:
                 answers = question.test_answers.filter(id__in=qst["answer_ids"])
                 for ans in answers:
