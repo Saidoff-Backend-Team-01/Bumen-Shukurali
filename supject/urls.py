@@ -18,6 +18,7 @@ from .views import (
     JoinDiscussionGroupView,
     TopUserList,
     UserSubjectListApiView,
+    UserSubjectProgressAPIView,
 )
 
 urlpatterns = [
@@ -26,9 +27,6 @@ urlpatterns = [
         "start-subject/<int:subject_id>/",
         StartSubjectApi.as_view(),
         name="start-subject",
-    ),
-    path(
-        "userpopularsubject/", UserPopularSubject.as_view(), name="userpopularsubject"
     ),
     path("categories/", CategoryListView.as_view(), name="categories"),
     path("steps/<int:pk>/", StepDetailAPIView.as_view(), name="step-detail"),
@@ -51,4 +49,7 @@ urlpatterns = [
     path("user-subjects/", UserSubjectListApiView.as_view(), name="user-subjects"),
     path("step-test/submit/", SubmitTestView.as_view(), name="submit-test"),
     path("finish-step-test/", StepTestFinishView.as_view(), name="finish-step-test"),
+
+    path("subjects/<int:subject_id>/progress/", UserSubjectProgressAPIView.as_view(), name="subject-progress"),
+
 ]

@@ -58,7 +58,7 @@ class UserPhoneVerifySerializer(serializers.Serializer):
 
 
 class GoogleSerializer(serializers.Serializer):
-    auth_token = serializers.CharField()
+    auth_token = serializers.CharField(required=True)
 
     def validate_auth_token(self, auth_token):
 
@@ -68,11 +68,16 @@ class GoogleSerializer(serializers.Serializer):
             "client_id": settings.GOOGLE_CLIENT_ID,
             "client_secret": settings.GOOGLE_CLIENT_SECRET,
             "redirect_uri": settings.GOOGLE_REDIRECT_URI,
-            "grant_type": settings.GOOGLE_GRANT_TYPE,
+            "grant_type": "authorization_code",
         }
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
+        
+        print("Payload:", payload)
 
         response = requests.post(token_url, data=payload, headers=headers)
+
+        print("Response Status:", response.status_code)
+        print("Response Body:", response.text)
 
         if response.status_code == 200:
             id_token_str = response.json()["id_token"]
@@ -112,7 +117,7 @@ class GoogleSerializer(serializers.Serializer):
 
 
 class FacebookSerializer(serializers.Serializer):
-    auth_token = serializers.CharField()
+    auth_token = serializers.CharField(required=True)
 
 
 class UserSerializer(serializers.ModelSerializer):

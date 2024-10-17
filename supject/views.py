@@ -349,7 +349,7 @@ class UserSubjectListApiView(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return UserSubject.objects.filter(user=user, started=True)
+        return UserSubject.objects.filter(user=user)
 
 
 class UserPopularSubject(APIView):
@@ -482,3 +482,14 @@ class SubmitTestView(CreateAPIView):
                 "percentage": user_total_test_result.percentage,
             }
         )
+
+
+# class UserSubjectProgressAPIView(RetrieveAPIView):
+#     serializer_class = UserSubjectSerializer
+#     permission_classes = [IsAuthenticated]
+
+#     def get_object(self):
+#         subject = get_object_or_404(Subject, pk=self.kwargs["subject_id"])
+#         return get_object_or_404(
+#             UserSubject, subject=subject, user=self.request.user
+#         )
