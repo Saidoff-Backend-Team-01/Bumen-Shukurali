@@ -301,7 +301,6 @@ class StepTestFinishView(CreateAPIView):
 
                 total_answers = len(correct_answers)
                 correct_percentage = correct_count / total_answers
-
                 question_ball += correct_percentage * user_total_test_result.step_test.ball_for_each_test
 
             if question.question_type == TestQuestion.QuestionType.MULTIPLE:
