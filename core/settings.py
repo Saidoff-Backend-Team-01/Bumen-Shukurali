@@ -30,7 +30,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+
+# SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = config["SECRET_KEY"]
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = bool(config["DEBUG"])
 
 BOT_TOKEN = config["BOT_TOKEN"]
 CHANNEL_ID = config["CHANNEL_ID"]
@@ -120,11 +125,11 @@ LOCALE_PATHS = [
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("DB_NAME"),
-        "HOST": os.getenv("DB_HOST"),
-        "USER": os.getenv("DB_USER"),
-        "PORT": os.getenv("DB_PORT"),
-        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "NAME": config["DB_NAME"],
+        "HOST": config["DB_HOST"],
+        "USER": config["DB_USER"],
+        "PORT": config["DB_PORT"],
+        "PASSWORD": config["DB_PASSWORD"],
     }
 }
 
