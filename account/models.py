@@ -123,6 +123,7 @@ class UserMessage(models.Model):
     group = models.ForeignKey(
         verbose_name=_("Group"), to=Groups, on_delete=models.CASCADE
     )
+    created_at = models.DateTimeField(verbose_name=_("Date"), auto_now_add=True)
 
     def __str__(self) -> str:
         return f"{self.user.username} - {self.group.name}"
