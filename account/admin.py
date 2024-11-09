@@ -10,6 +10,7 @@ from .models import (
     UserIntroQuestion,
     UserMessage,
     UserOtpCode,
+    UserLike,
 )
 
 
@@ -90,3 +91,4 @@ class IntroQuestionAdmin(admin.ModelAdmin):
 admin.site.register(IntroQuestion, IntroQuestionAdmin)
 admin.site.register(IntroQuestionAnswer)
 admin.site.register(UserIntroQuestion)
+admin.site.register(UserLike)

@@ -124,6 +124,8 @@ class UserMessage(models.Model):
         verbose_name=_("Group"), to=Groups, on_delete=models.CASCADE
     )
     created_at = models.DateTimeField(verbose_name=_("Date"), auto_now_add=True)
+    views = models.ManyToManyField(verbose_name=_('Views'), to='UserView')
+    likes = models.ManyToManyField(verbose_name=_('Likes'), to='UserLike')
 
     def __str__(self) -> str:
         return f"{self.user.username} - {self.group.name}"
@@ -189,3 +191,21 @@ class UserIntroQuestion(models.Model):
 
     def __str__(self) -> str:
         return f"{self.pk} - {self.intro_question.title}"
+
+
+class UserView(models.Model):
+    user = models.ForeignKey(verbose_name=_('User'), to=User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(verbose_name=_('Created at'), auto_now_add=True)
+
+
+    def __str__(self):
+        return f'{self.user.pk} - {self.created_at}'
+    
+
+class UserLike(models.Model):
+    user = models.ForeignKey(verbose_name=_('User'), to=User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(verbose_name=_('Created at'), auto_now_add=True)
+
+
+    def __str__(self):
+        return f'{self.user.pk} - {self.created_at}'

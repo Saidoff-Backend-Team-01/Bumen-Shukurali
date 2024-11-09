@@ -323,6 +323,7 @@ class UserClubMessage(models.Model):
     club = models.ForeignKey(
         verbose_name=_("Club"), to=Club, on_delete=models.CASCADE, related_name='club_messages'
     )
+    views = models.ManyToManyField(verbose_name=_('Views'), to='account.UserView')
     created_at = models.DateTimeField(verbose_name=_("Date"), auto_now_add=True)
     
 
