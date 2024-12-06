@@ -109,6 +109,14 @@ class Groups(models.Model):
         verbose_name = _("Group")
         verbose_name_plural = _("Groups")
 
+class UserGroupConversation(models.Model):
+    initiator = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, related_name="user_group_conversatons_started"
+    )
+    receiver = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, related_name="user_group_conversatons_receiver"
+    )
+    start_time = models.DateTimeField(auto_now_add=True)
 
 class UserMessage(models.Model):
     user = models.ForeignKey(verbose_name=_("User"), to=User, on_delete=models.CASCADE)
@@ -123,9 +131,12 @@ class UserMessage(models.Model):
     group = models.ForeignKey(
         verbose_name=_("Group"), to=Groups, on_delete=models.CASCADE
     )
+
+    conversation = models.ForeignKey(UserGroupConversation, on_delete=models.CASCADE, related_name="user_messages", null=True, blank=True)
     created_at = models.DateTimeField(verbose_name=_("Date"), auto_now_add=True)
     views = models.ManyToManyField(verbose_name=_('Views'), to='UserView')
     likes = models.ManyToManyField(verbose_name=_('Likes'), to='UserLike')
+
 
     def __str__(self) -> str:
         return f"{self.user.username} - {self.group.name}"

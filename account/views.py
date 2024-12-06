@@ -5,7 +5,7 @@ from datetime import timedelta
 
 import sentry_sdk
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from drf_yasg import openapi
@@ -52,6 +52,8 @@ from .serializers import (
     AnswerIntroQuestionSerializer
 )
 from .utils import generate_otp_code, send_verification_code, telegram_pusher
+import json
+from account.auth import facebook, register
 
 code = openapi.Parameter(name="code", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING)
 auth_token = openapi.Parameter(
@@ -216,13 +218,15 @@ class UserRegisterPhoneVerifyView(CreateAPIView):
 
 
 class GoogleAuth(APIView):
-    @swagger_auto_schema(manual_parameters=[code])
-    def get(self, request, *args, **kwargs):
-        auth_token = str(request.query_params.get("code"))
+    @swagger_auto_schema(request_body=GoogleSerializer)
+    def post(self, request, *args, **kwargs):
+        auth_token = str(request.data.get("code"))
         ser = GoogleSerializer(data={"auth_token": auth_token})
         if ser.is_valid():
-            return Response(ser.data)
+            return Response(ser.data, status=200)
         return Response(ser.errors, status=400)
+
+
 
 
 import json
@@ -231,9 +235,11 @@ from account.auth import facebook, register
 
 
 class FacebookAuth(APIView):
+
     serializer_class = FacebookSerializer
 
     def post(self, request, *args, **kwargs):
+        print("Incoming request data:", request.data)
         ser = self.serializer_class(data=request.data)
 
         if ser.is_valid():
@@ -255,6 +261,7 @@ class FacebookAuth(APIView):
             )
             return Response(json.loads(data))
         return Response(ser.errors, status=400)
+
 
 
 class UserMessageCreateApi(CreateAPIView):
@@ -447,10 +454,35 @@ class AnswerIntroQuestionView(CreateAPIView):
 
 
 
-        return Response(UserIntroQuestionSerializer(answer_base).data)
+        return Response(UserIntroQuestionSerializer(user_answer).data)
 
+
+class GroupUserListApiView(ListAPIView):
+    # serializer_class = UserProfileSerializer
+    # permission_classes = [permissions.IsAuthenticated, IsGroupMember]
+
+    # def get_queryset(self):
+    #     group_id = self.kwargs["group_id"]
+    #     group = get_object_or_404(Groups, pk=group_id)
+
+    #     if not group.users.filter(id=self.request.user.id).exists():
+    #         raise PermissionDenied(_("You are not a member of this group."))
+
+    #     return group.users.all()
+
+    serializer_class = UserProfileSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        group_id = self.kwargs["group_id"]
+        group = get_object_or_404(Groups, pk=group_id)
+        return group.users.all()
+
+
+  
 
 # {
 #   "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcyODc0NjkzMiwiaWF0IjoxNzI4MzE0OTMyLCJqdGkiOiI2M2YxOTg4ZGI3Njg0NGI1OGQzNDQ5ZDViNDc0M2E4NSIsInVzZXJfaWQiOjF9.mZcjV9u22SSIcqaDD9_aJfADzNmvHjPExwJB4IM2AdY",
 #   "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI4MzIyMTMyLCJpYXQiOjE3MjgzMTQ5MzIsImp0aSI6IjQzMWZlZjg1ODM2MzRjYjA4M2JlNThkYTEyMTAyMjdjIiwidXNlcl9pZCI6MX0.hxujKIBKt7bAl3FtZkudHbx_1PU-GDUO0M0FptHtYLg"
 # }
+

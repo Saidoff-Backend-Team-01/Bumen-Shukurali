@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_ckeditor_5.fields import CKEditor5Field
+from colorfield.fields import ColorField
 
 
 from common.models import Media
@@ -51,7 +52,11 @@ class Subject(models.Model):
     image = models.OneToOneField(
         Media, on_delete=models.CASCADE, related_name="subjects", null=True, blank=True
     )
+    color = ColorField(default='#ffffff')
 
+
+    def __str__(self):
+        return self.name
     def clean(self):
         subject_count = Subject.objects.filter(category=self.category).count()
         if subject_count >= 2:

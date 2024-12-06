@@ -26,7 +26,9 @@ django-debug-toolbar
 gunicorn
 pyfcm
 redis
+django-colorfield==10.4.0
 django-channels-jwt-auth-middleware==1.0.0
 daphne==4.1.2
 channels==4.1.0
 channels-redis==4.2.0
+

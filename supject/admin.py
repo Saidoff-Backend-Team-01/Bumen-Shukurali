@@ -45,7 +45,7 @@ class StepInlineAdmin(admin.StackedInline):
 
 @admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
-    list_display = ("id", "name")
+    list_display = ("id", "name", 'color')
     inlines = [StepInlineAdmin]
 
 
