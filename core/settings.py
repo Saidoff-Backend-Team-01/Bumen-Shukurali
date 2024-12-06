@@ -44,6 +44,7 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
 
 DJANGO_APPS = [
     "jazzmin",
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -66,6 +67,7 @@ THIRD_PARTY_APPS = [
     "django_ckeditor_5",
     "rest_framework_simplejwt",
     "django_celery_beat",
+    'channels',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -109,6 +111,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "core.wsgi.application"
+ASGI_APPLICATION = "core.asgi.application"
 
 LOCALE_PATHS = [
     BASE_DIR / "locale/",
@@ -454,3 +457,17 @@ CACHES = {
 }
 
 FCM_SERVER_KEY = config["SOCIAL_SECRET_PASSWORD"]
+
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'config': {
+            'hosts': [('127.0.0.1', 6379)],
+        },
+    },
+}
+
+
+
+

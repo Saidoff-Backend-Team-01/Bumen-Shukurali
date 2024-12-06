@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -58,5 +58,138 @@
         </div>
     </div>
 
+</body>
+</html> -->
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-time Chat</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .chat-container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .messages { max-height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; }
+    .message { margin: 5px 0; padding: 5px; border-radius: 5px; background: #f1f1f1; }
+    .message .user { font-weight: bold; }
+    .actions { margin-top: 10px; }
+    .actions button { margin-left: 5px; }
+    .input-container { display: flex; gap: 10px; margin-top: 10px; }
+    .input-container input, .input-container textarea { flex: 1; padding: 5px; }
+    .input-container button { padding: 5px 10px; }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <h1>Real-time Chat</h1>
+    <div class="messages" id="messages"></div>
+
+    <div class="input-container">
+      <textarea id="messageInput" placeholder="Type a message..."></textarea>
+      <button onclick="sendMessage()">Send</button>
+      <input type="file" id="fileInput">
+    </div>
+  </div>
+
+  <script>
+    const chatSocket = new WebSocket('ws://127.0.0.1:8000/ws/general/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMDA2MTc5LCJpYXQiOjE3Mjk5OTg5NzksImp0aSI6ImY3MDNhYzE0NGNkZTQ5MzZiM2EzYTRkYjM0YmFkNTE1IiwidXNlcl9pZCI6MX0.aWCypx9O7LwqH3rFqT0Tcm3UbvvINwT9AXsneNrsbwA');
+    const messagesContainer = document.getElementById('messages');
+    let editingMessageId = null;
+
+    chatSocket.onmessage = function(event) {
+      const data = JSON.parse(event.data);
+      const action = data.action;
+
+      if (action === 'send') {
+        displayMessage(data, true);
+      } else if (action === 'delete') {
+        removeMessage(data.message_id);
+      } else if (action === 'edit') {
+        updateMessage(data);
+      }
+    };
+
+    function sendMessage() {
+      const messageInput = document.getElementById('messageInput');
+      const message = messageInput.value.trim();
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+
+      if (editingMessageId) {
+        chatSocket.send(JSON.stringify({ action: 'edit', message_id: editingMessageId, new_message: message }));
+        editingMessageId = null;
+      } else if (message) {
+        const messageData = { action: 'send', message: message };
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            messageData.file = event.target.result;
+            chatSocket.send(JSON.stringify(messageData));
+          };
+          reader.readAsDataURL(file);
+        } else {
+          chatSocket.send(JSON.stringify(messageData));
+        }
+      }
+
+      messageInput.value = '';
+      fileInput.value = '';
+    }
+
+    function displayMessage(data, isNew = false) {
+      const existingMessage = document.getElementById(`message-${data.id}`);
+      if (existingMessage) return;
+
+      const messageElement = document.createElement('div');
+      messageElement.className = 'message';
+      messageElement.id = `message-${data.id}`;
+
+      messageElement.innerHTML = `
+        <span class="user">${data.user.username}</span>: 
+        <span class="text">${data.message}</span>
+        ${data.file ? `<br><img src="${data.file}" width="100">` : ''}
+        <div class="actions">
+          <button onclick="editMessage('${data.id}', '${data.message}')">Edit</button>
+          <button onclick="deleteMessage('${data.id}')">Delete</button>
+        </div>
+      `;
+
+      if (isNew) {
+        messagesContainer.appendChild(messageElement);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      } else {
+        messagesContainer.insertBefore(messageElement, messagesContainer.firstChild);
+      }
+    }
+
+    function deleteMessage(id) {
+      chatSocket.send(JSON.stringify({ action: 'delete', message_id: id }));
+    }
+
+    function editMessage(id, message) {
+      const messageInput = document.getElementById('messageInput');
+      messageInput.value = message;
+      editingMessageId = id;
+    }
+
+    function updateMessage(data) {
+      const messageElement = document.getElementById(`message-${data.id}`);
+      if (messageElement) {
+        const textElement = messageElement.querySelector('.text');
+        textElement.textContent = data.new_message;
+      }
+    }
+
+    function removeMessage(id) {
+      const messageElement = document.getElementById(`message-${id}`);
+      if (messageElement) {
+        messageElement.remove();
+      }
+    }
+  </script>
 </body>
 </html>

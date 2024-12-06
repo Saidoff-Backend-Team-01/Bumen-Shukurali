@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_ckeditor_5.fields import CKEditor5Field
 
+
 from common.models import Media
 
 
@@ -307,3 +308,28 @@ class UserStep(models.Model):
 
     class Meta:
         unique_together = ["user", "step"]
+
+
+class UserClubMessage(models.Model):
+    user = models.ForeignKey(verbose_name=_("User"), to="account.User", on_delete=models.CASCADE, related_name='club_messages')
+    message = models.TextField(verbose_name=_("Message"))
+    file = models.OneToOneField(
+        verbose_name=_("File"),
+        to=Media,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    club = models.ForeignKey(
+        verbose_name=_("Club"), to=Club, on_delete=models.CASCADE, related_name='club_messages'
+    )
+    views = models.ManyToManyField(verbose_name=_('Views'), to='account.UserView')
+    created_at = models.DateTimeField(verbose_name=_("Date"), auto_now_add=True)
+    
+
+    def __str__(self) -> str:
+        return f"{self.user.pk} - {self.club.name}"
+
+    class Meta:
+        verbose_name = _("Club's message")
+        verbose_name_plural = _("Club's messages")
